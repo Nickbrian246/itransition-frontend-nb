@@ -22,8 +22,8 @@ export function CustomText({
 
   return (
     <Typography
-      {...props}
       style={{ fontSize: textFont, color: colors[textColor], ...style }}
+      {...props}
     >
       {children}
     </Typography>

@@ -12,8 +12,10 @@ import { colors } from "@/constants";
 import { ApiFailureResponse } from "@/types/api/api-response-interface";
 // import { UserLoginType, LoginUserSchema } from "@/validations/auth";
 import { Box, FormHelperText } from "@mui/material";
+import { t } from "i18next";
 import { ChangeEvent, FormEventHandler, useState } from "react";
 import { ZodError } from "zod";
+import { useTranslation } from "react-i18next";
 
 export default function Login() {
   const [hidePassword, setHidePassword] = useState<boolean>(false);
@@ -25,6 +27,7 @@ export default function Login() {
     password: "",
     date: new Date(),
   });
+  const { t } = useTranslation();
 
   const handleClickShowPassword = () => setHidePassword((show) => !show);
 
@@ -80,7 +83,7 @@ export default function Login() {
         textColor="black"
         style={{ fontWeight: "bold" }}
       >
-        Log in to your account
+        {t("auth-Sign-In-Title")}
       </CustomText>
       {errorMessage && (
         <CustomText textAlign="center" textSize="textSm" textColor="redAlert">
@@ -97,12 +100,12 @@ export default function Login() {
         }}
       >
         <Box sx={{ display: "flex", gap: "10px", flexDirection: "column" }}>
-          <CustomInputLabel htmlFor="EmailField">Email</CustomInputLabel>
+          <CustomInputLabel htmlFor="EmailField">{t("Email")}</CustomInputLabel>
           <CustomTextField
             onChange={handleUserData}
             name="email"
             id="EmailField"
-            placeholder="example@example.com"
+            placeholder={t("placeholderEmail")}
           />
           {errors &&
             errors.issues
@@ -122,7 +125,9 @@ export default function Login() {
               ))}
         </Box>
         <Box sx={{ display: "flex", gap: "10px", flexDirection: "column" }}>
-          <CustomInputLabel htmlFor="passwordField">Password</CustomInputLabel>
+          <CustomInputLabel htmlFor="passwordField">
+            {t("auth-password")}
+          </CustomInputLabel>
           <CustomPasswordField
             onChange={handleUserData}
             name="password"
@@ -130,7 +135,7 @@ export default function Login() {
             handleShowPassword={handleClickShowPassword}
             hidePassword={hidePassword}
             id="passwordField"
-            placeholder="Password"
+            placeholder={t("auth-password")}
           />
           {errors &&
             errors.issues
@@ -158,12 +163,12 @@ export default function Login() {
           variant="contained"
           textSize="textSm"
         >
-          Log in
+          {t("auth-login")}
         </CustomButton>
         {isLoading && <CustomCircularLoading />}
       </form>
       <CustomLink href={"/auth/register"}>
-        Don&apos;t have an account? Register
+        {t("auth-dont-have-account")}
       </CustomLink>
     </Box>
   );

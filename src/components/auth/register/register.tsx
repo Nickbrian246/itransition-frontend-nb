@@ -12,12 +12,13 @@ import {
 import { colors } from "@/constants";
 import { usePasswordRules } from "@/hooks/use-password-rules/use-password-rules";
 import { ApiFailureResponse } from "@/types/api/api-response-interface";
-// import { RegisterUserSchema, RegisterUserType } from "@/validations/auth";
+
 import { Box, FormHelperText } from "@mui/material";
 import { FormEventHandler, useState } from "react";
 import { ZodError } from "zod";
-// import { registerUser } from "./services";
-// import { fields } from "./utils/fields";
+
+import { fields } from "./utils/fields";
+import { useTranslation } from "react-i18next";
 
 export default function Register() {
   const [isHidePassword, setIsHidePassword] = useState(false);
@@ -34,6 +35,7 @@ export default function Register() {
   });
 
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const { t } = useTranslation();
 
   const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     const name = e.target.name.toLowerCase();
@@ -77,6 +79,7 @@ export default function Register() {
     <Box
       sx={{
         minWidth: "400px",
+        maxWidth: "600px",
         display: "flex",
         flexDirection: "column",
         gap: "5px",
@@ -90,7 +93,7 @@ export default function Register() {
         textColor="black"
         style={{ fontWeight: "bold", textAlign: "center" }}
       >
-        Register
+        {t("auth-register")}
       </CustomText>
       {errorMessage && (
         <CustomText textAlign="center" textSize="textSm" textColor="redAlert">
@@ -106,26 +109,21 @@ export default function Register() {
           position: "relative",
         }}
       >
-        {/* {fields.map((field) => (
+        {fields.map((field) => (
           <Box
             key={field.htmlFor}
             sx={{ display: "flex", gap: "10px", flexDirection: "column" }}
           >
             <CustomInputLabel htmlFor={field.htmlFor}>
-              {field.name}
+              {t(field.name)}
             </CustomInputLabel>
             <CustomTextField
               required={true}
               type={field.htmlFor === "Email" ? "email" : "text"}
               onChange={handleInput}
-              value={
-                userData[
-                  `${field.name.toLowerCase()}` as keyof RegisterUserType
-                ]
-              }
               name={field.name}
               id={field.htmlFor}
-              placeholder={field.placeholder}
+              placeholder={t(field.placeholder)}
             />
 
             {errors &&
@@ -145,9 +143,11 @@ export default function Register() {
                   </FormHelperText>
                 ))}
           </Box>
-        ))} */}
+        ))}
         <Box sx={{ display: "flex", gap: "10px", flexDirection: "column" }}>
-          <CustomInputLabel htmlFor="passwordField">Password</CustomInputLabel>
+          <CustomInputLabel htmlFor="passwordField">
+            {t("auth-password")}
+          </CustomInputLabel>
           <CustomPasswordField
             handleOnMouseDown={handleMouseDownPassword}
             hidePassword={isHidePassword}
@@ -160,7 +160,7 @@ export default function Register() {
             onChange={handleInput}
             value={userData["password"]}
             id="passwordField"
-            placeholder="Password"
+            placeholder={t("auth-password")}
           />
           <PasswordRules hasMinLength={hasMinLength} isDirty={isDirty} />
         </Box>
@@ -171,11 +171,11 @@ export default function Register() {
           variant="contained"
           textSize="textSm"
         >
-          Register
+          {t("auth-register")}
         </CustomButton>
         {isLoading && <CustomCircularLoading />}
       </form>
-      <CustomLink href={"/auth/login"}>have an account? Log in</CustomLink>
+      <CustomLink href={"/auth/login"}>{t("auth-have-account")}</CustomLink>
     </Box>
   );
 }
