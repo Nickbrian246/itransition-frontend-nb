@@ -114,6 +114,7 @@ const theme = createTheme({
     },
     caption: {
       fontSize: text.textSm,
+      color: colors.textGrayDarkMode,
     },
   },
   components: {

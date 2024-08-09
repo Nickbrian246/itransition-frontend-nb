@@ -1,31 +1,33 @@
 "use client";
 import {
-  CustomButton,
   CustomCircularLoading,
   CustomInputLabel,
   CustomLink,
   CustomPasswordField,
   CustomText,
-  CustomTextField,
 } from "@/components/custom-components";
 import { colors } from "@/constants";
-import { ApiFailureResponse } from "@/types/api/api-response-interface";
-// import { UserLoginType, LoginUserSchema } from "@/validations/auth";
-import { Box, Button, FormHelperText, TextField } from "@mui/material";
-import { t } from "i18next";
+import {
+  Box,
+  Button,
+  FormHelperText,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { ChangeEvent, FormEventHandler, useState } from "react";
-import { ZodError } from "zod";
 import { useTranslation } from "react-i18next";
+import { ZodError } from "zod";
+import { LogInUserSchema, LoginUser } from "@/validations";
+import { ApiFailureResponse } from "@/types/api/api-response-interface";
 
 export default function Login() {
   const [hidePassword, setHidePassword] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [errors, setErrors] = useState<ZodError | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [userData, setUserData] = useState({
+  const [userData, setUserData] = useState<LoginUser>({
     email: "",
     password: "",
-    date: new Date(),
   });
   const { t } = useTranslation();
 
@@ -51,40 +53,38 @@ export default function Login() {
   const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    // try {
-    //   const data = LoginUserSchema.parse(userData);
-    //   const res = await loginUser(data);
-    //   logUser(res.data.userName, res.medaData.access_token);
-    //   setIsLoading(false);
-    // } catch (error) {
-    //   setIsLoading(false);
-    //   if (error instanceof ZodError) {
-    //     setErrors(error);
-    //   } else {
-    //     const err = error as ApiFailureResponse;
-    //     setErrorMessage(err.message);
-    //   }
-    // }
+    try {
+      const data = LogInUserSchema.parse(userData);
+
+      setIsLoading(false);
+    } catch (error) {
+      setIsLoading(false);
+      if (error instanceof ZodError) {
+        setErrors(error);
+      } else {
+        const err = error as ApiFailureResponse;
+        setErrorMessage(err.message);
+      }
+    }
   };
   return (
     <Box
       sx={{
-        minWidth: "400px",
+        maxWidth: "600px",
         display: "flex",
         flexDirection: "column",
-        gap: "10px",
-        border: `2px solid ${colors.border}`,
+        gap: "5px",
+        background: `${colors.backGroundDarkModeGrayBox}`,
         borderRadius: "10px",
-        padding: "50px",
+        padding: {
+          xs: "20px",
+          sm: "40px",
+        },
       }}
     >
-      <CustomText
-        textSize="titleLg"
-        textColor="black"
-        style={{ fontWeight: "bold" }}
-      >
+      <Typography style={{ fontWeight: "bold" }}>
         {t("auth-Sign-In-Title")}
-      </CustomText>
+      </Typography>
       {errorMessage && (
         <CustomText textAlign="center" textSize="textSm" textColor="redAlert">
           {errorMessage}

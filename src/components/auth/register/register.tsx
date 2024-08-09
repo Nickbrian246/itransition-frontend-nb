@@ -1,12 +1,9 @@
 "use client";
 import {
-  CustomButton,
   CustomCircularLoading,
   CustomInputLabel,
   CustomLink,
   CustomPasswordField,
-  CustomText,
-  CustomTextField,
   PasswordRules,
 } from "@/components/custom-components";
 import { colors } from "@/constants";
@@ -17,9 +14,10 @@ import { Box, Button, FormHelperText, TextField } from "@mui/material";
 import { FormEventHandler, useState } from "react";
 import { ZodError } from "zod";
 
-import { fields } from "./utils/fields";
+import { RegisterUser, RegisterUserSchema } from "@/validations";
+import { Typography } from "@mui/material";
 import { useTranslation } from "react-i18next";
-import { Typography, InputLabel } from "@mui/material";
+import { fields } from "./utils/fields";
 
 export default function Register() {
   const [isHidePassword, setIsHidePassword] = useState(false);
@@ -34,12 +32,11 @@ export default function Register() {
     setIsDirty,
   } = usePasswordRules();
   const [errors, setErrors] = useState<ZodError | null>(null);
-  const [userData, setUserData] = useState({
+  const [userData, setUserData] = useState<RegisterUser>({
+    firstName: "",
+    lastName: "",
     email: "",
-    name: "",
     password: "",
-    position: "",
-    date: new Date(),
   });
 
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -68,22 +65,20 @@ export default function Register() {
   const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    // try {
-    //   const user = RegisterUserSchema.parse(userData);
-    //   const res = await registerUser(user);
-    //   logUser(res.data.userName, res.medaData.access_token);
-    //   setIsLoading(false);
-    // } catch (error) {
-    //   setIsLoading(false);
-    //   if (error instanceof ZodError) {
-    //     setErrors(error);
-    //   } else {
-    //     const err = error as ApiFailureResponse;
-    //     setErrorMessage(err.message);
-    //   }
-    // }
+    try {
+      const user = RegisterUserSchema.parse(userData);
+
+      setIsLoading(false);
+    } catch (error) {
+      setIsLoading(false);
+      if (error instanceof ZodError) {
+        setErrors(error);
+      } else {
+        const err = error as ApiFailureResponse;
+        setErrorMessage(err.message);
+      }
+    }
   };
-  // border: `2px solid ${colors.textGrayDarkMode}`,
   return (
     <Box
       sx={{
@@ -91,10 +86,12 @@ export default function Register() {
         display: "flex",
         flexDirection: "column",
         gap: "5px",
-
         background: `${colors.backGroundDarkModeGrayBox}`,
         borderRadius: "10px",
-        padding: "40px",
+        padding: {
+          xs: "10px",
+          sm: "40px",
+        },
       }}
     >
       <Typography variant="h1" sx={{ fontWeight: "bold", textAlign: "center" }}>

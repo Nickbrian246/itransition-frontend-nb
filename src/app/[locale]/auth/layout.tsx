@@ -11,6 +11,7 @@ export default function AuthLayout({
         alignItems: "center",
         width: "100%",
         height: "100vh",
+        padding: "5px",
       }}
     >
       {children}

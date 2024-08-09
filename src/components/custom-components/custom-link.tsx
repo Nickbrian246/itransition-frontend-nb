@@ -19,7 +19,6 @@ export function CustomLink({ href, children, ...props }: Props) {
       <Typography
         style={{
           fontSize: text.textSm,
-          color: colors.textBlue,
         }}
         variant="caption"
       >
