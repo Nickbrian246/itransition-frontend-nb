@@ -17,7 +17,6 @@ export function CustomInputLabel({
       {...props}
       style={{
         fontSize: textSize ? textSize : text.textSm,
-        color: textColor ? textColor : colors.textBlue,
       }}
     >
       {children}

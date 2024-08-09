@@ -11,7 +11,7 @@ import {
 import { colors } from "@/constants";
 import { ApiFailureResponse } from "@/types/api/api-response-interface";
 // import { UserLoginType, LoginUserSchema } from "@/validations/auth";
-import { Box, FormHelperText } from "@mui/material";
+import { Box, Button, FormHelperText, TextField } from "@mui/material";
 import { t } from "i18next";
 import { ChangeEvent, FormEventHandler, useState } from "react";
 import { ZodError } from "zod";
@@ -101,7 +101,7 @@ export default function Login() {
       >
         <Box sx={{ display: "flex", gap: "10px", flexDirection: "column" }}>
           <CustomInputLabel htmlFor="EmailField">{t("Email")}</CustomInputLabel>
-          <CustomTextField
+          <TextField
             onChange={handleUserData}
             name="email"
             id="EmailField"
@@ -155,16 +155,15 @@ export default function Login() {
               ))}
         </Box>
 
-        <CustomButton
+        <Button
           type="submit"
           disabled={
             !(userData.email.length > 3 && userData.password.length >= 1)
           }
           variant="contained"
-          textSize="textSm"
         >
           {t("auth-login")}
-        </CustomButton>
+        </Button>
         {isLoading && <CustomCircularLoading />}
       </form>
       <CustomLink href={"/auth/register"}>

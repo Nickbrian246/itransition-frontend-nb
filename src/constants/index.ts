@@ -11,6 +11,10 @@ export const colors = {
   redAlert: "#d50000",
   greenSuccess: "#43a047",
   white: "#FFFFFF",
+  mainDarkMode: "#242424",
+  backGroundDarkModeGrayBox: "#242424",
+  textGrayDarkMode: "#999999",
+  textWhiteDarkMode: "#FFFFFF",
 };
 export const text = {
   titleLg: "32px",
@@ -19,42 +23,122 @@ export const text = {
   textSm: "14px",
 };
 
+// const theme = createTheme({
+//   palette: {
+//     primary: {
+//       main: colors.blue,
+//     },
+//     secondary: {
+//       main: colors.textBlue,
+//     },
+//     error: {
+//       main: colors.redAlert,
+//     },
+//     success: {
+//       main: colors.greenSuccess,
+//     },
+//     background: {
+//       default: colors.main,
+//       paper: colors.white,
+//     },
+//     text: {
+//       primary: colors.textBlack,
+//       secondary: colors.textBlue,
+//     },
+//     divider: colors.border,
+//   },
+//   typography: {
+//     allVariants: {
+//       color: colors.textBlue,
+//     },
+//     h1: {
+//       fontSize: text.titleLg,
+//     },
+//     body1: {
+//       fontSize: text.textLg,
+//     },
+//     body2: {
+//       fontSize: text.textMd,
+//     },
+//     caption: {
+//       fontSize: text.textSm,
+//     },
+//   },
+//   components: {
+//     MuiTextField: {
+//       styleOverrides: {
+//         root: {
+//           "& .MuiInputBase-input": {
+//             fontSize: text.textMd,
+//           },
+//           "& .MuiOutlinedInput-root": {
+//             "& fieldset": {
+//               borderColor: colors.border,
+//             },
+//             "&:hover fieldset": {
+//               borderColor: colors.border,
+//             },
+//             "&.Mui-focused fieldset": {
+//               borderColor: colors.border,
+//             },
+//             "& .MuiOutlinedInput-notchedOutline": {
+//               borderRadius: "10px",
+//             },
+//           },
+//         },
+//       },
+//     },
+//   },
+// });
+
 const theme = createTheme({
   palette: {
+    mode: "dark",
     primary: {
-      main: colors.blue,
+      main: "#191919",
     },
-    secondary: {
-      main: colors.textBlue,
-    },
-    error: {
-      main: colors.redAlert,
-    },
-    success: {
-      main: colors.greenSuccess,
-    },
-    background: {
-      default: colors.main,
-      paper: colors.white,
-    },
-    text: {
-      primary: colors.textBlack,
-      secondary: colors.textBlue,
-    },
-    divider: colors.border,
   },
+
   typography: {
     h1: {
       fontSize: text.titleLg,
+      color: colors.white,
     },
     body1: {
       fontSize: text.textLg,
+      color: colors.white,
     },
     body2: {
       fontSize: text.textMd,
+      color: colors.textGrayDarkMode,
     },
     caption: {
       fontSize: text.textSm,
+    },
+  },
+  components: {
+    MuiTextField: {
+      styleOverrides: {
+        root: {
+          "& .MuiInputBase-input": {
+            fontSize: text.textMd,
+          },
+          "& .MuiOutlinedInput-root": {
+            "& fieldset": {
+              borderColor: colors.border,
+            },
+            "&:hover fieldset": {
+              borderColor: colors.border,
+            },
+            "&.Mui-focused fieldset": {
+              borderColor: colors.border,
+            },
+            "& .MuiOutlinedInput-notchedOutline": {
+              borderRadius: "10px",
+            },
+          },
+        },
+      },
     },
   },
 });

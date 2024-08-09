@@ -1,8 +1,9 @@
 "use client";
-import { List, ListItem } from "@mui/material";
+import { List, ListItem, Typography } from "@mui/material";
 import { CustomText } from "./custom-text";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import { useTranslation } from "react-i18next";
+import { colors } from "@/constants";
 interface Props {
   isDirty: boolean;
   hasMinLength: boolean;
@@ -20,36 +21,48 @@ export function PasswordRules({ hasMinLength, isDirty }: Props) {
           alignItems: "self-start",
         }}
       >
-        <CustomText
+        <Typography
           style={{ display: "flex", gap: "10px" }}
-          textSize="textSm"
-          textColor={
-            isDirty ? (hasMinLength ? "greenSuccess" : "redAlert") : "textBlue"
+          variant="caption"
+          color={
+            isDirty
+              ? hasMinLength
+                ? `${colors.greenSuccess}`
+                : "error"
+              : "inherit"
           }
         >
           * {t("password-rules:lengthMin")}
           {hasMinLength && <CheckCircleOutlineIcon color="success" />}
-        </CustomText>
-        <CustomText
+        </Typography>
+        <Typography
           style={{ display: "flex", gap: "10px" }}
-          textSize="textSm"
-          textColor={
-            isDirty ? (hasMinLength ? "greenSuccess" : "redAlert") : "textBlue"
+          variant="caption"
+          color={
+            isDirty
+              ? hasMinLength
+                ? `${colors.greenSuccess}`
+                : "error"
+              : "inherit"
           }
         >
           * {t("password-rules:oneUppercase")}
           {hasMinLength && <CheckCircleOutlineIcon color="success" />}
-        </CustomText>
-        <CustomText
+        </Typography>
+        <Typography
           style={{ display: "flex", gap: "10px" }}
-          textSize="textSm"
-          textColor={
-            isDirty ? (hasMinLength ? "greenSuccess" : "redAlert") : "textBlue"
+          variant="caption"
+          color={
+            isDirty
+              ? hasMinLength
+                ? `${colors.greenSuccess}`
+                : "error"
+              : "inherit"
           }
         >
           * {t("password-rules:specialCharacter")}
           {hasMinLength && <CheckCircleOutlineIcon color="success" />}
-        </CustomText>
+        </Typography>
       </ListItem>
     </List>
   );

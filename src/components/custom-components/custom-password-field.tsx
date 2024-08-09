@@ -32,20 +32,6 @@ const CustomPasswordField: React.FC<Props> = ({
         ),
       }}
       sx={{
-        "& .MuiOutlinedInput-root": {
-          "& fieldset": {
-            borderColor: colors.border,
-          },
-          "&:hover fieldset": {
-            borderColor: colors.border,
-          },
-          "&.Mui-focused fieldset": {
-            borderColor: colors.border,
-          },
-          "& .MuiOutlinedInput-notchedOutline": {
-            borderRadius: "10px",
-          },
-        },
         ...props.sx,
       }}
     />

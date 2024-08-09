@@ -13,12 +13,13 @@ import { colors } from "@/constants";
 import { usePasswordRules } from "@/hooks/use-password-rules/use-password-rules";
 import { ApiFailureResponse } from "@/types/api/api-response-interface";
 
-import { Box, FormHelperText } from "@mui/material";
+import { Box, Button, FormHelperText, TextField } from "@mui/material";
 import { FormEventHandler, useState } from "react";
 import { ZodError } from "zod";
 
 import { fields } from "./utils/fields";
 import { useTranslation } from "react-i18next";
+import { Typography, InputLabel } from "@mui/material";
 
 export default function Register() {
   const [isHidePassword, setIsHidePassword] = useState(false);
@@ -75,6 +76,7 @@ export default function Register() {
     //   }
     // }
   };
+  // border: `2px solid ${colors.textGrayDarkMode}`,
   return (
     <Box
       sx={{
@@ -83,23 +85,21 @@ export default function Register() {
         display: "flex",
         flexDirection: "column",
         gap: "5px",
-        border: `2px solid ${colors.border}`,
+
+        background: `${colors.backGroundDarkModeGrayBox}`,
         borderRadius: "10px",
         padding: "40px",
       }}
     >
-      <CustomText
-        textSize="titleLg"
-        textColor="black"
-        style={{ fontWeight: "bold", textAlign: "center" }}
-      >
+      <Typography variant="h1" sx={{ fontWeight: "bold", textAlign: "center" }}>
         {t("auth-register")}
-      </CustomText>
+      </Typography>
       {errorMessage && (
-        <CustomText textAlign="center" textSize="textSm" textColor="redAlert">
+        <Typography textAlign="center" variant="caption" color="red">
           {errorMessage}
-        </CustomText>
+        </Typography>
       )}
+
       <form
         onSubmit={handleSubmit}
         style={{
@@ -117,7 +117,7 @@ export default function Register() {
             <CustomInputLabel htmlFor={field.htmlFor}>
               {t(field.name)}
             </CustomInputLabel>
-            <CustomTextField
+            <TextField
               required={true}
               type={field.htmlFor === "Email" ? "email" : "text"}
               onChange={handleInput}
@@ -165,14 +165,14 @@ export default function Register() {
           <PasswordRules hasMinLength={hasMinLength} isDirty={isDirty} />
         </Box>
 
-        <CustomButton
+        <Button
+          sx={{ fontWeight: "500" }}
           type="submit"
           disabled={!hasMinLength}
           variant="contained"
-          textSize="textSm"
         >
           {t("auth-register")}
-        </CustomButton>
+        </Button>
         {isLoading && <CustomCircularLoading />}
       </form>
       <CustomLink href={"/auth/login"}>{t("auth-have-account")}</CustomLink>
