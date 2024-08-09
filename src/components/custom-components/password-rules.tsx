@@ -7,8 +7,17 @@ import { colors } from "@/constants";
 interface Props {
   isDirty: boolean;
   hasMinLength: boolean;
+  hasNoWhiteSpace: boolean;
+  hasOneEspecialCharacter: boolean;
+  atLeastOneUppercase: boolean;
 }
-export function PasswordRules({ hasMinLength, isDirty }: Props) {
+export function PasswordRules({
+  hasMinLength,
+  isDirty,
+  atLeastOneUppercase,
+  hasNoWhiteSpace,
+  hasOneEspecialCharacter,
+}: Props) {
   const { t } = useTranslation();
   return (
     <List component="div" sx={{ display: "flex " }}>
@@ -22,7 +31,39 @@ export function PasswordRules({ hasMinLength, isDirty }: Props) {
         }}
       >
         <Typography
-          style={{ display: "flex", gap: "10px" }}
+          style={{ display: "flex", gap: "5px" }}
+          variant="caption"
+          color={
+            isDirty
+              ? hasOneEspecialCharacter
+                ? `${colors.greenSuccess}`
+                : "error"
+              : "inherit"
+          }
+        >
+          * {t("password-rules:specialCharacter")}
+          {hasOneEspecialCharacter && (
+            <CheckCircleOutlineIcon color="success" sx={{ fontSize: "20px" }} />
+          )}
+        </Typography>
+        <Typography
+          style={{ display: "flex", gap: "5px" }}
+          variant="caption"
+          color={
+            isDirty
+              ? atLeastOneUppercase
+                ? `${colors.greenSuccess}`
+                : "error"
+              : "inherit"
+          }
+        >
+          * {t("password-rules:oneUppercase")}
+          {atLeastOneUppercase && (
+            <CheckCircleOutlineIcon color="success" sx={{ fontSize: "20px" }} />
+          )}
+        </Typography>
+        <Typography
+          style={{ display: "flex", gap: "5px" }}
           variant="caption"
           color={
             isDirty
@@ -33,35 +74,9 @@ export function PasswordRules({ hasMinLength, isDirty }: Props) {
           }
         >
           * {t("password-rules:lengthMin")}
-          {hasMinLength && <CheckCircleOutlineIcon color="success" />}
-        </Typography>
-        <Typography
-          style={{ display: "flex", gap: "10px" }}
-          variant="caption"
-          color={
-            isDirty
-              ? hasMinLength
-                ? `${colors.greenSuccess}`
-                : "error"
-              : "inherit"
-          }
-        >
-          * {t("password-rules:oneUppercase")}
-          {hasMinLength && <CheckCircleOutlineIcon color="success" />}
-        </Typography>
-        <Typography
-          style={{ display: "flex", gap: "10px" }}
-          variant="caption"
-          color={
-            isDirty
-              ? hasMinLength
-                ? `${colors.greenSuccess}`
-                : "error"
-              : "inherit"
-          }
-        >
-          * {t("password-rules:specialCharacter")}
-          {hasMinLength && <CheckCircleOutlineIcon color="success" />}
+          {hasMinLength && (
+            <CheckCircleOutlineIcon color="success" sx={{ fontSize: "20px" }} />
+          )}
         </Typography>
       </ListItem>
     </List>

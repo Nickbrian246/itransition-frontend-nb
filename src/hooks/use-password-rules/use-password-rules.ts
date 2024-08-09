@@ -10,7 +10,7 @@ export function usePasswordRules() {
     useState<boolean>(false);
 
   const validatePassword = (password: string) => {
-    setHasMinLength(password.length > 1);
+    setHasMinLength(password.length > 8);
 
     setHasNoWhiteSpace(!/\s/.test(password));
 

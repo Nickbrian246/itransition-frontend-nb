@@ -24,8 +24,15 @@ import { Typography, InputLabel } from "@mui/material";
 export default function Register() {
   const [isHidePassword, setIsHidePassword] = useState(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const { hasMinLength, isDirty, validatePassword, setIsDirty } =
-    usePasswordRules();
+  const {
+    hasMinLength,
+    isDirty,
+    atLeastOneUppercase,
+    hasNoWhiteSpace,
+    hasOneEspecialCharacter,
+    validatePassword,
+    setIsDirty,
+  } = usePasswordRules();
   const [errors, setErrors] = useState<ZodError | null>(null);
   const [userData, setUserData] = useState({
     email: "",
@@ -80,7 +87,6 @@ export default function Register() {
   return (
     <Box
       sx={{
-        minWidth: "400px",
         maxWidth: "600px",
         display: "flex",
         flexDirection: "column",
@@ -162,7 +168,13 @@ export default function Register() {
             id="passwordField"
             placeholder={t("auth-password")}
           />
-          <PasswordRules hasMinLength={hasMinLength} isDirty={isDirty} />
+          <PasswordRules
+            hasMinLength={hasMinLength}
+            isDirty={isDirty}
+            atLeastOneUppercase={atLeastOneUppercase}
+            hasNoWhiteSpace={hasNoWhiteSpace}
+            hasOneEspecialCharacter={hasOneEspecialCharacter}
+          />
         </Box>
 
         <Button
