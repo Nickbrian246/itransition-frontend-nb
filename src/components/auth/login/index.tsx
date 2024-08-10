@@ -81,6 +81,9 @@ export default function Login() {
       <CustomContainer
         sx={{
           maxWidth: "600px",
+          width: {
+            sm: "500px",
+          },
           display: "flex",
           flexDirection: "column",
           gap: "5px",
@@ -90,7 +93,7 @@ export default function Login() {
           },
         }}
       >
-        <Typography style={{ fontWeight: "bold" }}>
+        <Typography variant="h1" style={{ fontWeight: "bold" }}>
           {t("auth-Sign-In-Title")}
         </Typography>
         {errorMessage && (
