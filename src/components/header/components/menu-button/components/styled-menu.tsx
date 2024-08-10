@@ -19,7 +19,10 @@ export const StyledMenu = styled((props: MenuProps) => (
     borderRadius: 6,
     marginTop: theme.spacing(1),
     minWidth: 180,
-    backgroundColor: colors.backGroundDarkModeGrayBox,
+    backgroundColor:
+      theme.palette.mode === "dark"
+        ? colors.backGroundDarkModeGrayBox
+        : theme.palette.primary,
     color:
       theme.palette.mode === "light"
         ? "rgb(55, 65, 81)"

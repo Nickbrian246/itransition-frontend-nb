@@ -92,7 +92,7 @@ export default function Register() {
     >
       <CustomContainer
         sx={{
-          maxWidth: "600px",
+          maxWidth: { xs: "300px", md: "600px" },
           maxHeight: "1000px",
           display: "flex",
           flexDirection: "column",

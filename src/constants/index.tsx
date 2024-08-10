@@ -20,11 +20,26 @@ export const colors = {
 
 export const text = {
   titleLg: "32px",
+  titleMd: "28px",
+  titleSm: "24px",
+
   textLg: "18px",
   textMd: "16px",
   textSm: "14px",
-};
 
+  bodyLg: "16px",
+  bodyMd: "14px",
+  bodySm: "12px",
+
+  captionLg: "14px",
+  captionMd: "12px",
+  captionSm: "10px",
+};
+export const iconSizes = {
+  iconLg: "24px",
+  iconMd: "20px",
+  iconSm: "16px",
+};
 export const lightTheme = createTheme({
   palette: {
     primary: {
@@ -55,15 +70,39 @@ export const lightTheme = createTheme({
     },
     h1: {
       fontSize: text.titleLg,
+      "@media (max-width: 960px)": {
+        fontSize: text.titleMd,
+      },
+      "@media (max-width: 600px)": {
+        fontSize: text.titleSm,
+      },
     },
     body1: {
-      fontSize: text.textLg,
+      fontSize: text.bodyLg,
+      "@media (max-width: 960px)": {
+        fontSize: text.bodyMd,
+      },
+      "@media (max-width: 600px)": {
+        fontSize: text.bodySm,
+      },
     },
     body2: {
-      fontSize: text.textMd,
+      fontSize: text.textLg,
+      "@media (max-width: 960px)": {
+        fontSize: text.textMd,
+      },
+      "@media (max-width: 600px)": {
+        fontSize: text.textSm,
+      },
     },
     caption: {
-      fontSize: text.textSm,
+      fontSize: text.captionLg,
+      "@media (max-width: 960px)": {
+        fontSize: text.captionMd,
+      },
+      "@media (max-width: 600px)": {
+        fontSize: text.captionSm,
+      },
     },
   },
   components: {
@@ -72,6 +111,12 @@ export const lightTheme = createTheme({
         root: {
           "& .MuiInputBase-input": {
             fontSize: text.textMd,
+            "@media (max-width: 960px)": {
+              fontSize: text.textMd,
+            },
+            "@media (max-width: 600px)": {
+              fontSize: text.textSm,
+            },
           },
           "& .MuiOutlinedInput-root": {
             "& fieldset": {
@@ -94,6 +139,13 @@ export const lightTheme = createTheme({
       styleOverrides: {
         root: {
           color: colors.black,
+          fontSize: iconSizes.iconLg,
+          "@media (max-width: 960px)": {
+            fontSize: iconSizes.iconMd,
+          },
+          "@media (max-width: 600px)": {
+            fontSize: iconSizes.iconSm,
+          },
         },
       },
     },
@@ -111,10 +163,22 @@ export const darkTheme = createTheme({
     h1: {
       fontSize: text.titleLg,
       color: colors.white,
+      "@media (max-width: 960px)": {
+        fontSize: text.titleMd,
+      },
+      "@media (max-width: 600px)": {
+        fontSize: text.titleSm,
+      },
     },
     body1: {
       fontSize: text.textLg,
       color: colors.white,
+      "@media (max-width: 960px)": {
+        fontSize: text.bodyMd,
+      },
+      "@media (max-width: 600px)": {
+        fontSize: text.bodySm,
+      },
     },
     body2: {
       fontSize: text.textMd,
@@ -123,6 +187,12 @@ export const darkTheme = createTheme({
     caption: {
       fontSize: text.textSm,
       color: colors.textGrayDarkMode,
+      "@media (max-width: 960px)": {
+        fontSize: text.captionMd,
+      },
+      "@media (max-width: 600px)": {
+        fontSize: text.captionSm,
+      },
     },
   },
   components: {
@@ -153,6 +223,13 @@ export const darkTheme = createTheme({
       styleOverrides: {
         root: {
           color: colors.white,
+          fontSize: iconSizes.iconLg,
+          "@media (max-width: 960px)": {
+            fontSize: iconSizes.iconMd,
+          },
+          "@media (max-width: 600px)": {
+            fontSize: iconSizes.iconSm,
+          },
         },
       },
     },

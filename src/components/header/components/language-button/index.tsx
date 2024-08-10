@@ -86,7 +86,11 @@ export default function ChangeLanguageButton() {
   const bg =
     theme === "DARK" ? colors.backGroundDarkModeGrayBox : colors.backGroundGray;
   return (
-    <Stack direction="row" spacing={2}>
+    <Stack
+      direction="row"
+      spacing={2}
+      sx={{ display: { xs: "none", md: "flex" } }}
+    >
       <div>
         <Button
           sx={{ bgcolor: `${bg}`, borderRadius: "30%" }}

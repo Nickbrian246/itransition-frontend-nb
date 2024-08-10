@@ -82,6 +82,7 @@ export default function Login() {
         sx={{
           maxWidth: "600px",
           width: {
+            xs: "300px",
             sm: "500px",
           },
           display: "flex",
