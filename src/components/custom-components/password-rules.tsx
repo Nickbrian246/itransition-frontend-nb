@@ -1,6 +1,5 @@
 "use client";
 import { List, ListItem, Typography } from "@mui/material";
-import { CustomText } from "./custom-text";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import { useTranslation } from "react-i18next";
 import { colors } from "@/constants";
@@ -43,7 +42,7 @@ export function PasswordRules({
         >
           * {t("password-rules:specialCharacter")}
           {hasOneEspecialCharacter && (
-            <CheckCircleOutlineIcon color="success" sx={{ fontSize: "20px" }} />
+            <CheckCircleOutlineIcon sx={{ fontSize: "20px", color: "green" }} />
           )}
         </Typography>
         <Typography
@@ -59,7 +58,7 @@ export function PasswordRules({
         >
           * {t("password-rules:oneUppercase")}
           {atLeastOneUppercase && (
-            <CheckCircleOutlineIcon color="success" sx={{ fontSize: "20px" }} />
+            <CheckCircleOutlineIcon sx={{ fontSize: "20px", color: "green" }} />
           )}
         </Typography>
         <Typography
@@ -75,7 +74,7 @@ export function PasswordRules({
         >
           * {t("password-rules:lengthMin")}
           {hasMinLength && (
-            <CheckCircleOutlineIcon color="success" sx={{ fontSize: "20px" }} />
+            <CheckCircleOutlineIcon sx={{ fontSize: "20px", color: "green" }} />
           )}
         </Typography>
       </ListItem>

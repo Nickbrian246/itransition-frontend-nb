@@ -18,6 +18,7 @@ import { RegisterUser, RegisterUserSchema } from "@/validations";
 import { Typography } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { fields } from "./utils/fields";
+import CustomContainer from "@/components/custom-components/custom-container";
 
 export default function Register() {
   const [isHidePassword, setIsHidePassword] = useState(false);
@@ -80,13 +81,12 @@ export default function Register() {
     }
   };
   return (
-    <Box
+    <CustomContainer
       sx={{
         maxWidth: "600px",
         display: "flex",
         flexDirection: "column",
         gap: "5px",
-        background: `${colors.backGroundDarkModeGrayBox}`,
         borderRadius: "10px",
         padding: {
           xs: "10px",
@@ -185,6 +185,6 @@ export default function Register() {
         {isLoading && <CustomCircularLoading />}
       </form>
       <CustomLink href={"/auth/login"}>{t("auth-have-account")}</CustomLink>
-    </Box>
+    </CustomContainer>
   );
 }

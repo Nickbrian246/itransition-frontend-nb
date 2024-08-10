@@ -4,13 +4,10 @@ export interface ApiFailureResponse {
   errors?: ZodIssue[];
 }
 
-export interface ApiAuthUserSuccess {
-  userName: string;
+export interface ApiSuccessResponseWithMetaData<T, V> {
+  data: T;
+  medaData: V;
 }
-export interface ApiAuthUserSuccessMetaData {
-  access_token: string;
-}
-
-export interface DecodedUser {
-  id: string;
+export interface ApiSuccessResponseWithData<T> {
+  data: T;
 }

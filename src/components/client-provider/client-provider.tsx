@@ -1,25 +1,18 @@
 "use client";
-import { createTheme, ThemeProvider } from "@mui/material";
-import React, { ReactNode } from "react";
-import CssBaseline from "@mui/material/CssBaseline";
-import theme from "@/constants";
+import { ReactNode } from "react";
+import { store } from "@/store/store";
+import { Provider } from "react-redux";
+import ThemeProvider from "@/components/theme-provider/theme-provider";
 export default function ClientComponent({
   children,
 }: {
   children: Readonly<ReactNode>;
 }) {
-  // const darkTheme = createTheme({
-  //   palette: {
-  //     mode: "dark",
-  //   },
-  // });
-
   return (
     <section>
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
-        {children}
-      </ThemeProvider>
+      <Provider store={store}>
+        <ThemeProvider>{children}</ThemeProvider>
+      </Provider>
     </section>
   );
 }

@@ -1,4 +1,4 @@
-export * from "./custom-button";
+export * from "./custom-icon-button";
 export * from "./custom-circular-loading";
 export * from "./custom-input-label";
 export * from "./custom-link";
