@@ -19,6 +19,7 @@ import { useTranslation } from "react-i18next";
 import { ZodError } from "zod";
 import { LogInUserSchema, LoginUser } from "@/validations";
 import { ApiFailureResponse } from "@/types/api/api-response-interface";
+import CustomContainer from "@/components/custom-components/custom-container";
 
 export default function Login() {
   const [hidePassword, setHidePassword] = useState<boolean>(false);
@@ -68,107 +69,119 @@ export default function Login() {
     }
   };
   return (
-    <Box
-      sx={{
-        maxWidth: "600px",
+    <section
+      style={{
+        width: "100%",
+        height: "100%",
         display: "flex",
-        flexDirection: "column",
-        gap: "5px",
-        background: `${colors.backGroundDarkModeGrayBox}`,
-        borderRadius: "10px",
-        padding: {
-          xs: "20px",
-          sm: "40px",
-        },
+        alignItems: "center",
+        justifyContent: "center",
       }}
     >
-      <Typography style={{ fontWeight: "bold" }}>
-        {t("auth-Sign-In-Title")}
-      </Typography>
-      {errorMessage && (
-        <CustomText textAlign="center" textSize="textSm" textColor="redAlert">
-          {errorMessage}
-        </CustomText>
-      )}
-      <form
-        onSubmit={handleSubmit}
-        style={{
+      <CustomContainer
+        sx={{
+          maxWidth: "600px",
           display: "flex",
           flexDirection: "column",
-          gap: "10px",
-          position: "relative",
+          gap: "5px",
+          padding: {
+            xs: "20px",
+            sm: "40px",
+          },
         }}
       >
-        <Box sx={{ display: "flex", gap: "10px", flexDirection: "column" }}>
-          <CustomInputLabel htmlFor="EmailField">{t("Email")}</CustomInputLabel>
-          <TextField
-            onChange={handleUserData}
-            name="email"
-            id="EmailField"
-            placeholder={t("placeholderEmail")}
-          />
-          {errors &&
-            errors.issues
-              .filter((err) => err.path[0] === "email")
-              .map((e) => (
-                <FormHelperText
-                  key={e.message}
-                  id={e.message}
-                  sx={{
-                    color: colors.redAlert,
-                    fontSize: "12px",
-                    margin: "0",
-                  }}
-                >
-                  {e.message}
-                </FormHelperText>
-              ))}
-        </Box>
-        <Box sx={{ display: "flex", gap: "10px", flexDirection: "column" }}>
-          <CustomInputLabel htmlFor="passwordField">
-            {t("auth-password")}
-          </CustomInputLabel>
-          <CustomPasswordField
-            onChange={handleUserData}
-            name="password"
-            handleOnMouseDown={handleMouseDownPassword}
-            handleShowPassword={handleClickShowPassword}
-            hidePassword={hidePassword}
-            id="passwordField"
-            placeholder={t("auth-password")}
-          />
-          {errors &&
-            errors.issues
-              .filter((err) => err.path[0] === "password")
-              .map((e) => (
-                <FormHelperText
-                  key={e.message}
-                  id={e.message}
-                  sx={{
-                    color: colors.redAlert,
-                    fontSize: "12px",
-                    margin: "0",
-                  }}
-                >
-                  {e.message}
-                </FormHelperText>
-              ))}
-        </Box>
-
-        <Button
-          type="submit"
-          disabled={
-            !(userData.email.length > 3 && userData.password.length >= 1)
-          }
-          variant="contained"
+        <Typography style={{ fontWeight: "bold" }}>
+          {t("auth-Sign-In-Title")}
+        </Typography>
+        {errorMessage && (
+          <CustomText textAlign="center" textSize="textSm" textColor="redAlert">
+            {errorMessage}
+          </CustomText>
+        )}
+        <form
+          onSubmit={handleSubmit}
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: "10px",
+            position: "relative",
+          }}
         >
-          {t("auth-login")}
-        </Button>
-        {isLoading && <CustomCircularLoading />}
-      </form>
-      <CustomLink href={"/auth/register"}>
-        {t("auth-dont-have-account")}
-      </CustomLink>
-    </Box>
+          <Box sx={{ display: "flex", gap: "10px", flexDirection: "column" }}>
+            <CustomInputLabel htmlFor="EmailField">
+              {t("Email")}
+            </CustomInputLabel>
+            <TextField
+              fullWidth
+              onChange={handleUserData}
+              name="email"
+              id="EmailField"
+              placeholder={t("placeholderEmail")}
+            />
+            {errors &&
+              errors.issues
+                .filter((err) => err.path[0] === "email")
+                .map((e) => (
+                  <FormHelperText
+                    key={e.message}
+                    id={e.message}
+                    sx={{
+                      color: colors.redAlert,
+                      fontSize: "12px",
+                      margin: "0",
+                    }}
+                  >
+                    {e.message}
+                  </FormHelperText>
+                ))}
+          </Box>
+          <Box sx={{ display: "flex", gap: "10px", flexDirection: "column" }}>
+            <CustomInputLabel htmlFor="passwordField">
+              {t("auth-password")}
+            </CustomInputLabel>
+            <CustomPasswordField
+              fullWidth
+              onChange={handleUserData}
+              name="password"
+              handleOnMouseDown={handleMouseDownPassword}
+              handleShowPassword={handleClickShowPassword}
+              hidePassword={hidePassword}
+              id="passwordField"
+              placeholder={t("auth-password")}
+            />
+            {errors &&
+              errors.issues
+                .filter((err) => err.path[0] === "password")
+                .map((e) => (
+                  <FormHelperText
+                    key={e.message}
+                    id={e.message}
+                    sx={{
+                      color: colors.redAlert,
+                      fontSize: "12px",
+                      margin: "0",
+                    }}
+                  >
+                    {e.message}
+                  </FormHelperText>
+                ))}
+          </Box>
+
+          <Button
+            type="submit"
+            disabled={
+              !(userData.email.length > 3 && userData.password.length >= 1)
+            }
+            variant="contained"
+          >
+            {t("auth-login")}
+          </Button>
+          {isLoading && <CustomCircularLoading />}
+        </form>
+        <CustomLink href={"/auth/register"}>
+          {t("auth-dont-have-account")}
+        </CustomLink>
+      </CustomContainer>
+    </section>
   );
 }

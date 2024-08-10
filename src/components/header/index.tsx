@@ -1,4 +1,3 @@
-"use client";
 import { Box, Typography } from "@mui/material";
 import ThemeButton from "./components/theme-button";
 import ComputerOutlinedIcon from "@mui/icons-material/ComputerOutlined";

@@ -2,6 +2,8 @@ import React from "react";
 import Login from "@/components/auth/login";
 import initTranslations from "@/app/i18n";
 import TranslationsProvider from "@/components/translations-provider/translations-provider";
+import Header from "@/components/header";
+
 const i18nNamespaces = ["auth", "commons", "password-rules"];
 export default async function Page({
   params: { locale },
@@ -15,6 +17,7 @@ export default async function Page({
       locale={locale}
       resources={resources}
     >
+      <Header />
       <Login />
     </TranslationsProvider>
   );
