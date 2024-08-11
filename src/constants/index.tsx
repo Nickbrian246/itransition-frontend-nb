@@ -2,7 +2,7 @@ import { createTheme } from "@mui/material";
 
 export const colors = {
   black: "#0D141C",
-  main: "#F7FAFC",
+  main: "#f9fbfc",
   blue: "#1A80E5",
   textBlue: "#4F7396",
   textBlack: "#0e141b",
@@ -15,7 +15,7 @@ export const colors = {
   backGroundDarkModeGrayBox: "#242424",
   textGrayDarkMode: "#999999",
   textWhiteDarkMode: "#FFFFFF",
-  backGroundGray: "#f1f2f6;",
+  backGroundGray: "#e8edf4;",
 };
 
 export const text = {
@@ -43,10 +43,10 @@ export const iconSizes = {
 export const lightTheme = createTheme({
   palette: {
     primary: {
-      main: colors.blue,
+      main: colors.black,
     },
     secondary: {
-      main: colors.textBlue,
+      main: colors.black,
     },
     error: {
       main: colors.redAlert,
@@ -70,20 +70,30 @@ export const lightTheme = createTheme({
     },
     h1: {
       fontSize: text.titleLg,
+      color: colors.black,
       "@media (max-width: 960px)": {
         fontSize: text.titleMd,
+        color: colors.black,
       },
       "@media (max-width: 600px)": {
         fontSize: text.titleSm,
+        color: colors.black,
       },
+    },
+    h5: {
+      color: colors.black,
+      fontWeight: "600",
     },
     body1: {
       fontSize: text.bodyLg,
+      color: colors.black,
       "@media (max-width: 960px)": {
         fontSize: text.bodyMd,
+        color: colors.black,
       },
       "@media (max-width: 600px)": {
         fontSize: text.bodySm,
+        color: colors.black,
       },
     },
     body2: {
@@ -93,6 +103,21 @@ export const lightTheme = createTheme({
       },
       "@media (max-width: 600px)": {
         fontSize: text.textSm,
+      },
+    },
+    subtitle1: {
+      fontSize: text.captionLg,
+      color: colors.black,
+      fontWeight: "500",
+      "@media (max-width: 960px)": {
+        fontSize: text.captionMd,
+        color: colors.black,
+        fontWeight: "500",
+      },
+      "@media (max-width: 600px)": {
+        fontSize: text.captionSm,
+        color: colors.black,
+        fontWeight: "500",
       },
     },
     caption: {
@@ -142,9 +167,11 @@ export const lightTheme = createTheme({
           fontSize: iconSizes.iconLg,
           "@media (max-width: 960px)": {
             fontSize: iconSizes.iconMd,
+            color: colors.black,
           },
           "@media (max-width: 600px)": {
             fontSize: iconSizes.iconSm,
+            color: colors.black,
           },
         },
       },
