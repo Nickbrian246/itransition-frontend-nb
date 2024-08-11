@@ -1,15 +1,19 @@
 "use client";
-import { Box, Typography, IconButton } from "@mui/material";
-import React, { useRef } from "react";
-import CarouselCard from "./card";
+import NavigateBeforeOutlinedIcon from "@mui/icons-material/NavigateBeforeOutlined";
+import NavigateNextOutlinedIcon from "@mui/icons-material/NavigateNextOutlined";
+import { Box, IconButton, Typography } from "@mui/material";
+import { useRef } from "react";
+import SwiperCore from "swiper";
+import { Navigation } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/swiper-bundle.css";
-import NavigateNextOutlinedIcon from "@mui/icons-material/NavigateNextOutlined";
-import NavigateBeforeOutlinedIcon from "@mui/icons-material/NavigateBeforeOutlined";
-import { colors } from "@/constants";
-import { Navigation } from "swiper/modules";
+import CarouselCard from "./card";
+
+import "swiper/css";
+import "swiper/css/pagination";
 
 export default function TagsCarousel() {
+  const swiperRef = useRef<SwiperCore>();
   const tags = [
     "Engineering",
     "Design",
@@ -20,45 +24,25 @@ export default function TagsCarousel() {
     "Engineering",
   ];
 
-  const prevRef = useRef<HTMLButtonElement | null>(null);
-  const nextRef = useRef<HTMLButtonElement | null>(null);
-
   return (
     <Box>
-      <Typography variant="h5">Discover</Typography>
-      <Box className="swiper-container" sx={{ position: "relative" }}>
+      <Typography sx={{ mb: "10px" }} variant="h5">
+        Discover
+      </Typography>
+      <Box
+        className="swiper-container"
+        sx={{ position: "relative", width: { xs: "280px", sm: "600px" } }}
+      >
         <Swiper
           modules={[Navigation]}
-          navigation={{
-            prevEl: prevRef.current,
-            nextEl: nextRef.current,
-          }}
-          onSwiper={(swiper) => {
-            if (
-              swiper.params.navigation &&
-              prevRef.current &&
-              nextRef.current
-            ) {
-              //@ts-ignore
-              swiper.params.navigation.prevEl = prevRef.current;
-              //@ts-ignore
-              swiper.params.navigation.nextEl = nextRef.current;
-              swiper.navigation.init();
-              swiper.navigation.update();
-            }
-          }}
-          spaceBetween={1}
-          slidesPerView={5}
+          slidesPerView={3}
           breakpoints={{
-            1024: {
-              slidesPerView: 3,
-            },
             600: {
-              slidesPerView: 2,
+              slidesPerView: 5,
             },
-            480: {
-              slidesPerView: 1,
-            },
+          }}
+          onBeforeInit={(swiper) => {
+            swiperRef.current = swiper;
           }}
           loop={true}
         >
@@ -68,31 +52,35 @@ export default function TagsCarousel() {
             </SwiperSlide>
           ))}
         </Swiper>
-
         <IconButton
-          ref={prevRef}
           sx={{
             position: "absolute",
-            top: "50%",
             left: -40,
+            top: "50%",
             transform: "translateY(-50%)",
-            zIndex: 10,
-            color: colors.black,
+            zIndex: 2,
+            display: {
+              xs: "none",
+              md: "flex",
+            },
           }}
+          onClick={() => swiperRef.current?.slidePrev()}
         >
           <NavigateBeforeOutlinedIcon />
         </IconButton>
-
         <IconButton
-          ref={nextRef}
           sx={{
             position: "absolute",
+            right: -40,
             top: "50%",
-            right: 0,
             transform: "translateY(-50%)",
-            zIndex: 10,
-            color: colors.black,
+            zIndex: 2,
+            display: {
+              xs: "none",
+              md: "flex",
+            },
           }}
+          onClick={() => swiperRef.current?.slideNext()}
         >
           <NavigateNextOutlinedIcon />
         </IconButton>

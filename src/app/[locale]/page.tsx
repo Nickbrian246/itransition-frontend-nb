@@ -25,8 +25,9 @@ export default async function Home({
         <Header />
         <section
           style={{
-            maxWidth: "800px",
-            alignSelf: "center",
+            maxWidth: "1000px",
+            display: "flex",
+            margin: "auto",
           }}
         >
           <TagsCarousel />

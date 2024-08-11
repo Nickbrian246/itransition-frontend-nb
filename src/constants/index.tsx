@@ -197,6 +197,25 @@ export const darkTheme = createTheme({
         fontSize: text.titleSm,
       },
     },
+    h5: {
+      color: colors.white,
+      fontWeight: "600",
+    },
+    subtitle1: {
+      fontSize: text.captionLg,
+      color: colors.black,
+      fontWeight: "500",
+      "@media (max-width: 960px)": {
+        fontSize: text.captionMd,
+        color: colors.black,
+        fontWeight: "500",
+      },
+      "@media (max-width: 600px)": {
+        fontSize: text.captionSm,
+        color: colors.black,
+        fontWeight: "500",
+      },
+    },
     body1: {
       fontSize: text.textLg,
       color: colors.white,
