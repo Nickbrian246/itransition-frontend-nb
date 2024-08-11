@@ -1,45 +1,15 @@
 "use client";
-import { Box, IconButton, Typography } from "@mui/material";
-import React from "react";
+import { Box, Typography, IconButton } from "@mui/material";
+import React, { useRef } from "react";
 import CarouselCard from "./card";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
-import Slider from "react-slick";
+import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/swiper-bundle.css";
 import NavigateNextOutlinedIcon from "@mui/icons-material/NavigateNextOutlined";
-import ArrowBackIosNewOutlinedIcon from "@mui/icons-material/ArrowBackIosNewOutlined";
+import NavigateBeforeOutlinedIcon from "@mui/icons-material/NavigateBeforeOutlined";
 import { colors } from "@/constants";
-export default function TagsCarousel() {
-  const settings = {
-    className: "slider variable-width",
-    dots: false,
-    infinite: true,
-    speed: 500,
-    slidesToShow: 6,
-    slidesToScroll: 1,
-    nextArrow: <SampleNextArrow />,
-    prevArrow: <SamplePrevArrow />,
+import { Navigation } from "swiper/modules";
 
-    responsive: [
-      {
-        breakpoint: 1024,
-        settings: {
-          slidesToShow: 3,
-        },
-      },
-      {
-        breakpoint: 600,
-        settings: {
-          slidesToShow: 2,
-        },
-      },
-      {
-        breakpoint: 480,
-        settings: {
-          slidesToShow: 1,
-        },
-      },
-    ],
-  };
+export default function TagsCarousel() {
   const tags = [
     "Engineering",
     "Design",
@@ -47,49 +17,86 @@ export default function TagsCarousel() {
     "Sales",
     "HR",
     "Finance",
-    "enginnering",
+    "Engineering",
   ];
+
+  const prevRef = useRef<HTMLButtonElement | null>(null);
+  const nextRef = useRef<HTMLButtonElement | null>(null);
+
   return (
     <Box>
       <Typography variant="h5">Discover</Typography>
-      <Box className="slider-container">
-        <Slider {...settings}>
+      <Box className="swiper-container" sx={{ position: "relative" }}>
+        <Swiper
+          modules={[Navigation]}
+          navigation={{
+            prevEl: prevRef.current,
+            nextEl: nextRef.current,
+          }}
+          onSwiper={(swiper) => {
+            if (
+              swiper.params.navigation &&
+              prevRef.current &&
+              nextRef.current
+            ) {
+              //@ts-ignore
+              swiper.params.navigation.prevEl = prevRef.current;
+              //@ts-ignore
+              swiper.params.navigation.nextEl = nextRef.current;
+              swiper.navigation.init();
+              swiper.navigation.update();
+            }
+          }}
+          spaceBetween={1}
+          slidesPerView={5}
+          breakpoints={{
+            1024: {
+              slidesPerView: 3,
+            },
+            600: {
+              slidesPerView: 2,
+            },
+            480: {
+              slidesPerView: 1,
+            },
+          }}
+          loop={true}
+        >
           {tags.map((tag, index) => (
-            <CarouselCard tagName={tag} itemId="2" key={tag} />
+            <SwiperSlide key={index}>
+              <CarouselCard tagName={tag} itemId="23" />
+            </SwiperSlide>
           ))}
-        </Slider>
+        </Swiper>
+
+        <IconButton
+          ref={prevRef}
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: -40,
+            transform: "translateY(-50%)",
+            zIndex: 10,
+            color: colors.black,
+          }}
+        >
+          <NavigateBeforeOutlinedIcon />
+        </IconButton>
+
+        <IconButton
+          ref={nextRef}
+          sx={{
+            position: "absolute",
+            top: "50%",
+            right: 0,
+            transform: "translateY(-50%)",
+            zIndex: 10,
+            color: colors.black,
+          }}
+        >
+          <NavigateNextOutlinedIcon />
+        </IconButton>
       </Box>
     </Box>
-  );
-}
-function SampleNextArrow(props) {
-  const { className, style, onClick } = props;
-  return (
-    <div
-      className={className}
-      style={{
-        display: "block",
-        background: `${colors.textBlueBolder}`,
-        borderRadius: "100%",
-        ...style,
-      }}
-      onClick={onClick}
-    />
-  );
-}
-
-function SamplePrevArrow(props) {
-  const { className, style, onClick } = props;
-  return (
-    <div
-      className={className}
-      style={{
-        display: "block",
-        background: `${colors.textBlueBolder}`,
-        borderRadius: "100%",
-        ...style,
-      }}
-      onClick={onClick}
-    />
   );
 }

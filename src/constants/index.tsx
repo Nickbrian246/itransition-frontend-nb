@@ -15,7 +15,7 @@ export const colors = {
   backGroundDarkModeGrayBox: "#242424",
   textGrayDarkMode: "#999999",
   textWhiteDarkMode: "#FFFFFF",
-  backGroundGray: "#e8edf4;",
+  backGroundGray: "#e8edf4",
 };
 
 export const text = {
