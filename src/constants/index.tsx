@@ -85,7 +85,7 @@ export const lightTheme = createTheme({
       fontWeight: "600",
     },
     body1: {
-      fontSize: text.bodyLg,
+      fontSize: text.textLg,
       color: colors.black,
       "@media (max-width: 960px)": {
         fontSize: text.bodyMd,
@@ -97,7 +97,8 @@ export const lightTheme = createTheme({
       },
     },
     body2: {
-      fontSize: text.textLg,
+      fontSize: text.textMd,
+      color: colors.black,
       "@media (max-width: 960px)": {
         fontSize: text.textMd,
       },
@@ -117,6 +118,21 @@ export const lightTheme = createTheme({
       "@media (max-width: 600px)": {
         fontSize: text.captionSm,
         color: colors.black,
+        fontWeight: "500",
+      },
+    },
+    subtitle2: {
+      fontSize: text.bodyLg,
+      color: colors.textBlue,
+      fontWeight: "500",
+      "@media (max-width: 960px)": {
+        fontSize: text.bodyMd,
+        color: colors.textBlue,
+        fontWeight: "500",
+      },
+      "@media (max-width: 600px)": {
+        fontSize: text.bodyMd,
+        color: colors.textBlue,
         fontWeight: "500",
       },
     },
@@ -213,6 +229,21 @@ export const darkTheme = createTheme({
       "@media (max-width: 600px)": {
         fontSize: text.captionSm,
         color: colors.black,
+        fontWeight: "500",
+      },
+    },
+    subtitle2: {
+      fontSize: text.bodyLg,
+      color: colors.white,
+      fontWeight: "500",
+      "@media (max-width: 960px)": {
+        fontSize: text.bodyMd,
+        color: colors.white,
+        fontWeight: "500",
+      },
+      "@media (max-width: 600px)": {
+        fontSize: text.bodyMd,
+        color: colors.white,
         fontWeight: "500",
       },
     },
