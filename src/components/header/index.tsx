@@ -1,10 +1,25 @@
+"use client";
 import { Box, Typography } from "@mui/material";
 import ThemeButton from "./components/theme-button";
 import ComputerOutlinedIcon from "@mui/icons-material/ComputerOutlined";
 import ChangeLanguageButton from "./components/language-button";
 import MenuButton from "./components/menu-button";
+import { useAppDispatch, useAppSelector } from "@/hooks/use-redux/redux";
+import { useEffect } from "react";
+import { getAccessToken } from "@/utils/localstorage/localstorage";
+import { getUser } from "@/store/slices/auth/auth-thunk";
 
 export default function Header() {
+  const user = useAppSelector((state) => state.user);
+  const dispatch = useAppDispatch();
+  useEffect(() => {
+    const token = getAccessToken();
+
+    if (token && !user.isAuth) {
+      console.log("entrando");
+      dispatch(getUser());
+    }
+  }, []);
   return (
     <header
       style={{

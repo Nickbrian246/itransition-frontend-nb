@@ -13,7 +13,9 @@ export default function Collections() {
         },
       }}
     >
-      <Typography variant="h5">Latest collections</Typography>
+      <Typography mb={1} variant="h5">
+        Latest collections
+      </Typography>
       <Box
         sx={{
           width: "100%",

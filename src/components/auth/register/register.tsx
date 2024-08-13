@@ -6,12 +6,11 @@ import {
   CustomPasswordField,
   PasswordRules,
 } from "@/components/custom-components";
-import { colors } from "@/constants";
 import { usePasswordRules } from "@/hooks/use-password-rules/use-password-rules";
 import { ApiFailureResponse } from "@/types/api/api-response-interface";
 
 import { Box, Button, FormHelperText, TextField } from "@mui/material";
-import { FormEventHandler, useState } from "react";
+import { FormEventHandler, useEffect, useState } from "react";
 import { ZodError } from "zod";
 
 import { RegisterUser, RegisterUserSchema } from "@/validations";
@@ -19,10 +18,22 @@ import { Typography } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { fields } from "./utils/fields";
 import CustomContainer from "@/components/custom-components/custom-container";
+import { registerUser } from "@/store/slices/auth/auth-thunk";
+import { useAppDispatch, useAppSelector } from "@/hooks/use-redux/redux";
+import { cleanAuthErrorMessage } from "@/store/slices/auth/auth-slice";
 
 export default function Register() {
   const [isHidePassword, setIsHidePassword] = useState(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [errors, setErrors] = useState<ZodError | null>(null);
+  const dispatch = useAppDispatch();
+  const authError = useAppSelector((state) => state.user.authError);
+  const [userData, setUserData] = useState<RegisterUser>({
+    firstName: "",
+    lastName: "",
+    email: "",
+    password: "",
+  });
   const {
     hasMinLength,
     isDirty,
@@ -32,20 +43,24 @@ export default function Register() {
     validatePassword,
     setIsDirty,
   } = usePasswordRules();
-  const [errors, setErrors] = useState<ZodError | null>(null);
-  const [userData, setUserData] = useState<RegisterUser>({
-    firstName: "",
-    lastName: "",
-    email: "",
-    password: "",
-  });
-
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const { t } = useTranslation();
 
+  useEffect(() => {
+    if (!authError.isActive) return;
+    setErrorMessage(authError.message);
+
+    const timer = setTimeout(() => {
+      dispatch(cleanAuthErrorMessage());
+    }, authError.duration);
+
+    return () => clearTimeout(timer);
+  }, [authError.isActive, authError.message, authError.duration, dispatch]);
+
   const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const name = e.target.name.toLowerCase();
+    const name = e.target.name;
     const value = e.target.value;
+
     if (name === "password") validatePassword(value);
     setUserData((prev) => {
       return {
@@ -68,6 +83,7 @@ export default function Register() {
     setIsLoading(true);
     try {
       const user = RegisterUserSchema.parse(userData);
+      dispatch(registerUser(user));
 
       setIsLoading(false);
     } catch (error) {
@@ -78,8 +94,11 @@ export default function Register() {
         const err = error as ApiFailureResponse;
         setErrorMessage(err.message);
       }
+    } finally {
+      setIsLoading(false);
     }
   };
+
   return (
     <section
       style={{
@@ -134,28 +153,26 @@ export default function Register() {
                 {t(field.name)}
               </CustomInputLabel>
               <TextField
-                required={true}
                 type={field.htmlFor === "Email" ? "email" : "text"}
                 onChange={handleInput}
-                name={field.name}
+                name={field.fieldName}
                 id={field.htmlFor}
                 placeholder={t(field.placeholder)}
               />
 
               {errors &&
                 errors.issues
-                  .filter((err) => err.path[0] === field.name.toLowerCase())
+                  .filter((err) => err.path[0] === field.fieldName)
                   .map((e) => (
                     <FormHelperText
                       key={e.message}
                       id={field.htmlFor}
                       sx={{
-                        color: colors.redAlert,
                         fontSize: "12px",
                         margin: "0",
                       }}
                     >
-                      {e.message}
+                      {t(`${e.message}`)}
                     </FormHelperText>
                   ))}
             </Box>
