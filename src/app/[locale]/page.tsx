@@ -4,7 +4,7 @@ import TranslationsProvider from "@/components/translations-provider/translation
 import initTranslations from "../i18n";
 import Collections from "@/components/collections";
 import Items from "@/components/items";
-const i18nNamespaces = ["home"];
+const i18nNamespaces = ["home", "menu-options", "feed"];
 
 export default async function Home({
   params: { locale },

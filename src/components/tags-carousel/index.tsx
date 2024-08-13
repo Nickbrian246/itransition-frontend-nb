@@ -11,9 +11,11 @@ import CarouselCard from "./card";
 
 import "swiper/css";
 import "swiper/css/pagination";
+import { useTranslation } from "react-i18next";
 
 export default function TagsCarousel() {
   const swiperRef = useRef<SwiperCore>();
+  const { t } = useTranslation();
   const tags = [
     "Engineering",
     "Design",
@@ -27,7 +29,7 @@ export default function TagsCarousel() {
   return (
     <Box>
       <Typography sx={{ mb: "10px" }} variant="h5">
-        Discover
+        {t("feed:discover")}
       </Typography>
       <Box
         className="swiper-container"
