@@ -38,7 +38,16 @@ export default function Header() {
         </Link>
         <ComputerOutlinedIcon sx={{ fontSize: "30px" }} />
       </Box>
-      <Box sx={{ display: "flex", alignItems: "center", gap: "15px" }}>
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          gap: {
+            xs: "5px",
+            md: "15px",
+          },
+        }}
+      >
         {!isAuth && (
           <>
             <Link style={{ textDecoration: "none" }} href={"/auth/login"}>
