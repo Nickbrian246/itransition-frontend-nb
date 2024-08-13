@@ -15,11 +15,10 @@ export default function Header() {
   useEffect(() => {
     const token = getAccessToken();
 
-    if (token && !user.isAuth) {
-      console.log("entrando");
+    if (token && !user.user.isAuth) {
       dispatch(getUser());
     }
-  }, []);
+  }, [dispatch, user.user.isAuth]);
   return (
     <header
       style={{

@@ -27,7 +27,7 @@ export const loginUser = createAsyncThunk<
   ApiSuccessResponseWithMetaData<UserApiResponse, AccessToken>,
   LoginUser,
   { rejectValue: string }
->("auth/register", async (userData, { fulfillWithValue, rejectWithValue }) => {
+>("auth/login", async (userData, { fulfillWithValue, rejectWithValue }) => {
   try {
     const { data } = await axios.post<
       ApiSuccessResponseWithMetaData<UserApiResponse, AccessToken>
@@ -35,11 +35,7 @@ export const loginUser = createAsyncThunk<
 
     return fulfillWithValue(data);
   } catch (error: any) {
-    console.log(error);
-
-    return rejectWithValue(
-      error.response?.data?.message || "Error desconocido"
-    );
+    return rejectWithValue(error.response.data.message as string);
   }
 });
 

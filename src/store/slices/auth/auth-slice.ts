@@ -1,6 +1,6 @@
 import { createSlice, createEntityAdapter } from "@reduxjs/toolkit";
 import { User } from "@/entities/user";
-import { getUser, registerUser } from "./auth-thunk";
+import { getUser, loginUser, registerUser } from "./auth-thunk";
 import { setAccessToken } from "@/utils/localstorage/localstorage";
 export interface userState extends Omit<User, "password" | "lastName"> {
   isAuth: boolean;
@@ -44,7 +44,6 @@ export const userSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(registerUser.pending, () => {})
       .addCase(registerUser.fulfilled, (state, { payload }) => {
         setAccessToken(payload.medaData.access_token);
         state.user = { ...payload.data, isAuth: true };
@@ -54,6 +53,13 @@ export const userSlice = createSlice({
           isActive: true,
           message: payload ?? "",
         };
+      })
+
+      .addCase(loginUser.fulfilled, (state, { payload }) => {
+        state.user = { ...payload.data, isAuth: true };
+      })
+      .addCase(loginUser.rejected, (state, { payload }) => {
+        state.authError = { isActive: true, message: payload ?? "" };
       })
 
       .addCase(getUser.fulfilled, (state, { payload }) => {

@@ -8,6 +8,7 @@ export function usePasswordRules() {
     useState<boolean>(false);
   const [atLeastOneUppercase, setAtLeastOneUppercase] =
     useState<boolean>(false);
+  const [atLeastOneNumber, SetAtLeastOneNumber] = useState<boolean>(false);
 
   const validatePassword = (password: string) => {
     setHasMinLength(password.length > 8);
@@ -17,6 +18,8 @@ export function usePasswordRules() {
     setHasOneEspecialCharacter(/[!@#$%^&*(),.?":{}|<>]/.test(password));
 
     setAtLeastOneUppercase(/[A-Z]/.test(password));
+
+    SetAtLeastOneNumber(/[0-9]/.test(password));
   };
 
   return {
@@ -27,5 +30,6 @@ export function usePasswordRules() {
     hasNoWhiteSpace,
     hasOneEspecialCharacter,
     atLeastOneUppercase,
+    atLeastOneNumber,
   };
 }

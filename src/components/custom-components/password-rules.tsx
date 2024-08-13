@@ -9,13 +9,14 @@ interface Props {
   hasNoWhiteSpace: boolean;
   hasOneEspecialCharacter: boolean;
   atLeastOneUppercase: boolean;
+  atLeastOneNumber: boolean;
 }
 export function PasswordRules({
   hasMinLength,
   isDirty,
   atLeastOneUppercase,
-  hasNoWhiteSpace,
   hasOneEspecialCharacter,
+  atLeastOneNumber,
 }: Props) {
   const { t } = useTranslation();
   return (
@@ -73,6 +74,22 @@ export function PasswordRules({
           }
         >
           * {t("password-rules:lengthMin")}
+          {hasMinLength && (
+            <CheckCircleOutlineIcon sx={{ fontSize: "20px", color: "green" }} />
+          )}
+        </Typography>
+        <Typography
+          style={{ display: "flex", gap: "5px" }}
+          variant="caption"
+          color={
+            isDirty
+              ? atLeastOneNumber
+                ? `${colors.greenSuccess}`
+                : "error"
+              : "inherit"
+          }
+        >
+          * {t("password-rules:atLeastOneNumber")}
           {hasMinLength && (
             <CheckCircleOutlineIcon sx={{ fontSize: "20px", color: "green" }} />
           )}

@@ -1,6 +1,6 @@
 "use client";
 import { colors } from "@/constants";
-import { useAppSelector } from "@/hooks/use-redux/redux";
+import { useAppSelector, useAppDispatch } from "@/hooks/use-redux/redux";
 import ImportContactsOutlinedIcon from "@mui/icons-material/ImportContactsOutlined";
 import LoginOutlinedIcon from "@mui/icons-material/LoginOutlined";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
@@ -10,10 +10,13 @@ import Divider from "@mui/material/Divider";
 import { StyledMenu } from "./components/styled-menu";
 import MenuItem from "@mui/material/MenuItem";
 import { useState } from "react";
+import { cleanAuth } from "@/store/slices/auth/auth-slice";
+import { clearAccessToken } from "@/utils/localstorage/localstorage";
 
 export default function MenuButton() {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const theme = useAppSelector((state) => state.theme.theme);
+  const dispatch = useAppDispatch();
 
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -21,6 +24,9 @@ export default function MenuButton() {
   };
   const handleClose = () => {
     setAnchorEl(null);
+  };
+  const handleLogOut = () => {
+    dispatch(cleanAuth());
   };
   const bg =
     theme === "DARK" ? colors.backGroundDarkModeGrayBox : colors.backGroundGray;
@@ -55,7 +61,14 @@ export default function MenuButton() {
           My collections
         </MenuItem>
         <Divider sx={{ my: 0.5 }} />
-        <MenuItem onClick={handleClose} disableRipple>
+        <MenuItem
+          onClick={() => {
+            handleClose();
+            handleLogOut();
+            clearAccessToken();
+          }}
+          disableRipple
+        >
           <LoginOutlinedIcon />
           Log out
         </MenuItem>

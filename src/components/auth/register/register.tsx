@@ -21,6 +21,8 @@ import CustomContainer from "@/components/custom-components/custom-container";
 import { registerUser } from "@/store/slices/auth/auth-thunk";
 import { useAppDispatch, useAppSelector } from "@/hooks/use-redux/redux";
 import { cleanAuthErrorMessage } from "@/store/slices/auth/auth-slice";
+import Router from "next/router";
+import { useRouter } from "next/navigation";
 
 export default function Register() {
   const [isHidePassword, setIsHidePassword] = useState(false);
@@ -28,6 +30,7 @@ export default function Register() {
   const [errors, setErrors] = useState<ZodError | null>(null);
   const dispatch = useAppDispatch();
   const authError = useAppSelector((state) => state.user.authError);
+  const router = useRouter();
   const [userData, setUserData] = useState<RegisterUser>({
     firstName: "",
     lastName: "",
@@ -42,6 +45,7 @@ export default function Register() {
     hasOneEspecialCharacter,
     validatePassword,
     setIsDirty,
+    atLeastOneNumber,
   } = usePasswordRules();
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const { t } = useTranslation();
@@ -86,6 +90,7 @@ export default function Register() {
       dispatch(registerUser(user));
 
       setIsLoading(false);
+      router.push("/");
     } catch (error) {
       setIsLoading(false);
       if (error instanceof ZodError) {
@@ -131,7 +136,7 @@ export default function Register() {
         </Typography>
         {errorMessage && (
           <Typography textAlign="center" variant="caption" color="red">
-            {errorMessage}
+            {t(`${errorMessage}`)}
           </Typography>
         )}
 
@@ -201,6 +206,7 @@ export default function Register() {
               atLeastOneUppercase={atLeastOneUppercase}
               hasNoWhiteSpace={hasNoWhiteSpace}
               hasOneEspecialCharacter={hasOneEspecialCharacter}
+              atLeastOneNumber={atLeastOneNumber}
             />
           </Box>
 
