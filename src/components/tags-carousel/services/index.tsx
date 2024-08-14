@@ -10,6 +10,6 @@ export async function getTags(): Promise<ApiSuccessResponseWithData<Tag[]>> {
     );
     return data.data;
   } catch (error) {
-    throw error;
+    throw new Error(`${error}`);
   }
 }

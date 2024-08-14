@@ -37,7 +37,7 @@ export default function TagsCarousel({ tags }: Props) {
         >
           {tags.map((tag) => (
             <SwiperSlide key={tag.id}>
-              <CarouselCard tagName={tag.name} itemId={tag.id} />
+              <CarouselCard tagName={tag.name} id={tag.id} />
             </SwiperSlide>
           ))}
         </Swiper>

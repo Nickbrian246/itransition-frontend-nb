@@ -2,14 +2,19 @@ import React from "react";
 import Header from "@/components/header";
 import initTranslations from "@/app/i18n";
 import TranslationsProvider from "@/components/translations-provider/translations-provider";
-import Item from "./_components/item";
+import { getItemsByTagId } from "./_services";
+import Items from "./_components";
+
 const i18nNamespaces = ["auth", "commons", "password-rules", "menu-options"];
 export default async function Page({
-  params: { locale },
+  params: { locale, slug },
 }: {
-  params: { locale: string };
+  params: { locale: string; slug: string };
 }) {
   const { t, resources } = await initTranslations(locale, i18nNamespaces);
+
+  const { data } = await getItemsByTagId(slug);
+
   return (
     <TranslationsProvider
       namespaces={i18nNamespaces}
@@ -26,7 +31,7 @@ export default async function Page({
           gap: "40px",
         }}
       >
-        <Item />
+        <Items slug={slug} />
       </section>
     </TranslationsProvider>
   );

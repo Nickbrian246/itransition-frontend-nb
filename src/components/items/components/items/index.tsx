@@ -16,6 +16,7 @@ export default function Items({ items }: Props) {
           date={item.updatedAt}
           title={item.name}
           key={item.id}
+          id={item.id}
         />
       ))}
     </>

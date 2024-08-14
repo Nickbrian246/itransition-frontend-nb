@@ -2,8 +2,8 @@ import { TypeCustomField } from "@/entities/custom-field";
 import React from "react";
 import BooleanField from "./components/boolean-field";
 import IntegerField from "./components/integer-field";
-import DateField from "./components/date-field";
 import FieldString from "./components/string-field";
+import DateField from "./components/date-field";
 interface Props {
   type: TypeCustomField;
 }

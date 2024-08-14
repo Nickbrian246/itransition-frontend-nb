@@ -30,6 +30,7 @@ export default async function Page({
         style={{ maxWidth: "1000px", margin: "auto", marginTop: "40px" }}
       >
         <Collection
+          category={category}
           date={updatedAt}
           description={description}
           id={id}

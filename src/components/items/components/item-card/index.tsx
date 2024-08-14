@@ -4,11 +4,13 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { formatDistanceToNow, formatDistanceToNowStrict } from "date-fns";
 import { es } from "date-fns/locale"; // Para español
+import Link from "next/link";
 interface Props {
   title: string;
   authorName: string;
   collectionName: string;
   date: string;
+  id: string;
 }
 
 export default function ItemCard({
@@ -16,6 +18,7 @@ export default function ItemCard({
   collectionName,
   date,
   title,
+  id,
 }: Props) {
   const { t } = useTranslation();
 
@@ -25,34 +28,36 @@ export default function ItemCard({
     locale: es,
   });
   return (
-    <Card
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        padding: "10px",
-      }}
-    >
-      <Box
+    <Link style={{ textDecoration: "none" }} href={`/item/${id}`}>
+      <Card
         sx={{
           display: "flex",
           flexDirection: "column",
-          justifyContent: "space-between",
+          padding: "10px",
         }}
       >
-        <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-          <Typography variant="subtitle2">{title}</Typography>
-          <Typography variant="caption">
-            {t("commons:author")}: {authorName}
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "space-between",
+          }}
+        >
+          <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+            <Typography variant="subtitle2">{title}</Typography>
+            <Typography variant="caption">
+              {t("commons:author")}: {authorName}
+            </Typography>
+          </Box>
+          <Typography variant="body2">
+            {" "}
+            {t("commons:collection")}: {collectionName}
           </Typography>
         </Box>
-        <Typography variant="body2">
-          {" "}
-          {t("commons:collection")}: {collectionName}
-        </Typography>
-      </Box>
-      <Box sx={{ display: "flex", justifyContent: "end" }}>
-        <Typography variant="caption">{tiempoTranscurrido}</Typography>
-      </Box>
-    </Card>
+        <Box sx={{ display: "flex", justifyContent: "end" }}>
+          <Typography variant="caption">{tiempoTranscurrido}</Typography>
+        </Box>
+      </Card>
+    </Link>
   );
 }

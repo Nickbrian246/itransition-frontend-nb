@@ -11,6 +11,6 @@ export async function getLatestItems(): Promise<
     );
     return data;
   } catch (error) {
-    throw error;
+    throw new Error(`${error}`);
   }
 }

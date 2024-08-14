@@ -1,11 +1,12 @@
 "use client";
 import React from "react";
-import CollectionCard from "@/components/collections/components/collection-card";
 import { Card, Box, Typography } from "@mui/material";
 import { formatDistanceToNowStrict } from "date-fns";
 import { es } from "date-fns/locale";
 import Image from "next/image";
 import foodImage from "../../../../../../../public/assets/food.jpg";
+import { Categories } from "@/entities/categories";
+import CategoryCard from "@/components/category-card";
 interface Props {
   title: string;
   description: string;
@@ -13,6 +14,7 @@ interface Props {
   date: string;
   imgId: string;
   id: string;
+  category: Categories;
 }
 export default function Collection({
   date,
@@ -20,6 +22,7 @@ export default function Collection({
   imgId,
   itemsCount,
   title,
+  category,
   id,
 }: Props) {
   const fechaPublicacion = new Date(date);
@@ -63,6 +66,7 @@ export default function Collection({
         <Box>
           <Typography variant="h6">{title}</Typography>
           <Typography variant="body2">{description}</Typography>
+          <CategoryCard title={category.name} id={category.id} />
         </Box>
         <Box sx={{ display: "flex", gap: "10px", justifyContent: "flex-end" }}>
           <Typography variant="caption"> {itemsCount} items</Typography>
