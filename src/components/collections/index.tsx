@@ -3,6 +3,8 @@ import { Box, Typography } from "@mui/material";
 import React from "react";
 import CollectionCard from "./components/collection-card";
 import { useTranslation } from "react-i18next";
+import CollectionCardSkeleton from "../skeletons/collection-card";
+import Skeletons from "./components/skeleton";
 export default function Collections() {
   const { t } = useTranslation();
   return (
@@ -28,6 +30,7 @@ export default function Collections() {
       >
         <CollectionCard />
         <CollectionCard />
+        <Skeletons />
       </Box>
     </Box>
   );
