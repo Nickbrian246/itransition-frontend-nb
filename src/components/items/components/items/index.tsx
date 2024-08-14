@@ -5,7 +5,7 @@ import { Item } from "@/entities/item";
 interface Props {
   items: Item[];
 }
-
+//TODO: FIND A WAY TO PASS LOCALE TO DATE FNS
 export default function Items({ items }: Props) {
   return (
     <>

@@ -3,7 +3,27 @@ import { Box, Card, Typography } from "@mui/material";
 import React from "react";
 import Image from "next/image";
 import foodImage from "../../../../../public/assets/food.jpg";
-export default function CollectionCard() {
+import { formatDistanceToNowStrict } from "date-fns";
+import { es } from "date-fns/locale";
+interface Props {
+  title: string;
+  description: string;
+  itemsCount: number;
+  date: string;
+  imgId: string;
+}
+export default function CollectionCard({
+  date,
+  description,
+  imgId,
+  itemsCount,
+  title,
+}: Props) {
+  const fechaPublicacion = new Date(date);
+  const tiempoTranscurrido = formatDistanceToNowStrict(fechaPublicacion, {
+    addSuffix: true,
+    locale: es,
+  });
   return (
     <Card
       sx={{
@@ -38,14 +58,12 @@ export default function CollectionCard() {
         }}
       >
         <Box>
-          <Typography variant="subtitle2">Organize your life 2022</Typography>
-          <Typography variant="body2">
-            Get ready for the year with our planners, journals and more
-          </Typography>
+          <Typography variant="subtitle2">{title}</Typography>
+          <Typography variant="body2">{description}</Typography>
         </Box>
         <Box sx={{ display: "flex", gap: "10px", justifyContent: "flex-end" }}>
-          <Typography variant="caption"> 6 items</Typography>
-          <Typography variant="caption"> 1hour ago</Typography>
+          <Typography variant="caption"> {itemsCount} items</Typography>
+          <Typography variant="caption"> {tiempoTranscurrido} </Typography>
         </Box>
       </Box>
     </Card>
