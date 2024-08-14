@@ -15,6 +15,7 @@ export default function LatestCollections({ collections }: Props) {
           imgId="hello"
           title={collection.name}
           key={collection.id}
+          id={collection.id}
         />
       ))}
     </>
