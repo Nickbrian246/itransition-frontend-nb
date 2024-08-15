@@ -16,7 +16,7 @@ import ThemeButton from "../theme-button";
 import { StyledMenu } from "./components/styled-menu";
 import ChangeLanguage from "../language-button";
 import { useTranslation } from "react-i18next";
-
+import Link from "next/link";
 export default function MenuButton() {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const theme = useAppSelector((state) => state.theme.theme);
@@ -80,9 +80,14 @@ export default function MenuButton() {
               <PersonOutlineOutlinedIcon />
               {t("menu-options:myProfile")}
             </MenuItem>
-            <MenuItem onClick={handleClose} disableRipple>
-              <ImportContactsOutlinedIcon />
-              {t("menu-options:myCollections")}
+            <MenuItem disableRipple>
+              <Link
+                style={{ textDecoration: "none", color: "inherit" }}
+                href={"/my-collections"}
+              >
+                <ImportContactsOutlinedIcon />
+                {t("menu-options:myCollections")}
+              </Link>
             </MenuItem>
             <Divider sx={{ my: 0.5 }} />
           </>

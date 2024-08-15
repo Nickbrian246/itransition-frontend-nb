@@ -45,7 +45,7 @@ export const userSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(registerUser.fulfilled, (state, { payload }) => {
-        setAccessToken(payload.medaData.access_token);
+        setAccessToken(payload.metaData.access_token);
         state.user = { ...payload.data, isAuth: true };
       })
       .addCase(registerUser.rejected, (state, { payload }) => {
@@ -56,6 +56,7 @@ export const userSlice = createSlice({
       })
 
       .addCase(loginUser.fulfilled, (state, { payload }) => {
+        setAccessToken(payload.metaData.access_token);
         state.user = { ...payload.data, isAuth: true };
       })
       .addCase(loginUser.rejected, (state, { payload }) => {

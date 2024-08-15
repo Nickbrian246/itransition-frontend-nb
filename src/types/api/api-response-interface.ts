@@ -6,7 +6,7 @@ export interface ApiFailureResponse {
 
 export interface ApiSuccessResponseWithMetaData<T, V> {
   data: T;
-  medaData: V;
+  metaData: V;
 }
 export interface ApiSuccessResponseWithData<T> {
   data: T;
