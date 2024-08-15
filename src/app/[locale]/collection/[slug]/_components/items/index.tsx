@@ -14,6 +14,7 @@ export default function Items({ items }: Props) {
         <ItemCard
           authorName={item.author.firstName}
           key={item.id}
+          id={item.id}
           collectionName={item.collection.name}
           date={item.updatedAt}
           title={item.name}
