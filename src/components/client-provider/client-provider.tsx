@@ -11,7 +11,7 @@ export default function ClientComponent({
   children: Readonly<ReactNode>;
 }) {
   useEffect(() => {
-    const token = getAccessToken();
+    const token = localStorage.getItem("access_token");
     axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
   }, []);
   return (
