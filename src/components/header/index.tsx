@@ -18,8 +18,6 @@ export default function Header() {
     const token = getAccessToken();
 
     if (token && !isAuth) {
-      console.log("entrando");
-
       dispatch(getUser());
     }
   }, [dispatch, isAuth]);
