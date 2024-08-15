@@ -14,23 +14,42 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { ChangeEvent, FormEventHandler, useState } from "react";
+import { ChangeEvent, FormEventHandler, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ZodError } from "zod";
 import { LogInUserSchema, LoginUser } from "@/validations";
 import { ApiFailureResponse } from "@/types/api/api-response-interface";
 import CustomContainer from "@/components/custom-components/custom-container";
+import { useAppDispatch, useAppSelector } from "@/hooks/use-redux/redux";
+import { loginUser } from "@/store/slices/auth/auth-thunk";
+import { cleanAuthErrorMessage } from "@/store/slices/auth/auth-slice";
+import { useRouter } from "next/navigation";
 
 export default function Login() {
   const [hidePassword, setHidePassword] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [errors, setErrors] = useState<ZodError | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const dispatch = useAppDispatch();
+  const router = useRouter();
   const [userData, setUserData] = useState<LoginUser>({
     email: "",
     password: "",
   });
+  const { isActive, message, duration } = useAppSelector(
+    (state) => state.user.authError
+  );
   const { t } = useTranslation();
+
+  useEffect(() => {
+    if (!isActive) return;
+    setErrorMessage(message);
+    const timer = setTimeout(() => {
+      dispatch(cleanAuthErrorMessage());
+    }, duration);
+
+    return () => clearTimeout(timer);
+  }, [dispatch, message, isActive, duration]);
 
   const handleClickShowPassword = () => setHidePassword((show) => !show);
 
@@ -56,8 +75,9 @@ export default function Login() {
     setIsLoading(true);
     try {
       const data = LogInUserSchema.parse(userData);
-
+      dispatch(loginUser(data));
       setIsLoading(false);
+      router.push("/");
     } catch (error) {
       setIsLoading(false);
       if (error instanceof ZodError) {
@@ -99,7 +119,7 @@ export default function Login() {
         </Typography>
         {errorMessage && (
           <CustomText textAlign="center" textSize="textSm" textColor="redAlert">
-            {errorMessage}
+            {t(`${errorMessage}`)}
           </CustomText>
         )}
         <form

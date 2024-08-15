@@ -16,6 +16,7 @@ export const colors = {
   textGrayDarkMode: "#999999",
   textWhiteDarkMode: "#FFFFFF",
   backGroundGray: "#e8edf4",
+  textErrorDarkMode: "#ef6c00",
 };
 
 export const text = {
@@ -192,6 +193,13 @@ export const lightTheme = createTheme({
         },
       },
     },
+    MuiFormHelperText: {
+      styleOverrides: {
+        root: {
+          color: colors.redAlert,
+        },
+      },
+    },
   },
 });
 
@@ -307,6 +315,13 @@ export const darkTheme = createTheme({
           "@media (max-width: 600px)": {
             fontSize: iconSizes.iconSm,
           },
+        },
+      },
+    },
+    MuiFormHelperText: {
+      styleOverrides: {
+        root: {
+          color: colors.textErrorDarkMode,
         },
       },
     },

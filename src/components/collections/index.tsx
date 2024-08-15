@@ -1,8 +1,24 @@
 "use client";
 import { Box, Typography } from "@mui/material";
-import React from "react";
-import CollectionCard from "./components/collection-card";
+import React, { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import LatestCollections from "./components/collections/latest-collections";
+import Skeletons from "./components/skeleton";
+import { getLatestCollections } from "./services";
+import { Collections as collectionInterface } from "@/entities/collections";
 export default function Collections() {
+  const [collections, setCollections] = useState<collectionInterface[] | null>(
+    null
+  );
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const { t } = useTranslation();
+
+  useEffect(() => {
+    getLatestCollections()
+      .then((res) => setCollections(res.data))
+      .catch((err) => console.log(err))
+      .finally(() => setIsLoading(false));
+  }, []);
   return (
     <Box
       sx={{
@@ -13,7 +29,9 @@ export default function Collections() {
         },
       }}
     >
-      <Typography variant="h5">Latest collections</Typography>
+      <Typography mb={1} variant="h5">
+        {t("feed:latestCollections")}
+      </Typography>
       <Box
         sx={{
           width: "100%",
@@ -22,8 +40,11 @@ export default function Collections() {
           gap: "20px",
         }}
       >
-        <CollectionCard />
-        <CollectionCard />
+        {isLoading || collections === null ? (
+          <Skeletons />
+        ) : (
+          <LatestCollections collections={collections} />
+        )}
       </Box>
     </Box>
   );

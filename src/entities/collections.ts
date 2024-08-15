@@ -1,6 +1,11 @@
+import { Item } from "./item";
+import { Categories } from "./categories";
 export interface Collections {
   name: string;
   description: string;
-  category: string;
+  category: Categories;
   imageId?: string;
+  id: string;
+  updatedAt: string;
+  items?: Item[];
 }

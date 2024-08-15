@@ -4,7 +4,7 @@ import initTranslations from "@/app/i18n";
 import TranslationsProvider from "@/components/translations-provider/translations-provider";
 import Header from "@/components/header";
 
-const i18nNamespaces = ["auth", "commons", "password-rules"];
+const i18nNamespaces = ["auth", "commons", "password-rules", "menu-options"];
 export default async function Page({
   params: { locale },
 }: {

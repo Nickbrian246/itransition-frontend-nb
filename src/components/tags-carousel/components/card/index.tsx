@@ -3,12 +3,13 @@ import { Typography } from "@mui/material";
 import Link from "next/link";
 import React from "react";
 import { colors } from "@/constants";
+import { id } from "date-fns/locale";
 
 interface Props {
   tagName: string;
-  itemId: string;
+  id: string;
 }
-export default function CarouselCard({ itemId, tagName }: Props) {
+export default function CarouselCard({ id, tagName }: Props) {
   return (
     <Link
       style={{
@@ -19,7 +20,7 @@ export default function CarouselCard({ itemId, tagName }: Props) {
         width: "fit-content",
         borderRadius: "30px",
       }}
-      href={"/"}
+      href={`/tag/${id}`}
     >
       <Typography variant="subtitle1">{tagName}</Typography>
     </Link>

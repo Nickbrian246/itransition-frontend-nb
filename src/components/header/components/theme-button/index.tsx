@@ -4,8 +4,14 @@ import { useAppDispatch, useAppSelector } from "@/hooks/use-redux/redux";
 import { setTheme } from "@/store/slices/theme/theme-slice";
 import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
 import WbSunnyOutlinedIcon from "@mui/icons-material/WbSunnyOutlined";
+import MenuItem from "@mui/material/MenuItem";
+import { useTranslation } from "react-i18next";
 
-export default function ThemeButton() {
+interface Props {
+  handleClose: () => void;
+}
+export default function ThemeButton({ handleClose }: Props) {
+  const { t } = useTranslation();
   const theme = useAppSelector((state) => state.theme.theme);
   const dispatch = useAppDispatch();
 
@@ -14,14 +20,17 @@ export default function ThemeButton() {
   };
 
   return (
-    <CustomIconButton
-      onClick={handleClick}
-      sx={{
-        borderRadius: "30%",
+    <MenuItem
+      onClick={() => {
+        handleClick();
+        handleClose();
       }}
       title="change theme "
     >
       {theme === "DARK" ? <WbSunnyOutlinedIcon /> : <DarkModeOutlinedIcon />}
-    </CustomIconButton>
+      {theme === "DARK"
+        ? t("menu-options:lightMode")
+        : t("menu-options:darkMode")}
+    </MenuItem>
   );
 }

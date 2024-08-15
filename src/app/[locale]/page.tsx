@@ -3,7 +3,8 @@ import TagsCarousel from "@/components/tags-carousel";
 import TranslationsProvider from "@/components/translations-provider/translations-provider";
 import initTranslations from "../i18n";
 import Collections from "@/components/collections";
-const i18nNamespaces = ["home"];
+import Items from "@/components/items";
+const i18nNamespaces = ["home", "menu-options", "feed", "commons"];
 
 export default async function Home({
   params: { locale },
@@ -37,9 +38,13 @@ export default async function Home({
           style={{
             maxWidth: "1200px",
             margin: "auto",
+            display: "flex",
+            flexDirection: "column",
+            gap: "40px",
           }}
         >
           <Collections />
+          <Items />
         </section>
       </section>
     </TranslationsProvider>
