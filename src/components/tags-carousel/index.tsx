@@ -17,15 +17,6 @@ export default function TagsCarousel() {
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const { t } = useTranslation();
-  // const tags = [
-  //   "Engineering",
-  //   "Design",
-  //   "Marketing",
-  //   "Sales",
-  //   "HR",
-  //   "Finance",
-  //   "Engineering",
-  // ];
 
   useEffect(() => {
     getTags()

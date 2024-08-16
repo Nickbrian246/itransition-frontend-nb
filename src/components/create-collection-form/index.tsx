@@ -1,10 +1,26 @@
-import { Box, TextField, Autocomplete, Typography } from "@mui/material";
-import React, { ChangeEvent, useState } from "react";
+import {
+  Box,
+  TextField,
+  Autocomplete,
+  Typography,
+  Button,
+} from "@mui/material";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import { CustomInputLabel } from "../custom-components";
-import { CreateCollection } from "./interfaces";
+import { CreateCollection as CreateCollectionInterface } from "./interfaces";
 import AutoComplete from "./components/auto-complete";
 import CustomFields from "./components/custom-fields";
 import { useTranslation } from "react-i18next";
+import { Custom } from "./interfaces";
+import FileUploader from "./components/file-uploader";
+import { CreateCollection, CreateCustomFIeldsByCollectionId } from "./services";
+import { Categories } from "@/entities/categories";
+import { adapterForCustomFields } from "./utils";
+
+interface Props {
+  handleRefreshCollections: () => void;
+  handleCLoseModal: () => void;
+}
 
 const style = {
   position: "absolute" as "absolute",
@@ -21,19 +37,29 @@ const style = {
   px: 4,
   pb: 3,
 };
-export default function CreateCollectionForm() {
+export default function CreateCollectionForm({
+  handleCLoseModal,
+  handleRefreshCollections,
+}: Props) {
+  const [imgSrc, setImgSrc] = useState<string | null>(null);
+  const [categorySelected, setCategorySelected] = useState<Categories>();
+  const [customFields, setCustomFields] = useState<Custom[]>([]);
+  const [idCollectionCreated, setIdCollectionCreated] = useState<string | null>(
+    null
+  );
+  const { t } = useTranslation();
   const [collectionData, setCreateCollectionData] = useState<
-    Omit<CreateCollection, "categories">
+    Omit<CreateCollectionInterface, "category">
   >({
     description: "",
     name: "",
   });
-  const [categories, setCategories] = useState<string[]>([""]);
-  const { t } = useTranslation();
 
   const handleNameAndDescription = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     const name = e.target.name;
+    console.log(name);
+    console.log(value);
 
     setCreateCollectionData((prev) => {
       return {
@@ -43,9 +69,49 @@ export default function CreateCollectionForm() {
     });
   };
 
+  const handleSelectCategory = (
+    event: React.SyntheticEvent,
+    value: Categories | null
+  ) => {
+    if (value) setCategorySelected(value);
+  };
+  const handleCrateCollection = () => {
+    const data: CreateCollectionInterface = {
+      category: categorySelected?.id ?? "",
+      description: collectionData.description,
+      name: collectionData.name,
+      imageId: imgSrc,
+    };
+    CreateCollection(data)
+      .then((res) => {
+        setIdCollectionCreated(res.data.id);
+      })
+      .catch((err) => console.log(err));
+  };
+
+  useEffect(() => {
+    if (!idCollectionCreated) return;
+    const adaptedFields = adapterForCustomFields(
+      idCollectionCreated,
+      customFields
+    );
+    CreateCustomFIeldsByCollectionId(adaptedFields)
+      .then((res) => {
+        handleRefreshCollections();
+        handleCLoseModal();
+      })
+      .catch((err) => console.log(err));
+  }, [idCollectionCreated]);
   return (
     <Box
-      sx={{ ...style, display: "flex", flexDirection: "column", gap: "20px" }}
+      sx={{
+        ...style,
+        display: "flex",
+        flexDirection: "column",
+        gap: "20px",
+        maxHeight: "600px",
+        overflow: "auto",
+      }}
     >
       <Typography align="center" variant="h6">
         {t("commons:createCollection")}
@@ -57,6 +123,7 @@ export default function CreateCollectionForm() {
         <TextField
           onChange={handleNameAndDescription}
           id="collectionName"
+          name="name"
           placeholder={t("commons:collectionName")}
           value={collectionData["name"]}
           fullWidth
@@ -67,6 +134,7 @@ export default function CreateCollectionForm() {
           {t("commons:description")}
         </CustomInputLabel>
         <TextField
+          name="description"
           fullWidth
           onChange={handleNameAndDescription}
           id="collectionName"
@@ -74,8 +142,25 @@ export default function CreateCollectionForm() {
           value={collectionData["description"]}
         />
       </Box>
-      <AutoComplete />
-      <CustomFields />
+      <FileUploader setImgSrc={setImgSrc} />
+      <AutoComplete handleSelectCategory={handleSelectCategory} />
+      <CustomFields
+        customFields={customFields}
+        setCustomFields={setCustomFields}
+      />
+      <Button
+        onClick={handleCrateCollection}
+        disabled={
+          !(
+            collectionData.description.length !== 0 &&
+            collectionData.name.length !== 0
+          )
+        }
+        variant="contained"
+      >
+        {" "}
+        {t("commons:createCollection")}
+      </Button>
     </Box>
   );
 }

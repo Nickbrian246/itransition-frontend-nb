@@ -13,19 +13,20 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import React, { ChangeEvent, useState } from "react";
+import React, { ChangeEvent, SetStateAction, useState } from "react";
 import { useTranslation } from "react-i18next";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import { v4 } from "uuid";
+import { Custom } from "../../interfaces";
 
-interface Custom extends Omit<CustomField, "collectionId"> {
-  id: string;
+interface Props {
+  customFields: Custom[];
+  setCustomFields: React.Dispatch<SetStateAction<Custom[]>>;
 }
-
-export default function CustomFields() {
+export default function CustomFields({ customFields, setCustomFields }: Props) {
   const [type, setType] = useState<TypeCustomField>("STRING");
   const { t } = useTranslation();
-  const [customFields, setCustomFields] = useState<Custom[]>([]);
+
   const [name, setName] = useState<string>("");
   const handleChange = (event: SelectChangeEvent) => {
     setType(event.target.value as TypeCustomField);

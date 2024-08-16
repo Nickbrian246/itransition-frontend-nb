@@ -4,7 +4,7 @@ export interface Collections {
   name: string;
   description: string;
   category: Categories;
-  imageId?: string;
+  imageId?: string | null;
   id: string;
   updatedAt: string;
   items?: Item[];

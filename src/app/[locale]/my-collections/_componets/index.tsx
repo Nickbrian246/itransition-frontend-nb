@@ -29,6 +29,14 @@ export default function Collections() {
     setIsOpenModal(true);
   };
 
+  const handleRefreshCollections = () => {
+    getMyCollections()
+      .then((res) => setCollections(res.data))
+      .catch((res) => console.log(res))
+      .finally(() => {
+        setIsLoading(false);
+      });
+  };
   return (
     <Box>
       <Button
@@ -52,7 +60,12 @@ export default function Collections() {
         open={isOpenModal}
         onClose={() => setIsOpenModal(false)}
       >
-        <CreateCollectionForm />
+        <CreateCollectionForm
+          handleRefreshCollections={handleRefreshCollections}
+          handleCLoseModal={() => {
+            setIsOpenModal(false);
+          }}
+        />
       </Modal>
     </Box>
   );

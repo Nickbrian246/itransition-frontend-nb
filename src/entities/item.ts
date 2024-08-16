@@ -8,7 +8,7 @@ export interface Item {
   name: string;
   collection: Collections;
   author: User;
-  tag: Tag;
+  tagsIds: Tag[];
   customFields?: CustomFieldForItem[];
   updatedAt: string;
   id: string;
