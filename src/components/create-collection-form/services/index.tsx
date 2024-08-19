@@ -21,8 +21,6 @@ export async function CreateCollection(
 
 export async function CreateCustomFIeldsByCollectionId(fields: CustomField[]) {
   try {
-    console.log(fields);
-
     const { status } = await axios.post(
       `${BASE_URL}/custom-fields`,
       {

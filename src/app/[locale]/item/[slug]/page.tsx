@@ -11,7 +11,6 @@ export default async function Page({
   params: { locale: string; slug: string };
 }) {
   const { t, resources } = await initTranslations(locale, i18nNamespaces);
-  const { data } = await getItemById(slug);
 
   return (
     <TranslationsProvider
@@ -29,7 +28,7 @@ export default async function Page({
           gap: "40px",
         }}
       >
-        <Item item={data} />
+        <Item slug={slug} />
       </section>
     </TranslationsProvider>
   );

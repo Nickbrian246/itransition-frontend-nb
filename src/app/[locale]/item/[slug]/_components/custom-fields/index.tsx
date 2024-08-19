@@ -1,39 +1,29 @@
-import { TypeCustomField } from "@/entities/custom-field";
-import React from "react";
-import BooleanField from "./components/boolean-field";
-import IntegerField from "./components/integer-field";
-import FieldString from "./components/string-field";
-import DateField from "./components/date-field";
+import EditableCustomField, {
+  EditCustomFields,
+} from "@/components/editable-custom-field";
+import { CreateCustomFieldFromItem } from "@/entities/custom-field";
+import { Stack } from "@mui/material";
+import React, { SetStateAction } from "react";
 interface Props {
-  type: TypeCustomField;
+  groupOfFields: EditCustomFields[];
+  setFieldData: React.Dispatch<SetStateAction<EditCustomFields[]>>;
+  fieldsData: EditCustomFields[];
+  isEditable: boolean;
 }
-export default function CustomFields() {
-  const array: { type: TypeCustomField }[] = [
-    { type: "STRING" },
-    { type: "STRING" },
-    { type: "STRING" },
-    { type: "INT" },
-    { type: "INT" },
-    { type: "INT" },
-    { type: "BOOLEAN" },
-    { type: "BOOLEAN" },
-    { type: "BOOLEAN" },
-    { type: "DATE" },
-    { type: "DATE" },
-    { type: "DATE" },
-  ];
-
-  const fields = {
-    STRING: <FieldString isEditable={false} />,
-    INT: <IntegerField isEditable={false} />,
-    BOOLEAN: <BooleanField isEditable={false} />,
-    DATE: <DateField isEditable={false} />,
-  };
+export default function CustomFields({
+  fieldsData,
+  groupOfFields,
+  isEditable,
+  setFieldData,
+}: Props) {
   return (
-    <>
-      {array.map((type, index) => {
-        return <React.Fragment key={index}>{fields[type.type]}</React.Fragment>;
-      })}
-    </>
+    <Stack spacing={2}>
+      <EditableCustomField
+        groupOfFields={groupOfFields}
+        setFieldData={setFieldData}
+        fieldsData={fieldsData}
+        isEditable={isEditable}
+      />
+    </Stack>
   );
 }
