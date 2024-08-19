@@ -1,16 +1,21 @@
 import { blue, grey } from "@mui/material/colors";
 import { styled } from "@mui/system";
-
+import { v4 } from "uuid";
 import { TextareaAutosize as BaseTextareaAutosize } from "@mui/base/TextareaAutosize";
 import { Box, Typography } from "@mui/material";
+import { ChangeEvent, ChangeEventHandler, useEffect, useState } from "react";
+import { CustomField } from "@/entities/custom-field";
+import { EditCustomFields, SaveFieldsDataStatus } from "../..";
 interface Props {
   isEditable: boolean;
+  name: string;
+  gatherData: (data: EditCustomFields) => void;
+  fieldsStatus: SaveFieldsDataStatus;
 }
-export default function FieldString({ isEditable }: Props) {
-  const Textarea = styled(BaseTextareaAutosize)(
-    ({ theme }) => `
+const Textarea = styled(BaseTextareaAutosize)(
+  ({ theme }) => `
     box-sizing: border-box;
-    width: 320px;
+    width: 100%;
     font-family: 'IBM Plex Sans', sans-serif;
     font-size: 0.875rem;
     font-weight: 400;
@@ -41,15 +46,39 @@ export default function FieldString({ isEditable }: Props) {
       outline: 0;
     }
   `
-  );
+);
+export default function FieldString({
+  isEditable,
+  name,
+  fieldsStatus,
+  gatherData,
+}: Props) {
+  const [text, setText] = useState<EditCustomFields>({
+    id: v4(),
+    name: name,
+    value: "",
+    type: "STRING",
+  });
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      gatherData(text);
+    }, 900);
+    return () => clearTimeout(timer);
+  }, [text]);
+  const handleTextArea = (event: ChangeEvent<HTMLTextAreaElement>) => {
+    setText((prev) => {
+      return { ...prev, value: event.target.value };
+    });
+  };
   return (
     <Box sx={{ display: "flex", flexDirection: "column" }}>
-      <Typography variant="caption">helper Text</Typography>
+      <Typography variant="caption">{name}</Typography>
       <Textarea
-        readOnly
+        onChange={handleTextArea}
         aria-label="empty textarea"
-        placeholder="Empty"
-        value={"HOLA OCMO ESTAS"}
+        placeholder="Write here"
+        value={text.value}
       />
     </Box>
   );

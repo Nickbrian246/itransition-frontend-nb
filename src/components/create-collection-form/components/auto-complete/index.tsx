@@ -6,7 +6,14 @@ import Skeleton from "@mui/material/Skeleton";
 import { categoriesAdapter } from "@/utils/localstorage/auto-complete-adapter";
 import { useTranslation } from "react-i18next";
 
-export default function AutoComplete() {
+interface Props {
+  handleSelectCategory: (
+    event: React.SyntheticEvent,
+    value: Categories | null
+  ) => void;
+}
+
+export default function AutoComplete({ handleSelectCategory }: Props) {
   const [categories, setCategories] = useState<Categories[] | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const { t } = useTranslation();
@@ -20,12 +27,14 @@ export default function AutoComplete() {
       .catch((err) => console.log(err))
       .finally(() => setIsLoading(false));
   }, []);
+
   return (
     <>
       {isLoading || categories === null ? (
         <Skeleton variant="text" sx={{ fontSize: "1rem" }} />
       ) : (
         <Autocomplete
+          onChange={handleSelectCategory}
           disablePortal
           id="combo-box-demo"
           options={categories}

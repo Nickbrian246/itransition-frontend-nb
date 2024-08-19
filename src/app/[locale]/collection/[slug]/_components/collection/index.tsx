@@ -7,6 +7,7 @@ import Image from "next/image";
 import foodImage from "../../../../../../../public/assets/food.jpg";
 import { Categories } from "@/entities/categories";
 import CategoryCard from "@/components/category-card";
+import { User } from "@/entities/user";
 interface Props {
   title: string;
   description: string;
@@ -15,6 +16,7 @@ interface Props {
   imgId: string;
   id: string;
   category: Categories;
+  user: Pick<User, "email">;
 }
 export default function Collection({
   date,
@@ -23,6 +25,7 @@ export default function Collection({
   itemsCount,
   title,
   category,
+  user,
   id,
 }: Props) {
   const fechaPublicacion = new Date(date);
