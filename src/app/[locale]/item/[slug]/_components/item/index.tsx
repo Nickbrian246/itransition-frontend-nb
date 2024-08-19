@@ -1,17 +1,15 @@
 "use client";
-import { Box, Button, Card, Stack, Typography } from "@mui/material";
-import React, { useEffect, useState } from "react";
-import TagCard from "@/components/tag-card";
 import { EditCustomFields } from "@/components/custom-fields";
-import { ItemWithEditableCustomFields } from "../../_interfaces";
-import EditableCustomField from "@/components/editable-custom-field";
-import Comments from "../comments";
 import UserOptions from "@/components/user-options";
+import { Tag } from "@/entities/tags";
 import { useAppSelector } from "@/hooks/use-redux/redux";
+import { Box, Button, Card, Typography } from "@mui/material";
+import { useEffect, useState } from "react";
+import { ItemWithEditableCustomFields } from "../../_interfaces";
 import { getItemById, updateItemById } from "../../_services";
+import Comments from "../comments";
 import CustomFields from "../custom-fields";
 import Tags from "../tags";
-import { Tag } from "@/entities/tags";
 
 interface Props {
   slug: string;
