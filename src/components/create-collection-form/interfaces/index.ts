@@ -2,7 +2,10 @@ import { Collections } from "@/entities/collections";
 import { CustomField } from "@/entities/custom-field";
 
 export interface CreateCollection
-  extends Omit<Collections, "id" | "updatedAt" | "items" | "category"> {
+  extends Omit<
+    Collections,
+    "id" | "updatedAt" | "items" | "category" | "user"
+  > {
   category: string;
 }
 export interface Custom extends Omit<CustomField, "collectionId"> {
