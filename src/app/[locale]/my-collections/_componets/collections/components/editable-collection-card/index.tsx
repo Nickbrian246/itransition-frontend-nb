@@ -1,14 +1,14 @@
 "use client";
+import CreateCollectionForm from "@/components/create-collection-form";
+import UserOptions from "@/components/user-options";
 import { Box, Card, Modal, Typography } from "@mui/material";
-import React, { useState } from "react";
-import Image from "next/image";
 import { formatDistanceToNowStrict } from "date-fns";
 import { es } from "date-fns/locale";
+import Image from "next/image";
 import Link from "next/link";
-import UserOptions from "@/components/user-options";
-import CreateCollectionForm from "@/components/create-collection-form";
-import { Categories } from "@/entities/categories";
+import { useState } from "react";
 import { deleteCollectionById } from "@/app/[locale]/my-collections/_services";
+import ReactMarkdown from "react-markdown";
 interface Props {
   title: string;
   description: string;
@@ -107,7 +107,9 @@ export default function EditableCollectionCard({
           >
             <Box>
               <Typography variant="subtitle2">{title}</Typography>
-              <Typography variant="body2">{description}</Typography>
+              <Typography variant="body2">
+                <ReactMarkdown>{description}</ReactMarkdown>
+              </Typography>
             </Box>
             <Box
               sx={{ display: "flex", gap: "10px", justifyContent: "flex-end" }}

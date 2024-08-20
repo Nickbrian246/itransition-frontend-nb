@@ -5,7 +5,12 @@ import {
   Typography,
   Button,
 } from "@mui/material";
-import React, { ChangeEvent, useEffect, useState } from "react";
+import React, {
+  ChangeEvent,
+  ChangeEventHandler,
+  useEffect,
+  useState,
+} from "react";
 import { CustomInputLabel } from "../custom-components";
 import { CreateCollection as CreateCollectionInterface } from "./interfaces";
 import AutoComplete from "./components/auto-complete";
@@ -21,6 +26,8 @@ import {
 import { Categories } from "@/entities/categories";
 import { adapterForCustomFields } from "./utils";
 import { Collections } from "@/entities/collections";
+import MarkDownDescription from "./components/mark-down-description";
+import CustomTextArea from "../custom-components/custom-text-area";
 
 interface EditableCollection
   extends Omit<Collections, "user" | "updatedAt" | "category" | "categoryId"> {
@@ -93,7 +100,7 @@ export default function CreateCollectionForm({
       });
     }
   }, [editableCollectionData]);
-  const handleNameAndDescription = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleName = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     const name = e.target.name;
 
@@ -101,6 +108,14 @@ export default function CreateCollectionForm({
       return {
         ...prev,
         [name]: value,
+      };
+    });
+  };
+  const handleDescription = (event: ChangeEvent<HTMLTextAreaElement>) => {
+    setCreateCollectionData((prev) => {
+      return {
+        ...prev,
+        ["description"]: event.target.value,
       };
     });
   };
@@ -163,7 +178,7 @@ export default function CreateCollectionForm({
           {t("commons:name")}
         </CustomInputLabel>
         <TextField
-          onChange={handleNameAndDescription}
+          onChange={handleName}
           id="collectionName"
           name="name"
           placeholder={t("commons:collectionName")}
@@ -175,14 +190,14 @@ export default function CreateCollectionForm({
         <CustomInputLabel htmlFor="collectionName">
           {t("commons:description")}
         </CustomInputLabel>
-        <TextField
+        <CustomTextArea
           name="description"
-          fullWidth
-          onChange={handleNameAndDescription}
+          onChange={handleDescription}
           id="collectionName"
           placeholder={t("commons:description")}
           value={collectionData["description"]}
         />
+        <MarkDownDescription text={collectionData["description"]} />
       </Box>
       <FileUploader setImgSrc={setImgSrc} />
       <AutoComplete
