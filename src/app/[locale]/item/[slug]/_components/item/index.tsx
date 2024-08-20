@@ -6,11 +6,12 @@ import { useAppSelector } from "@/hooks/use-redux/redux";
 import { Box, Button, Card, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { ItemWithEditableCustomFields } from "../../_interfaces";
-import { getItemById, updateItemById } from "../../_services";
+import { deleteItemById, getItemById, updateItemById } from "../../_services";
 import Comments from "../comments";
 import CustomFields from "../custom-fields";
 import Tags from "../tags";
 import { useTranslation } from "react-i18next";
+import { useRouter } from "next/navigation";
 
 interface Props {
   slug: string;
@@ -18,11 +19,13 @@ interface Props {
 export default function Item({ slug }: Props) {
   const [item, setItem] = useState<ItemWithEditableCustomFields | null>(null);
   const [fieldsEdited, setFieldsEdit] = useState<EditCustomFields[]>([]);
-  const [isEditable, setIsEditable] = useState<boolean>(true);
+  const [isEditable, setIsEditable] = useState<boolean>(false);
   const [isUserOwner, setIsUserOwner] = useState<boolean>(false);
   const [groupOfTags, setGroupTags] = useState<Tag[]>([]);
   const { email } = useAppSelector((state) => state.user.user);
   const { t } = useTranslation();
+  const router = useRouter();
+
   useEffect(() => {
     updateItem();
   }, [slug]);
@@ -62,6 +65,14 @@ export default function Item({ slug }: Props) {
       .catch((err) => console.log(err));
   };
 
+  const handleDeleteItem = () => {
+    deleteItemById(slug)
+      .then((res) => {
+        router.back();
+      })
+      .catch((err) => console.log(err));
+  };
+
   return (
     <Card
       sx={{
@@ -80,7 +91,7 @@ export default function Item({ slug }: Props) {
       >
         {isUserOwner && (
           <UserOptions
-            handleDelete={() => {}}
+            handleDelete={handleDeleteItem}
             handleIsEditable={() => {
               setIsEditable(true);
             }}

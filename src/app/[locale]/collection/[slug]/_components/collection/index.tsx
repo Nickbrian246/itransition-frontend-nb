@@ -8,6 +8,7 @@ import { Categories } from "@/entities/categories";
 import CategoryCard from "@/components/category-card";
 import { User } from "@/entities/user";
 import { Locale } from "@/types/types";
+import ReactMarkdown from "react-markdown";
 interface Props {
   title: string;
   description: string;
@@ -66,7 +67,9 @@ export default function Collection({
       >
         <Box>
           <Typography variant="h6">{title}</Typography>
-          <Typography variant="body2">{description}</Typography>
+          <Typography variant="body2">
+            <ReactMarkdown>{description}</ReactMarkdown>
+          </Typography>
           <CategoryCard title={category.name} id={category.id} />
         </Box>
         <Box sx={{ display: "flex", gap: "10px", justifyContent: "flex-end" }}>

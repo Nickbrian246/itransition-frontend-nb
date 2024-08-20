@@ -11,7 +11,7 @@ export default function Items({ slug }: { slug: string }) {
   const [tag, setTag] = useState<TagWithItems | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const { t } = useTranslation();
-
+  //TODO SOLUTION MANY TO MANY PROBLEMS
   useEffect(() => {
     getItemsByTagId(slug)
       .then((res) => setTag(res.data))

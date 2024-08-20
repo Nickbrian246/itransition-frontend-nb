@@ -17,7 +17,7 @@ export default function TagCard({ id, title }: Props) {
         width: "fit-content",
         borderRadius: "30px",
       }}
-      href={"/"}
+      href={`/tag/${id}`}
     >
       <Typography variant="subtitle1">{title}</Typography>
     </Link>
