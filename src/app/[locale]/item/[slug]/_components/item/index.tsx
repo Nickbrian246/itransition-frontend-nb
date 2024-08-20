@@ -10,6 +10,7 @@ import { getItemById, updateItemById } from "../../_services";
 import Comments from "../comments";
 import CustomFields from "../custom-fields";
 import Tags from "../tags";
+import { useTranslation } from "react-i18next";
 
 interface Props {
   slug: string;
@@ -21,7 +22,7 @@ export default function Item({ slug }: Props) {
   const [isUserOwner, setIsUserOwner] = useState<boolean>(false);
   const [groupOfTags, setGroupTags] = useState<Tag[]>([]);
   const { email } = useAppSelector((state) => state.user.user);
-
+  const { t } = useTranslation();
   useEffect(() => {
     updateItem();
   }, [slug]);
@@ -120,14 +121,14 @@ export default function Item({ slug }: Props) {
             }}
             variant="contained"
           >
-            cancelar
+            {t("commons:cancel")}
           </Button>
           <Button
             sx={{ bgcolor: "green" }}
             onClick={handleSaveEdit}
             variant="contained"
           >
-            Guardar
+            {t("commons:save")}
           </Button>
         </Box>
       )}

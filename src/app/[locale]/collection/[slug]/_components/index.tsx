@@ -53,7 +53,7 @@ export default function CollectionPage({ slug }: Props) {
           setIsOpenModal(true);
         }}
       >
-        Create new item
+        {t("commons:createItem")}
       </Button>
       <CreateItemModalForm
         open={isOpenModal}

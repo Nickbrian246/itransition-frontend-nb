@@ -1,21 +1,18 @@
-import React, { ChangeEvent, useEffect, useState } from "react";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { EditCustomFields, SaveFieldsDataStatus } from "../..";
-import dayjs, { Dayjs } from "dayjs";
+import { Dayjs } from "dayjs";
+import { useEffect, useState } from "react";
 import { v4 } from "uuid";
+import { EditCustomFields, SaveFieldsDataStatus } from "../..";
 
 interface Props {
   isEditable: Boolean;
   name: string;
   gatherData: (data: EditCustomFields) => void;
-  fieldsStatus: SaveFieldsDataStatus;
 }
 export default function DateField({
   isEditable,
-  fieldsStatus,
+
   gatherData,
   name,
 }: Props) {
@@ -41,11 +38,9 @@ export default function DateField({
   };
   return (
     <>
-      <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <DemoContainer components={["DatePicker"]}>
-          <DatePicker onChange={handleDateChange} label={name} />
-        </DemoContainer>
-      </LocalizationProvider>
+      <DemoContainer components={["DatePicker"]}>
+        <DatePicker onChange={handleDateChange} label={name} />
+      </DemoContainer>
     </>
   );
 }

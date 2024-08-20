@@ -1,9 +1,11 @@
+"use client";
 import { Tag } from "@/entities/tags";
 import { Autocomplete, Box, TextField, Typography } from "@mui/material";
 import React, { SetStateAction, useEffect, useState } from "react";
 import { getTags } from "../tags-carousel/services";
 import AddNewTag from "./component/add-new-tag";
 import TagCardEditable from "./component/tag-card";
+import { useTranslation } from "react-i18next";
 
 interface Props {
   setTagsSelected: React.Dispatch<SetStateAction<Tag[]>>;
@@ -12,6 +14,7 @@ interface Props {
 export default function TagsSelector({ setTagsSelected, tagsSelected }: Props) {
   const [tags, setTags] = useState<Tag[]>([]);
   const [isSetNewTag, setIsSetNewTag] = useState<boolean>(false);
+  const { t } = useTranslation();
 
   useEffect(() => {
     updateTags();
@@ -78,7 +81,7 @@ export default function TagsSelector({ setTagsSelected, tagsSelected }: Props) {
           ))
         ) : (
           <Box sx={{ padding: "0px 10px" }}>
-            <Typography>Add your tags</Typography>{" "}
+            <Typography>{t("commons:addCategories")}</Typography>{" "}
           </Box>
         )}
       </Box>

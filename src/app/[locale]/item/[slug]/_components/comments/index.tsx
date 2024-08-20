@@ -1,3 +1,4 @@
+"use client";
 import React, {
   ChangeEvent,
   FormEvent,
@@ -28,6 +29,7 @@ import dayjs from "dayjs";
 import ThumbUpOutlinedIcon from "@mui/icons-material/ThumbUpOutlined";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import { GetLikes } from "../../_interfaces";
+import { useTranslation } from "react-i18next";
 interface Props {
   itemId: string;
 }
@@ -36,7 +38,7 @@ dayjs.locale("es");
 export default function Comments({ itemId }: Props) {
   const [comments, setComments] = useState<CommentsInterface[]>([]);
   const [likes, setLikes] = useState<GetLikes | null>(null);
-
+  const { t } = useTranslation();
   const [text, setText] = useState<string>("");
   useEffect(() => {
     getComments();
@@ -85,7 +87,7 @@ export default function Comments({ itemId }: Props) {
   return (
     <Box>
       <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-        <Typography>Comments</Typography>
+        <Typography>{t("commons:comments")}</Typography>
         <Box>
           {likes && likes.didUserLikeIt ? (
             <IconButton onClick={handleDislike}>
@@ -112,10 +114,10 @@ export default function Comments({ itemId }: Props) {
         <CustomTextArea
           value={text}
           onChange={handleText}
-          placeholder="comment here "
+          placeholder={t("commons:commentHere")}
         />
         <Button type="submit" disabled={text.length === 0} variant="contained">
-          Comentar
+          {t("commons:comment")}
         </Button>
       </form>
       <Stack

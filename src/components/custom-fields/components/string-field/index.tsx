@@ -1,16 +1,16 @@
-import { blue, grey } from "@mui/material/colors";
-import { styled } from "@mui/system";
-import { v4 } from "uuid";
+"use client";
 import { TextareaAutosize as BaseTextareaAutosize } from "@mui/base/TextareaAutosize";
 import { Box, Typography } from "@mui/material";
-import { ChangeEvent, ChangeEventHandler, useEffect, useState } from "react";
-import { CustomField } from "@/entities/custom-field";
-import { EditCustomFields, SaveFieldsDataStatus } from "../..";
+import { blue, grey } from "@mui/material/colors";
+import { styled } from "@mui/system";
+import { ChangeEvent, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { v4 } from "uuid";
+import { EditCustomFields } from "../..";
 interface Props {
   isEditable: boolean;
   name: string;
   gatherData: (data: EditCustomFields) => void;
-  fieldsStatus: SaveFieldsDataStatus;
 }
 const Textarea = styled(BaseTextareaAutosize)(
   ({ theme }) => `
@@ -47,18 +47,14 @@ const Textarea = styled(BaseTextareaAutosize)(
     }
   `
 );
-export default function FieldString({
-  isEditable,
-  name,
-  fieldsStatus,
-  gatherData,
-}: Props) {
+export default function FieldString({ isEditable, name, gatherData }: Props) {
   const [text, setText] = useState<EditCustomFields>({
     id: v4(),
     name: name,
     value: "",
     type: "STRING",
   });
+  const { t } = useTranslation();
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -77,7 +73,7 @@ export default function FieldString({
       <Textarea
         onChange={handleTextArea}
         aria-label="empty textarea"
-        placeholder="Write here"
+        placeholder={t("commons:writeHere")}
         value={text.value}
       />
     </Box>

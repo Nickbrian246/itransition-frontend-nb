@@ -8,6 +8,7 @@ import { CustomField } from "@/entities/custom-field";
 import TagsSelector from "../tag-selector";
 import { Tag } from "@/entities/tags";
 import Modal from "@mui/material/Modal";
+import { useTranslation } from "react-i18next";
 
 interface Props {
   collectionId: string;
@@ -27,6 +28,7 @@ export default function CreateItemModalForm({
   const [customFields, setCustomFields] = useState<CustomField[]>([]);
   const [fieldsData, setFieldData] = useState<EditCustomFields[]>([]);
   const [tagsSelected, setTagsSelected] = useState<Tag[]>([]);
+  const { t } = useTranslation();
 
   useEffect(() => {
     getCustomFieldsByCollectionId(collectionId)
@@ -82,10 +84,10 @@ export default function CreateItemModalForm({
         }}
       >
         <Typography variant="h6" align="center">
-          Create Item
+          {t("commons:createItem")}
         </Typography>
         <form style={{ width: "100%" }}>
-          <CustomInputLabel id="name">Name</CustomInputLabel>
+          <CustomInputLabel id="name">{t("commons:name")}</CustomInputLabel>
           <TextField fullWidth id="name" onChange={handleName} />
           <CustomFields
             groupOfFields={customFields}
@@ -103,7 +105,7 @@ export default function CreateItemModalForm({
           onClick={handleCreateItem}
         >
           {" "}
-          create item
+          {t("commons:createItem")}
         </Button>
       </Box>
     </Modal>

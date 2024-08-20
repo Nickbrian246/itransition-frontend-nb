@@ -1,16 +1,14 @@
-import { CustomInputLabel } from "@/components/custom-components";
-import { CustomField } from "@/entities/custom-field";
 import { TextareaAutosize as BaseTextareaAutosize } from "@mui/base/TextareaAutosize";
 import { Box, styled, TextField, Typography } from "@mui/material";
-import React, { ChangeEvent, useEffect, useState } from "react";
-import { EditCustomFields, SaveFieldsDataStatus } from "../..";
+import { blue, grey } from "@mui/material/colors";
+import { ChangeEvent, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { v4 } from "uuid";
-import { grey, blue } from "@mui/material/colors";
+import { EditCustomFields } from "../..";
 interface Props {
   isEditable: Boolean;
   name: string;
   gatherData: (data: EditCustomFields) => void;
-  fieldsStatus: SaveFieldsDataStatus;
 }
 const Textarea = styled(BaseTextareaAutosize)(
   ({ theme }) => `
@@ -47,18 +45,14 @@ const Textarea = styled(BaseTextareaAutosize)(
     }
   `
 );
-export default function IntegerField({
-  isEditable,
-  name,
-  fieldsStatus,
-  gatherData,
-}: Props) {
+export default function IntegerField({ isEditable, name, gatherData }: Props) {
   const [numericField, setNumericField] = useState<EditCustomFields>({
     id: v4(),
     name,
     value: "",
     type: "INTEGER",
   });
+  const { t } = useTranslation();
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -80,7 +74,7 @@ export default function IntegerField({
       <TextField
         onChange={handleTextArea}
         aria-label="empty textarea"
-        placeholder="Write here"
+        placeholder={t("commons:writeHere")}
         value={numericField.value}
         type="number"
       />
