@@ -1,13 +1,13 @@
 "use client";
 import React from "react";
 import { Card, Box, Typography } from "@mui/material";
-import { formatDistanceToNowStrict } from "date-fns";
-import { es } from "date-fns/locale";
+import { timeFromNow } from "@/utils/date/date-distance";
 import Image from "next/image";
 import foodImage from "../../../../../../../public/assets/food.jpg";
 import { Categories } from "@/entities/categories";
 import CategoryCard from "@/components/category-card";
 import { User } from "@/entities/user";
+import { Locale } from "@/types/types";
 interface Props {
   title: string;
   description: string;
@@ -17,6 +17,7 @@ interface Props {
   id: string;
   category: Categories;
   user: Pick<User, "email">;
+  locale: Locale;
 }
 export default function Collection({
   date,
@@ -27,12 +28,9 @@ export default function Collection({
   category,
   user,
   id,
+  locale,
 }: Props) {
-  const fechaPublicacion = new Date(date);
-  const tiempoTranscurrido = formatDistanceToNowStrict(fechaPublicacion, {
-    addSuffix: true,
-    locale: es,
-  });
+  const timeFrom = timeFromNow(new Date(date), locale);
   return (
     <Card
       sx={{
@@ -73,7 +71,7 @@ export default function Collection({
         </Box>
         <Box sx={{ display: "flex", gap: "10px", justifyContent: "flex-end" }}>
           <Typography variant="caption"> {itemsCount} items</Typography>
-          <Typography variant="caption"> {tiempoTranscurrido} </Typography>
+          <Typography variant="caption"> {timeFrom} </Typography>
         </Box>
       </Box>
     </Card>

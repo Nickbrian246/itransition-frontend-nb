@@ -4,12 +4,13 @@ import TranslationsProvider from "@/components/translations-provider/translation
 import initTranslations from "../i18n";
 import Collections from "@/components/collections";
 import Items from "@/components/items";
+import { Locale } from "@/types/types";
 const i18nNamespaces = ["home", "menu-options", "feed", "commons"];
 
 export default async function Home({
   params: { locale },
 }: {
-  params: { locale: string };
+  params: { locale: Locale };
 }) {
   const { t, resources } = await initTranslations(locale, i18nNamespaces);
   return (
@@ -24,7 +25,7 @@ export default async function Home({
           flexDirection: "column",
         }}
       >
-        <Header />
+        <Header locale={locale} />
         <section
           style={{
             maxWidth: "1200px",

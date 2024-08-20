@@ -1,13 +1,13 @@
 "use client";
+import { deleteCollectionById } from "@/app/[locale]/my-collections/_services";
 import CreateCollectionForm from "@/components/create-collection-form";
 import UserOptions from "@/components/user-options";
+import { useAppSelector } from "@/hooks/use-redux/redux";
+import { timeFromNow } from "@/utils/date/date-distance";
 import { Box, Card, Modal, Typography } from "@mui/material";
-import { formatDistanceToNowStrict } from "date-fns";
-import { es } from "date-fns/locale";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
-import { deleteCollectionById } from "@/app/[locale]/my-collections/_services";
 import ReactMarkdown from "react-markdown";
 interface Props {
   title: string;
@@ -29,11 +29,8 @@ export default function EditableCollectionCard({
   categoryId,
   handleRefreshCollections,
 }: Props) {
-  const fechaPublicacion = new Date(date);
-  const tiempoTranscurrido = formatDistanceToNowStrict(fechaPublicacion, {
-    addSuffix: true,
-    locale: es,
-  });
+  const { locale } = useAppSelector((state) => state.locale);
+  const timeFrom = timeFromNow(new Date(date), locale);
   const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
 
   const handleDeleteItem = () => {
@@ -115,7 +112,7 @@ export default function EditableCollectionCard({
               sx={{ display: "flex", gap: "10px", justifyContent: "flex-end" }}
             >
               <Typography variant="caption"> {itemsCount} items</Typography>
-              <Typography variant="caption"> {tiempoTranscurrido} </Typography>
+              <Typography variant="caption"> {timeFrom} </Typography>
             </Box>
           </Box>
         </Box>

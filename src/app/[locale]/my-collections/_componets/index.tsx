@@ -71,7 +71,7 @@ export default function Collections() {
             setFilterOrder={setFilterOrder}
           />
           <Button variant="contained" onClick={handleFilter}>
-            Filtrar
+            {t("commons:filter")}
           </Button>
         </Box>
         <Button
