@@ -1,20 +1,20 @@
 "use client";
-import LatestCollections from "@/components/collections/components/collections/latest-collections";
-import { Collections as CollectionInterface } from "@/entities/collections";
-import { Autocomplete, Box, Button, Modal, TextField } from "@mui/material";
-import { useEffect, useState } from "react";
-import { getMyCollections } from "../_services";
-import Skeleton from "./skeleton";
-import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
-import { useTranslation } from "react-i18next";
 import CreateCollectionForm from "@/components/create-collection-form";
+import { Collections as CollectionInterface } from "@/entities/collections";
+import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
+import { Box, Button, Modal } from "@mui/material";
+import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { getMyCollections } from "../_services";
 import FilterOptionsMenu from "./filter-options-menu";
+import Skeleton from "./skeleton";
 
-import { filterByType } from "../_utils/filter-by";
 import {
   FilterKeys,
   FilterOrder as FilterOrderInterface,
 } from "../_interfaces";
+import { filterByType } from "../_utils/filter-by";
+import MyCollections from "./collections";
 import FilterOrder from "./filter-order";
 export default function Collections() {
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -87,7 +87,10 @@ export default function Collections() {
         {isLoading || collections === null ? (
           <Skeleton />
         ) : (
-          <LatestCollections collections={collections} />
+          <MyCollections
+            handleRefreshCollections={handleRefreshCollections}
+            collections={collections}
+          />
         )}
       </Box>
       <Modal

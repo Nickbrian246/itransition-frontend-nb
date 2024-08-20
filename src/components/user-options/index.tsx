@@ -1,6 +1,16 @@
-import React from "react";
+import React, { useState } from "react";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import { Button, IconButton, Menu, MenuItem } from "@mui/material";
+import {
+  Box,
+  Button,
+  Card,
+  IconButton,
+  Menu,
+  MenuItem,
+  Typography,
+} from "@mui/material";
+import CustomModal from "../custom-components/custom-modal";
+import { useTranslation } from "react-i18next";
 
 interface Props {
   handleIsEditable: () => void;
@@ -8,6 +18,8 @@ interface Props {
 }
 export default function UserOptions({ handleDelete, handleIsEditable }: Props) {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const [openConfirmModal, setOpenConfirmModal] = useState<boolean>(false);
+  const { t } = useTranslation();
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -41,17 +53,51 @@ export default function UserOptions({ handleDelete, handleIsEditable }: Props) {
             handleClose();
           }}
         >
-          editar
+          {t("commons:edit")}
         </MenuItem>
         <MenuItem
           onClick={() => {
-            handleDelete();
+            setOpenConfirmModal(true);
             handleClose();
           }}
         >
-          eliminar
+          {t("commons:delete")}
         </MenuItem>
       </Menu>
+      <CustomModal
+        open={openConfirmModal}
+        handleClose={() => {
+          setOpenConfirmModal(false);
+        }}
+      >
+        <Box sx={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+          <Typography variant="h5">{t("commons:confirmDeletion")}</Typography>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+            }}
+          >
+            <Button
+              onClick={() => {
+                handleDelete();
+                setOpenConfirmModal(false);
+              }}
+              sx={{ maxWidth: "300px" }}
+              variant="contained"
+            >
+              {t("commons:confirm")}
+            </Button>
+            <Button
+              onClick={() => setOpenConfirmModal(false)}
+              sx={{ bgcolor: "red", maxWidth: "300px" }}
+              variant="contained"
+            >
+              {t("commons:cancel")}
+            </Button>
+          </Box>
+        </Box>
+      </CustomModal>
     </div>
   );
 }

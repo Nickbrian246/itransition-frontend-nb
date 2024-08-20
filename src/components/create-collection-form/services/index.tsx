@@ -18,6 +18,20 @@ export async function CreateCollection(
     throw new Error(`${error}`);
   }
 }
+export async function editCollectionById(
+  collection: CreateCollectionInterface,
+  id: string
+): Promise<ApiSuccessResponseWithData<Collections>> {
+  try {
+    const { data } = await axios.put<ApiSuccessResponseWithData<Collections>>(
+      `${BASE_URL}/collections/${id}`,
+      collection
+    );
+    return data;
+  } catch (error) {
+    throw new Error(`${error}`);
+  }
+}
 
 export async function CreateCustomFIeldsByCollectionId(fields: CustomField[]) {
   try {

@@ -13,13 +13,23 @@ import CustomFields from "./components/custom-fields";
 import { useTranslation } from "react-i18next";
 import { Custom } from "./interfaces";
 import FileUploader from "./components/file-uploader";
-import { CreateCollection, CreateCustomFIeldsByCollectionId } from "./services";
+import {
+  CreateCollection,
+  CreateCustomFIeldsByCollectionId,
+  editCollectionById,
+} from "./services";
 import { Categories } from "@/entities/categories";
 import { adapterForCustomFields } from "./utils";
+import { Collections } from "@/entities/collections";
 
+interface EditableCollection
+  extends Omit<Collections, "user" | "updatedAt" | "category" | "categoryId"> {
+  categoryId: string | null;
+}
 interface Props {
   handleRefreshCollections: () => void;
   handleCLoseModal: () => void;
+  editableCollectionData?: EditableCollection;
 }
 
 const style = {
@@ -40,26 +50,52 @@ const style = {
 export default function CreateCollectionForm({
   handleCLoseModal,
   handleRefreshCollections,
+  editableCollectionData,
 }: Props) {
   const [imgSrc, setImgSrc] = useState<string | null>(null);
   const [categorySelected, setCategorySelected] = useState<Categories>();
   const [customFields, setCustomFields] = useState<Custom[]>([]);
+  const [isEditable, setIsEditable] = useState<boolean>(false);
+  const { t } = useTranslation();
   const [idCollectionCreated, setIdCollectionCreated] = useState<string | null>(
     null
   );
-  const { t } = useTranslation();
   const [collectionData, setCreateCollectionData] = useState<
-    Omit<CreateCollectionInterface, "category">
+    Omit<CreateCollectionInterface, "category" | "imageId" | "categoryId">
   >({
     description: "",
     name: "",
   });
 
+  useEffect(() => {
+    if (!idCollectionCreated) return;
+    const adaptedFields = adapterForCustomFields(
+      idCollectionCreated,
+      customFields
+    );
+    CreateCustomFIeldsByCollectionId(adaptedFields)
+      .then((res) => {
+        handleRefreshCollections();
+        handleCLoseModal();
+      })
+      .catch((err) => console.log(err));
+  }, [idCollectionCreated]);
+
+  useEffect(() => {
+    if (editableCollectionData) {
+      setIsEditable(true);
+      setCreateCollectionData((prev) => {
+        return {
+          ...prev,
+          description: editableCollectionData.description,
+          name: editableCollectionData.name,
+        };
+      });
+    }
+  }, [editableCollectionData]);
   const handleNameAndDescription = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     const name = e.target.name;
-    console.log(name);
-    console.log(value);
 
     setCreateCollectionData((prev) => {
       return {
@@ -75,6 +111,7 @@ export default function CreateCollectionForm({
   ) => {
     if (value) setCategorySelected(value);
   };
+
   const handleCrateCollection = () => {
     const data: CreateCollectionInterface = {
       category: categorySelected?.id ?? "",
@@ -88,20 +125,23 @@ export default function CreateCollectionForm({
       })
       .catch((err) => console.log(err));
   };
-
-  useEffect(() => {
-    if (!idCollectionCreated) return;
-    const adaptedFields = adapterForCustomFields(
-      idCollectionCreated,
-      customFields
-    );
-    CreateCustomFIeldsByCollectionId(adaptedFields)
+  const handleEditCollection = () => {
+    const data: CreateCollectionInterface = {
+      category:
+        categorySelected?.id ?? editableCollectionData?.categoryId ?? "",
+      description: collectionData.description,
+      name: collectionData.name,
+      imageId: imgSrc ?? editableCollectionData?.imageId ?? null,
+    };
+    if (!editableCollectionData) return;
+    editCollectionById(data, editableCollectionData?.id)
       .then((res) => {
         handleRefreshCollections();
         handleCLoseModal();
       })
       .catch((err) => console.log(err));
-  }, [idCollectionCreated]);
+  };
+
   return (
     <Box
       sx={{
@@ -114,7 +154,9 @@ export default function CreateCollectionForm({
       }}
     >
       <Typography align="center" variant="h6">
-        {t("commons:createCollection")}
+        {isEditable
+          ? t("commons:editCollection")
+          : t("commons:createCollection")}
       </Typography>
       <Box sx={{ display: "flex", flexDirection: "column" }}>
         <CustomInputLabel htmlFor="collectionName">
@@ -143,24 +185,57 @@ export default function CreateCollectionForm({
         />
       </Box>
       <FileUploader setImgSrc={setImgSrc} />
-      <AutoComplete handleSelectCategory={handleSelectCategory} />
-      <CustomFields
-        customFields={customFields}
-        setCustomFields={setCustomFields}
+      <AutoComplete
+        categoryId={editableCollectionData?.categoryId ?? null}
+        handleSelectCategory={handleSelectCategory}
       />
-      <Button
-        onClick={handleCrateCollection}
-        disabled={
-          !(
-            collectionData.description.length !== 0 &&
-            collectionData.name.length !== 0
-          )
-        }
-        variant="contained"
-      >
-        {" "}
-        {t("commons:createCollection")}
-      </Button>
+      {!isEditable && (
+        <CustomFields
+          customFields={customFields}
+          setCustomFields={setCustomFields}
+        />
+      )}
+      {isEditable ? (
+        <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+          <Button
+            onClick={handleEditCollection}
+            disabled={
+              !(
+                collectionData.description.length !== 0 &&
+                collectionData.name.length !== 0
+              )
+            }
+            variant="contained"
+          >
+            {" "}
+            {t("commons:saveChanges")}
+          </Button>
+          <Button
+            sx={{ bgcolor: "red" }}
+            onClick={() => {
+              handleCLoseModal();
+            }}
+            variant="contained"
+          >
+            {" "}
+            {t("commons:cancel")}
+          </Button>
+        </Box>
+      ) : (
+        <Button
+          onClick={handleCrateCollection}
+          disabled={
+            !(
+              collectionData.description.length !== 0 &&
+              collectionData.name.length !== 0
+            )
+          }
+          variant="contained"
+        >
+          {" "}
+          {t("commons:createCollection")}
+        </Button>
+      )}
     </Box>
   );
 }
