@@ -28,6 +28,7 @@ import { adapterForCustomFields } from "./utils";
 import { Collections } from "@/entities/collections";
 import MarkDownDescription from "./components/mark-down-description";
 import CustomTextArea from "../custom-components/custom-text-area";
+import CreateCustomCategory from "./components/add-custom-category";
 
 interface EditableCollection
   extends Omit<Collections, "user" | "updatedAt" | "category" | "categoryId"> {
@@ -60,9 +61,12 @@ export default function CreateCollectionForm({
   editableCollectionData,
 }: Props) {
   const [imgSrc, setImgSrc] = useState<string | null>(null);
-  const [categorySelected, setCategorySelected] = useState<Categories>();
+  const [categorySelected, setCategorySelected] = useState<Categories | null>(
+    null
+  );
   const [customFields, setCustomFields] = useState<Custom[]>([]);
   const [isEditable, setIsEditable] = useState<boolean>(false);
+  const [isNewCategory, setIsNewCategory] = useState<boolean>(false);
   const { t } = useTranslation();
   const [idCollectionCreated, setIdCollectionCreated] = useState<string | null>(
     null
@@ -124,7 +128,9 @@ export default function CreateCollectionForm({
     event: React.SyntheticEvent,
     value: Categories | null
   ) => {
-    if (value) setCategorySelected(value);
+    if (!value) return;
+    setCategorySelected(value);
+    if (value.name === "other") setIsNewCategory(true);
   };
 
   const handleCrateCollection = () => {
@@ -155,6 +161,11 @@ export default function CreateCollectionForm({
         handleCLoseModal();
       })
       .catch((err) => console.log(err));
+  };
+
+  const newCategoryCreated = (category: Categories) => {
+    setCategorySelected(category);
+    setIsNewCategory(false);
   };
 
   return (
@@ -200,10 +211,22 @@ export default function CreateCollectionForm({
         <MarkDownDescription text={collectionData["description"]} />
       </Box>
       <FileUploader setImgSrc={setImgSrc} />
-      <AutoComplete
-        categoryId={editableCollectionData?.categoryId ?? null}
-        handleSelectCategory={handleSelectCategory}
-      />
+      {isNewCategory ? (
+        <CreateCustomCategory
+          handleCancel={() => {
+            setIsNewCategory(false);
+            setCategorySelected(null);
+          }}
+          newCategoryCreated={newCategoryCreated}
+        />
+      ) : (
+        <AutoComplete
+          categoryId={
+            editableCollectionData?.categoryId ?? categorySelected?.id ?? null
+          }
+          handleSelectCategory={handleSelectCategory}
+        />
+      )}
       {!isEditable && (
         <CustomFields
           customFields={customFields}
@@ -242,7 +265,8 @@ export default function CreateCollectionForm({
           disabled={
             !(
               collectionData.description.length !== 0 &&
-              collectionData.name.length !== 0
+              collectionData.name.length !== 0 &&
+              !isNewCategory
             )
           }
           variant="contained"

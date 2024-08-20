@@ -21,12 +21,15 @@ export default function AutoComplete({
   const [categories, setCategories] = useState<Categories[] | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const { t } = useTranslation();
-  console.log(categoryId);
 
   useEffect(() => {
     GetCategories()
       .then((res) => {
-        const a = categoriesAdapter(res.data);
+        const a = categoriesAdapter(res.data).concat({
+          label: t("commons:other"),
+          name: "other",
+          id: "other11",
+        });
         setCategories(a);
       })
       .catch((err) => console.log(err))
