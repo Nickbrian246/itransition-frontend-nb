@@ -32,7 +32,7 @@ export default async function Page({
           gap: "40px",
         }}
       >
-        <Items slug={slug} />
+        <Items slug={slug} locale={locale} />
       </section>
     </TranslationsProvider>
   );
