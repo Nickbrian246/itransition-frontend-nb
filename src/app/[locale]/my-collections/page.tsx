@@ -3,12 +3,13 @@ import Header from "@/components/header";
 import initTranslations from "@/app/i18n";
 import TranslationsProvider from "@/components/translations-provider/translations-provider";
 import Collections from "./_componets";
+import { Locale } from "@/types/types";
 
 const i18nNamespaces = ["auth", "commons", "password-rules", "menu-options"];
 export default async function Page({
   params: { locale, slug },
 }: {
-  params: { locale: string; slug: string };
+  params: { locale: Locale; slug: string };
 }) {
   const { t, resources } = await initTranslations(locale, i18nNamespaces);
 
@@ -18,7 +19,7 @@ export default async function Page({
       locale={locale}
       resources={resources}
     >
-      <Header />
+      <Header locale={locale} />
       <section
         style={{
           maxWidth: "1200px",

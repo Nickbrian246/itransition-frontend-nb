@@ -8,10 +8,14 @@ import Link from "next/link";
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import MenuButton from "./components/menu-button";
-
-export default function Header() {
+import { Locale } from "@/types/types";
+import { setLocale } from "@/store/slices/current-locale";
+import TextSearch from "../text-search";
+interface Props {
+  locale: Locale;
+}
+export default function Header({ locale }: Props) {
   const { isAuth } = useAppSelector((state) => state.user.user);
-
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
   useEffect(() => {
@@ -21,12 +25,19 @@ export default function Header() {
       dispatch(getUser());
     }
   }, [dispatch, isAuth]);
+
+  useEffect(() => {
+    if (locale) {
+      dispatch(setLocale(locale));
+    }
+  }, [locale, dispatch]);
   return (
     <header
       style={{
         display: "flex",
         width: "100%",
         padding: "10px",
+        gap: "5px",
         justifyContent: "space-between",
       }}
     >
@@ -38,6 +49,7 @@ export default function Header() {
         </Link>
         <ComputerOutlinedIcon sx={{ fontSize: "30px" }} />
       </Box>
+      <TextSearch />
       <Box
         sx={{
           display: "flex",

@@ -9,13 +9,14 @@ import {
 } from "@uploadcare/react-uploader";
 import "@uploadcare/react-uploader/core.css";
 import Image from "next/image";
+import { useTranslation } from "react-i18next";
 
 interface Props {
   setImgSrc: React.Dispatch<SetStateAction<string | null>>;
 }
 export default function FileUploader({ setImgSrc }: Props) {
   const [files, setFiles] = useState<OutputFileEntry<"success">[]>([]);
-
+  const { t } = useTranslation();
   const handleChangeEvent = (
     items: OutputCollectionState<OutputCollectionStatus, "maybe-has-group">
   ) => {
@@ -40,7 +41,7 @@ export default function FileUploader({ setImgSrc }: Props) {
   return (
     <Box>
       <Typography variant="caption">
-        Upload an image to your collection ( you can omit this step )
+        {t("commons:uploadCollectionImg")} {`(${t("commons:optionalStep")})`}
       </Typography>
       <FileUploaderRegular
         onChange={handleChangeEvent}

@@ -1,11 +1,10 @@
-import React, {
-  ChangeEvent,
-  FormEvent,
-  FormEventHandler,
-  useEffect,
-  useState,
-} from "react";
+"use client";
 import CustomTextArea from "@/components/custom-components/custom-text-area";
+import { Comments as CommentsInterface } from "@/entities/comments";
+import { useAppSelector } from "@/hooks/use-redux/redux";
+import { timeFromNow } from "@/utils/date/date-distance";
+import ThumbUpIcon from "@mui/icons-material/ThumbUp";
+import ThumbUpOutlinedIcon from "@mui/icons-material/ThumbUpOutlined";
 import {
   Box,
   Button,
@@ -14,8 +13,10 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import relativeTime from "dayjs/plugin/relativeTime";
 import "dayjs/locale/es";
+import { ChangeEvent, FormEvent, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { GetLikes } from "../../_interfaces";
 import {
   CreateComment,
   createLike,
@@ -23,21 +24,16 @@ import {
   getCommentsByItemId,
   getLIkes,
 } from "./services";
-import { Comments as CommentsInterface } from "@/entities/comments";
-import dayjs from "dayjs";
-import ThumbUpOutlinedIcon from "@mui/icons-material/ThumbUpOutlined";
-import ThumbUpIcon from "@mui/icons-material/ThumbUp";
-import { GetLikes } from "../../_interfaces";
 interface Props {
   itemId: string;
 }
-dayjs.extend(relativeTime);
-dayjs.locale("es");
 export default function Comments({ itemId }: Props) {
   const [comments, setComments] = useState<CommentsInterface[]>([]);
   const [likes, setLikes] = useState<GetLikes | null>(null);
-
+  const { locale } = useAppSelector((state) => state.locale);
+  const { t } = useTranslation();
   const [text, setText] = useState<string>("");
+
   useEffect(() => {
     getComments();
     getLikes();
@@ -85,7 +81,7 @@ export default function Comments({ itemId }: Props) {
   return (
     <Box>
       <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-        <Typography>Comments</Typography>
+        <Typography>{t("commons:comments")}</Typography>
         <Box>
           {likes && likes.didUserLikeIt ? (
             <IconButton onClick={handleDislike}>
@@ -112,10 +108,10 @@ export default function Comments({ itemId }: Props) {
         <CustomTextArea
           value={text}
           onChange={handleText}
-          placeholder="comment here "
+          placeholder={t("commons:commentHere")}
         />
         <Button type="submit" disabled={text.length === 0} variant="contained">
-          Comentar
+          {t("commons:comment")}
         </Button>
       </form>
       <Stack
@@ -137,7 +133,7 @@ export default function Comments({ itemId }: Props) {
             >
               <Typography variant="subtitle2">{c.user.firstName}</Typography>
               <Typography variant="caption">
-                {dayjs(c.updatedAt).fromNow()}
+                {timeFromNow(new Date(c.updatedAt), locale)}
               </Typography>
             </Box>
             <Typography variant="body2">{c.content}</Typography>

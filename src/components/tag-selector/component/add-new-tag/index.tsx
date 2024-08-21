@@ -1,14 +1,17 @@
+"use client";
 import { CustomInputLabel } from "@/components/custom-components";
 import { Box, TextField, Button } from "@mui/material";
 import React, { ChangeEvent, useState } from "react";
 import { createTag } from "./services";
 import { Tag } from "@/entities/tags";
+import { useTranslation } from "react-i18next";
 
 interface Props {
   AddNewTag: (tag: Tag) => void;
 }
 export default function AddNewTag({ AddNewTag }: Props) {
   const [newTag, setNewTag] = useState<string>("");
+  const { t } = useTranslation();
 
   const handleAddNewTag = (e: ChangeEvent<HTMLInputElement>) => {
     setNewTag(e.target.value);
@@ -23,12 +26,12 @@ export default function AddNewTag({ AddNewTag }: Props) {
     <Box sx={{ display: "flex", alignItems: "center", gap: "10px" }}>
       <Box>
         <CustomInputLabel htmlFor="addNewTag" variant="standard">
-          Add new Tag
+          {t("commons:addTags")}
         </CustomInputLabel>
         <TextField
           id="addNewTag"
           onChange={handleAddNewTag}
-          placeholder="add new tag"
+          placeholder={t("commons:addNewTag")}
         />
       </Box>
       <Button
@@ -36,7 +39,7 @@ export default function AddNewTag({ AddNewTag }: Props) {
         onClick={handleCreateTag}
         variant="contained"
       >
-        Add tag
+        {t("commons:addTag")}
       </Button>
     </Box>
   );

@@ -46,7 +46,7 @@ export default function CustomFields({
       {groupOfFields.map((field, index) => {
         return (
           <React.Fragment key={index}>
-            {fields[field.type](field.name, gatherData, fieldsStatus)}
+            {fields[field.type](field.name, gatherData)}
           </React.Fragment>
         );
       })}

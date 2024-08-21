@@ -30,3 +30,16 @@ export async function updateItemById(
     throw new Error(`${error}`);
   }
 }
+export async function deleteItemById(id: string): Promise<{
+  statusText: string;
+  status: number;
+}> {
+  try {
+    const { statusText, status } = await axios.delete(
+      `${BASE_URL}/items/${id}`
+    );
+    return { statusText, status };
+  } catch (error) {
+    throw new Error(`${error}`);
+  }
+}

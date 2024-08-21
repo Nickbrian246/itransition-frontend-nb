@@ -3,6 +3,7 @@ import axios from "axios";
 import { CreateCollection as CreateCollectionInterface } from "../interfaces";
 import { ApiSuccessResponseWithData } from "@/types/api/api-response-interface";
 import { CustomField } from "@/entities/custom-field";
+import { Categories } from "@/entities/categories";
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 export async function CreateCollection(
@@ -11,6 +12,20 @@ export async function CreateCollection(
   try {
     const { data } = await axios.post<ApiSuccessResponseWithData<Collections>>(
       `${BASE_URL}/collections`,
+      collection
+    );
+    return data;
+  } catch (error) {
+    throw new Error(`${error}`);
+  }
+}
+export async function editCollectionById(
+  collection: CreateCollectionInterface,
+  id: string
+): Promise<ApiSuccessResponseWithData<Collections>> {
+  try {
+    const { data } = await axios.put<ApiSuccessResponseWithData<Collections>>(
+      `${BASE_URL}/collections/${id}`,
       collection
     );
     return data;
@@ -29,6 +44,17 @@ export async function CreateCustomFIeldsByCollectionId(fields: CustomField[]) {
       { headers: { "Content-Type": "application/json" } }
     );
     return status;
+  } catch (error) {
+    throw new Error(`${error}`);
+  }
+}
+
+export async function CreateNewCategory(
+  name: string
+): Promise<ApiSuccessResponseWithData<Categories>> {
+  try {
+    const { data } = await axios.post(`${BASE_URL}/categories`, { name });
+    return data;
   } catch (error) {
     throw new Error(`${error}`);
   }

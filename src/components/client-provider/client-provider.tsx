@@ -5,6 +5,7 @@ import { Provider } from "react-redux";
 import ThemeProvider from "@/components/theme-provider/theme-provider";
 import axios from "axios";
 import { getAccessToken } from "@/utils/localstorage/localstorage";
+import { DateLocalizationProvider } from "../date-localization-provider";
 export default function ClientComponent({
   children,
 }: {
@@ -17,7 +18,9 @@ export default function ClientComponent({
   return (
     <section>
       <Provider store={store}>
-        <ThemeProvider>{children}</ThemeProvider>
+        <DateLocalizationProvider>
+          <ThemeProvider>{children}</ThemeProvider>
+        </DateLocalizationProvider>
       </Provider>
     </section>
   );

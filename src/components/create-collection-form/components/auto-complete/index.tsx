@@ -11,9 +11,13 @@ interface Props {
     event: React.SyntheticEvent,
     value: Categories | null
   ) => void;
+  categoryId: string | null;
 }
 
-export default function AutoComplete({ handleSelectCategory }: Props) {
+export default function AutoComplete({
+  handleSelectCategory,
+  categoryId,
+}: Props) {
   const [categories, setCategories] = useState<Categories[] | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const { t } = useTranslation();
@@ -21,7 +25,11 @@ export default function AutoComplete({ handleSelectCategory }: Props) {
   useEffect(() => {
     GetCategories()
       .then((res) => {
-        const a = categoriesAdapter(res.data);
+        const a = categoriesAdapter(res.data).concat({
+          label: t("commons:other"),
+          name: "other",
+          id: "other11",
+        });
         setCategories(a);
       })
       .catch((err) => console.log(err))
@@ -38,7 +46,11 @@ export default function AutoComplete({ handleSelectCategory }: Props) {
           disablePortal
           id="combo-box-demo"
           options={categories}
-          defaultValue={categories[0]}
+          defaultValue={
+            categoryId
+              ? categories.find((c) => c.id === categoryId)
+              : categories[0]
+          }
           sx={{ width: { xs: "200px", md: "300px" } }}
           renderInput={(params) => (
             <TextField {...params} label={t("commons:categories")} />

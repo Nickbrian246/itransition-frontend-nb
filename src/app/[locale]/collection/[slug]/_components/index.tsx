@@ -9,6 +9,7 @@ import { Collections } from "@/entities/collections";
 import { Item } from "@/entities/item";
 import { useTranslation } from "react-i18next";
 import { Button } from "@mui/material";
+import { useAppSelector } from "@/hooks/use-redux/redux";
 
 interface Props {
   slug: string;
@@ -17,6 +18,7 @@ export default function CollectionPage({ slug }: Props) {
   const [collection, setCollection] = useState<Collections | null>(null);
   const [items, setItems] = useState<Item[]>([]);
   const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
+  const { locale } = useAppSelector((state) => state.locale);
   const { t } = useTranslation();
   useEffect(() => {
     updateData();
@@ -44,6 +46,7 @@ export default function CollectionPage({ slug }: Props) {
           itemsCount={collection.items?.length ?? 0}
           title={collection.name}
           key={collection.id}
+          locale={locale}
         />
       )}
       <Button
@@ -53,7 +56,7 @@ export default function CollectionPage({ slug }: Props) {
           setIsOpenModal(true);
         }}
       >
-        Create new item
+        {t("commons:createItem")}
       </Button>
       <CreateItemModalForm
         open={isOpenModal}

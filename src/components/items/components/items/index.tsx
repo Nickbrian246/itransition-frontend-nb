@@ -1,16 +1,19 @@
 import React from "react";
 import ItemCard from "../item-card";
 import { Item } from "@/entities/item";
+import { Locale } from "@/types/types";
 
 interface Props {
   items: Item[];
+  locale: Locale;
 }
-//TODO: FIND A WAY TO PASS LOCALE TO DATE FNS
-export default function Items({ items }: Props) {
+
+export default function Items({ items, locale }: Props) {
   return (
     <>
       {items.map((item) => (
         <ItemCard
+          locale={locale}
           authorName={item.author.firstName}
           collectionName={item.collection.name}
           date={item.updatedAt}

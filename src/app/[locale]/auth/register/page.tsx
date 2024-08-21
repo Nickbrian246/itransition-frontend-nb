@@ -3,11 +3,12 @@ import Register from "@/components/auth/register/register";
 import initTranslations from "@/app/i18n";
 import TranslationsProvider from "@/components/translations-provider/translations-provider";
 import Header from "@/components/header";
+import { Locale } from "@/types/types";
 const i18nNamespaces = ["auth", "commons", "password-rules", "menu-options"];
 export default async function Page({
   params: { locale },
 }: {
-  params: { locale: string };
+  params: { locale: Locale };
 }) {
   const { t, resources } = await initTranslations(locale, i18nNamespaces);
   return (
@@ -16,7 +17,7 @@ export default async function Page({
       locale={locale}
       resources={resources}
     >
-      <Header />
+      <Header locale={locale} />
       <Register />
     </TranslationsProvider>
   );

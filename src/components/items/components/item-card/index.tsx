@@ -2,15 +2,17 @@
 import { Box, Card, Typography } from "@mui/material";
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { formatDistanceToNow, formatDistanceToNowStrict } from "date-fns";
-import { es } from "date-fns/locale"; // Para español
+
 import Link from "next/link";
+import { Locale } from "@/types/types";
+import { timeFromNow } from "@/utils/date/date-distance";
 interface Props {
   title: string;
   authorName: string;
   collectionName: string;
   date: string;
   id: string;
+  locale: Locale;
 }
 
 export default function ItemCard({
@@ -18,15 +20,11 @@ export default function ItemCard({
   collectionName,
   date,
   title,
+  locale,
   id,
 }: Props) {
   const { t } = useTranslation();
-
-  const fechaPublicacion = new Date(date);
-  const tiempoTranscurrido = formatDistanceToNowStrict(fechaPublicacion, {
-    addSuffix: true,
-    locale: es,
-  });
+  const timeFrom = timeFromNow(new Date(date), locale);
   return (
     <Link style={{ textDecoration: "none" }} href={`/item/${id}`}>
       <Card
@@ -55,7 +53,7 @@ export default function ItemCard({
           </Typography>
         </Box>
         <Box sx={{ display: "flex", justifyContent: "end" }}>
-          <Typography variant="caption">{tiempoTranscurrido}</Typography>
+          <Typography variant="caption">{timeFrom}</Typography>
         </Box>
       </Card>
     </Link>

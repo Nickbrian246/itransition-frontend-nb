@@ -4,12 +4,13 @@ import initTranslations from "@/app/i18n";
 import TranslationsProvider from "@/components/translations-provider/translations-provider";
 import { getItemsByTagId } from "./_services";
 import Items from "./_components";
+import { Locale } from "@/types/types";
 
 const i18nNamespaces = ["auth", "commons", "password-rules", "menu-options"];
 export default async function Page({
   params: { locale, slug },
 }: {
-  params: { locale: string; slug: string };
+  params: { locale: Locale; slug: string };
 }) {
   const { t, resources } = await initTranslations(locale, i18nNamespaces);
 
@@ -21,7 +22,7 @@ export default async function Page({
       locale={locale}
       resources={resources}
     >
-      <Header />
+      <Header locale={locale} />
       <section
         style={{
           maxWidth: "1200px",
@@ -31,7 +32,7 @@ export default async function Page({
           gap: "40px",
         }}
       >
-        <Items slug={slug} />
+        <Items slug={slug} locale={locale} />
       </section>
     </TranslationsProvider>
   );

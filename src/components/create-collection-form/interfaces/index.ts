@@ -4,7 +4,7 @@ import { CustomField } from "@/entities/custom-field";
 export interface CreateCollection
   extends Omit<
     Collections,
-    "id" | "updatedAt" | "items" | "category" | "user"
+    "id" | "updatedAt" | "items" | "category" | "user" | "categoryId"
   > {
   category: string;
 }

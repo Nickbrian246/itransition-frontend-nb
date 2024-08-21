@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 
 import {
   Box,
@@ -8,21 +8,15 @@ import {
   Typography,
 } from "@mui/material";
 
-import { EditCustomFields, SaveFieldsDataStatus } from "../..";
 import { v4 } from "uuid";
+import { EditCustomFields } from "../..";
 interface Props {
   isEditable: Boolean;
   name: string;
   gatherData: (data: EditCustomFields) => void;
-  fieldsStatus: SaveFieldsDataStatus;
 }
 
-export default function BooleanField({
-  isEditable,
-  fieldsStatus,
-  gatherData,
-  name,
-}: Props) {
+export default function BooleanField({ isEditable, gatherData, name }: Props) {
   const [checkBoxField, setCheckBoxField] = useState<EditCustomFields>({
     id: v4(),
     name,

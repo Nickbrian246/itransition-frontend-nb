@@ -15,3 +15,15 @@ export async function getMyCollections(): Promise<
     throw new Error(`${error}`);
   }
 }
+export async function deleteCollectionById(
+  id: string
+): Promise<{ status: number; statusText: string }> {
+  try {
+    const { status, statusText } = await axios.delete<
+      ApiSuccessResponseWithData<Collections[]>
+    >(`${BASE_URL}/collections/${id}`);
+    return { status, statusText };
+  } catch (error) {
+    throw new Error(`${error}`);
+  }
+}

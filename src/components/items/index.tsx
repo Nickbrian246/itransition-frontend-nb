@@ -6,10 +6,12 @@ import { useTranslation } from "react-i18next";
 import LatestItems from "./components/items";
 import Skeletons from "./components/skeleton";
 import { getLatestItems } from "./services/item";
+import { useAppSelector } from "@/hooks/use-redux/redux";
 
 export default function Items() {
   const [items, setItems] = useState<Item[] | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const { locale } = useAppSelector((state) => state.locale);
   const { t } = useTranslation();
 
   useEffect(() => {
@@ -30,7 +32,7 @@ export default function Items() {
         {isLoading || items === null ? (
           <Skeletons />
         ) : (
-          <LatestItems items={items} />
+          <LatestItems locale={locale} items={items} />
         )}
       </Box>
     </Box>

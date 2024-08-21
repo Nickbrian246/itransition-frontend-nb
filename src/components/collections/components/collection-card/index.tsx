@@ -6,6 +6,7 @@ import foodImage from "../../../../../public/assets/food.jpg";
 import { formatDistanceToNowStrict } from "date-fns";
 import { es } from "date-fns/locale";
 import Link from "next/link";
+import ReactMarkdown from "react-markdown";
 interface Props {
   title: string;
   description: string;
@@ -63,7 +64,7 @@ export default function CollectionCard({
         >
           <Box>
             <Typography variant="subtitle2">{title}</Typography>
-            <Typography variant="body2">{description}</Typography>
+            <ReactMarkdown>{description}</ReactMarkdown>
           </Box>
           <Box
             sx={{ display: "flex", gap: "10px", justifyContent: "flex-end" }}
