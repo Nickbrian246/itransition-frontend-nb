@@ -15,6 +15,7 @@
     "@mui/icons-material": "^5.16.6",
     "@mui/joy": "^5.0.0-beta.48",
     "@mui/material": "^5.16.6",
+    "@mui/x-data-grid": "^7.13.0",
     "@mui/x-date-pickers": "^7.13.0",
     "@reduxjs/toolkit": "^2.2.7",
     "@uploadcare/react-uploader": "^1.0.0",
