@@ -17,10 +17,12 @@ import { StyledMenu } from "./components/styled-menu";
 import ChangeLanguage from "../language-button";
 import { useTranslation } from "react-i18next";
 import Link from "next/link";
+import AssessmentOutlinedIcon from "@mui/icons-material/AssessmentOutlined";
+
 export default function MenuButton() {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const theme = useAppSelector((state) => state.theme.theme);
-  const { isAuth } = useAppSelector((state) => state.user.user);
+  const { isAuth, role } = useAppSelector((state) => state.user.user);
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
   const [languageMenuAnchorEl, setLanguageMenuAnchorEl] =
@@ -76,10 +78,17 @@ export default function MenuButton() {
       >
         {isAuth && (
           <>
-            <MenuItem onClick={handleClose} disableRipple>
-              <PersonOutlineOutlinedIcon />
-              {t("menu-options:myProfile")}
-            </MenuItem>
+            {role === "ADMIN" && (
+              <MenuItem disableRipple>
+                <Link
+                  style={{ textDecoration: "none", color: "inherit" }}
+                  href={"/admin"}
+                >
+                  <AssessmentOutlinedIcon />
+                  {t("commons:usersDashboard")}
+                </Link>
+              </MenuItem>
+            )}
             <MenuItem disableRipple>
               <Link
                 style={{ textDecoration: "none", color: "inherit" }}

@@ -19,6 +19,9 @@ export default function CollectionPage({ slug }: Props) {
   const [items, setItems] = useState<Item[]>([]);
   const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
   const { locale } = useAppSelector((state) => state.locale);
+  const {
+    user: { email, role },
+  } = useAppSelector((state) => state.user);
   const { t } = useTranslation();
   useEffect(() => {
     updateData();
@@ -26,10 +29,15 @@ export default function CollectionPage({ slug }: Props) {
 
   const updateData = () => {
     getCollectionById(slug)
-      .then((res) => setCollection(res.data))
+      .then((res) => {
+        console.log(res.data);
+        setCollection(res.data);
+      })
       .catch((err) => console.log(err));
     getItemsByCollectionId(slug)
-      .then((res) => setItems(res.data))
+      .then((res) => {
+        setItems(res.data);
+      })
       .catch((err) => console.log(err));
   };
   return (
@@ -49,16 +57,19 @@ export default function CollectionPage({ slug }: Props) {
           locale={locale}
         />
       )}
-      <Button
-        sx={{ mt: "20px" }}
-        variant="contained"
-        onClick={() => {
-          setIsOpenModal(true);
-        }}
-      >
-        {t("commons:createItem")}
-      </Button>
+      {(role === "ADMIN" || email === collection?.user.email) && (
+        <Button
+          sx={{ mt: "20px" }}
+          variant="contained"
+          onClick={() => {
+            setIsOpenModal(true);
+          }}
+        >
+          {t("commons:createItem")}
+        </Button>
+      )}
       <CreateItemModalForm
+        itemOwnerId={collection?.userId ?? undefined}
         open={isOpenModal}
         handleClose={() => {
           setIsOpenModal(false);

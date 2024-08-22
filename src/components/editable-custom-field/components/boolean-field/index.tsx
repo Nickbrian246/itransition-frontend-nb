@@ -29,6 +29,7 @@ export default function BooleanField({
   name,
   handleDeleteItem,
 }: Props) {
+  const [isDirty, setIsDirty] = useState<boolean>(false);
   const [checkBoxField, setCheckBoxField] = useState<EditCustomFields>({
     id: v4(),
     name,
@@ -37,6 +38,7 @@ export default function BooleanField({
   });
 
   useEffect(() => {
+    if (!isDirty) return;
     const timer = setTimeout(() => {
       gatherData(checkBoxField);
     }, 900);
@@ -62,6 +64,11 @@ export default function BooleanField({
       value: event.target.checked ? "true" : "false",
     }));
   };
+
+  const handleFocus = () => {
+    setIsDirty(true);
+  };
+
   return (
     <Box sx={{ display: "flex", flexDirection: "column" }}>
       <Typography variant="caption">{name}</Typography>
@@ -69,6 +76,7 @@ export default function BooleanField({
         <FormControlLabel
           control={
             <Checkbox
+              onFocus={handleFocus}
               checked={checkBoxField.value === "true"}
               onChange={handleCheckBox}
               disabled={!isEditable}

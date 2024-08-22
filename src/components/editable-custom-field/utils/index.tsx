@@ -1,4 +1,4 @@
-import { EditCustomFields, SaveFieldsDataStatus } from "..";
+import { EditCustomFields } from "..";
 import BooleanField from "../components/boolean-field";
 import DateField from "../components/date-field";
 import IntegerField from "../components/integer-field";

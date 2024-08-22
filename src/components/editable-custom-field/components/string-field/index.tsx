@@ -57,6 +57,7 @@ export default function FieldString({
   gatherData,
   handleDeleteItem,
 }: Props) {
+  const [isDirty, setIsDirty] = useState<boolean>(false);
   const [text, setText] = useState<EditCustomFields>({
     id: v4(),
     name: name,
@@ -65,6 +66,7 @@ export default function FieldString({
   });
 
   useEffect(() => {
+    if (!isDirty) return;
     const timer = setTimeout(() => {
       gatherData(text);
     }, 900);
@@ -77,16 +79,22 @@ export default function FieldString({
         return { ...prev, value: value, id: id };
       });
   }, [value, id]);
+
   const handleTextArea = (event: ChangeEvent<HTMLTextAreaElement>) => {
     setText((prev) => {
       return { ...prev, value: event.target.value };
     });
+  };
+
+  const handleFocus = () => {
+    setIsDirty(true);
   };
   return (
     <Box sx={{ display: "flex", flexDirection: "column" }}>
       <Typography variant="caption">{name}</Typography>
       <Box sx={{ display: "flex", alignItems: "center", gap: "10px" }}>
         <Textarea
+          onFocus={handleFocus}
           disabled={!isEditable}
           onChange={handleTextArea}
           aria-label="empty textarea"

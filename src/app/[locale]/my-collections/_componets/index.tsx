@@ -114,6 +114,7 @@ export default function Collections({ userId }: Props) {
         onClose={() => setIsOpenModal(false)}
       >
         <CreateCollectionForm
+          userId={userId}
           handleRefreshCollections={handleRefreshCollections}
           handleCLoseModal={() => {
             setIsOpenModal(false);

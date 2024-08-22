@@ -15,6 +15,7 @@ interface Props {
   open: boolean;
   handleClose: () => void;
   updateData: () => void;
+  itemOwnerId?: string;
 }
 
 const style = {};
@@ -23,6 +24,7 @@ export default function CreateItemModalForm({
   handleClose,
   open,
   updateData,
+  itemOwnerId,
 }: Props) {
   const [name, setName] = useState<string>("");
   const [customFields, setCustomFields] = useState<CustomField[]>([]);
@@ -46,6 +48,7 @@ export default function CreateItemModalForm({
       tagsIds: tags,
       customFields: fieldsData,
       collectionId: collectionId,
+      userId: itemOwnerId ?? null,
     })
       .then((res) => {
         updateData();

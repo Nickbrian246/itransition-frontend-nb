@@ -1,7 +1,6 @@
 "use client";
 import { Collections } from "@/entities/collections";
 import EditableCollectionCard from "./components/editable-collection-card";
-import foodImg from "../../../../../../public/assets/food.jpg";
 interface Props {
   collections: Collections[];
   handleRefreshCollections: () => void;
@@ -22,8 +21,12 @@ export default function MyCollections({
           title={collection.name}
           key={collection.id}
           id={collection.id}
+          author={collection.author}
+          editedBy={collection.editedBy}
+          isEdited={collection.isEdited}
           categoryId={collection.categoryId}
           handleRefreshCollections={handleRefreshCollections}
+          customFields={collection.customFields}
         />
       ))}
     </>

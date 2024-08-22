@@ -25,6 +25,7 @@ export default function DateField({
   name,
   handleDeleteItem,
 }: Props) {
+  const [isDirty, setIsDirty] = useState<boolean>(false);
   const [dateField, setDateField] = useState<EditCustomFields>({
     id: v4(),
     name,
@@ -33,6 +34,7 @@ export default function DateField({
   });
 
   useEffect(() => {
+    if (!isDirty) return;
     const timer = setTimeout(() => {
       gatherData(dateField);
     }, 900);
@@ -47,11 +49,13 @@ export default function DateField({
   }, [value, id]);
 
   const handleDateChange = (date: Dayjs | null) => {
+    setIsDirty(true);
     setDateField((prev) => ({
       ...prev,
       value: date ? date.toISOString() : "",
     }));
   };
+
   return (
     <>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
