@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-export type Theme = "DARK" | "LIGHT";
+import { Theme } from "@/types/types";
 
 interface InitialState {
   theme: Theme;

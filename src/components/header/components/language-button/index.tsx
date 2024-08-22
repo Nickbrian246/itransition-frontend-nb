@@ -1,13 +1,17 @@
 "use client";
-import { colors } from "@/constants";
+
 import React, { useEffect, useRef, useState } from "react";
 
-import { useAppSelector } from "@/hooks/use-redux/redux";
+import { useAppDispatch, useAppSelector } from "@/hooks/use-redux/redux";
 import { MenuItem } from "@mui/material";
 import { usePathname, useRouter } from "next/navigation";
 import { useTranslation } from "react-i18next";
 import i18nConfig from "../../../../../i18nConfig";
 import { StyledMenu } from "../menu-button/components/styled-menu";
+import { Locale } from "@/types/types";
+import { getUserPreferencesInLocalStorage } from "@/utils/localstorage/localstorage";
+import { setTheme } from "@/store/slices/theme/theme-slice";
+import { setLocale } from "@/store/slices/current-locale";
 
 interface Props {
   languageMenuAnchorEl: null | HTMLElement;
@@ -23,10 +27,25 @@ export default function ChangeLanguage({
   const [open, setOpen] = useState(false);
   const anchorRef = useRef<HTMLButtonElement>(null);
   const theme = useAppSelector((state) => state.theme.theme);
+  const { locale } = useAppSelector((state) => state.locale);
+  const isAuth = useAppSelector((state) => state.user.user.isAuth);
   const { i18n } = useTranslation();
+  const dispatch = useAppDispatch();
   const currentLocale = i18n.language;
   const router = useRouter();
   const currentPathname = usePathname();
+
+  useEffect(() => {
+    const userPref = getUserPreferencesInLocalStorage();
+    if (userPref) {
+      dispatch(setTheme(userPref.theme));
+      dispatch(setLocale(userPref.language));
+    }
+    if (isAuth && userPref) {
+      dispatch(setLocale(userPref.language));
+      handleSelectLanguage(userPref.language);
+    }
+  }, [locale, dispatch]);
 
   const handleClose = (event: Event | React.SyntheticEvent) => {
     if (
@@ -39,8 +58,8 @@ export default function ChangeLanguage({
     setOpen(false);
   };
 
-  const handleSelectLanguage = (value: string) => {
-    const newLocale = value;
+  const handleSelectLanguage = (value: Locale) => {
+    const newLocale = value as Locale;
 
     const days = 30;
     const date = new Date();
@@ -71,8 +90,6 @@ export default function ChangeLanguage({
     prevOpen.current = open;
   }, [open]);
 
-  const bg =
-    theme === "DARK" ? colors.backGroundDarkModeGrayBox : colors.backGroundGray;
   return (
     <StyledMenu
       id="language-menu"

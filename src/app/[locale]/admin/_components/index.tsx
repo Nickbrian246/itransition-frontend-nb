@@ -6,15 +6,19 @@ import { Box } from "@mui/material";
 import { User } from "@/entities/user";
 import { getUsers } from "../_services";
 import { GridRowSelectionModel, GridCallbackDetails } from "@mui/x-data-grid";
+import { useAppSelector } from "@/hooks/use-redux/redux";
+import { useRouter } from "next/navigation";
 
 export default function Dashboard() {
   const [rows, setRows] = useState<User[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [selectedRows, setSelectedRows] = useState<any>([]);
-
+  const { role } = useAppSelector((state) => state.user.user);
+  const router = useRouter();
   useEffect(() => {
+    if (role !== "ADMIN") return router.replace("/");
     getAllUsers();
-  }, []);
+  }, [role]);
 
   const getAllUsers = () => {
     setIsLoading(true);

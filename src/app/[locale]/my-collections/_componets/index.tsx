@@ -1,22 +1,23 @@
 "use client";
 import CreateCollectionForm from "@/components/create-collection-form";
+import EmptyContent from "@/components/empty-content";
 import { Collections as CollectionInterface } from "@/entities/collections";
+import { useAppSelector } from "@/hooks/use-redux/redux";
 import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
 import { Box, Button, Modal } from "@mui/material";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { getCollectionsByUserId, getMyCollections } from "../_services";
-import FilterOptionsMenu from "./filter-options-menu";
-import Skeleton from "./skeleton";
-
 import {
   FilterKeys,
   FilterOrder as FilterOrderInterface,
 } from "../_interfaces";
+import { getCollectionsByUserId, getMyCollections } from "../_services";
 import { filterByType } from "../_utils/filter-by";
 import MyCollections from "./collections";
+import FilterOptionsMenu from "./filter-options-menu";
 import FilterOrder from "./filter-order";
-import EmptyContent from "@/components/empty-content";
+import Skeleton from "./skeleton";
 
 interface Props {
   userId?: string;
@@ -30,7 +31,8 @@ export default function Collections({ userId }: Props) {
   );
   const [filterKey, setFilterKey] = useState<FilterKeys>("items");
   const [filterOrder, setFilterOrder] = useState<FilterOrderInterface>("ASC");
-
+  const { role } = useAppSelector((state) => state.user.user);
+  const router = useRouter();
   useEffect(() => {
     handleRefreshCollections();
   }, []);
@@ -41,6 +43,7 @@ export default function Collections({ userId }: Props) {
 
   const handleRefreshCollections = () => {
     if (userId) {
+      if (role !== "ADMIN") return router.replace("/");
       getCollectionsByUserId(userId)
         .then((res) => setCollections(res.data))
         .catch((res) => console.log(res))
