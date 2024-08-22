@@ -10,8 +10,12 @@ export interface Item {
   collectionId: string;
   author: User;
   authorId: string;
+  user: User;
+  userId: string | null;
   tagsIds: string[];
   tag: Tag[];
+  isEdited: boolean;
+  editedBy: User;
   customFields?: CustomFieldForItem[];
   updatedAt: string;
   id: string;

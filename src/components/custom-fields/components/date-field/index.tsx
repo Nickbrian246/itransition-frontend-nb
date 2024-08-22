@@ -3,19 +3,14 @@ import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { Dayjs } from "dayjs";
 import { useEffect, useState } from "react";
 import { v4 } from "uuid";
-import { EditCustomFields, SaveFieldsDataStatus } from "../..";
+import { EditCustomFields } from "../..";
 
 interface Props {
   isEditable: Boolean;
   name: string;
   gatherData: (data: EditCustomFields) => void;
 }
-export default function DateField({
-  isEditable,
-
-  gatherData,
-  name,
-}: Props) {
+export default function DateField({ gatherData, name }: Props) {
   const [dateField, setDateField] = useState<EditCustomFields>({
     id: v4(),
     name,

@@ -1,22 +1,28 @@
 "use client";
 import CreateCollectionForm from "@/components/create-collection-form";
+import EmptyContent from "@/components/empty-content";
 import { Collections as CollectionInterface } from "@/entities/collections";
+import { useAppSelector } from "@/hooks/use-redux/redux";
 import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
 import { Box, Button, Modal } from "@mui/material";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { getMyCollections } from "../_services";
-import FilterOptionsMenu from "./filter-options-menu";
-import Skeleton from "./skeleton";
-
 import {
   FilterKeys,
   FilterOrder as FilterOrderInterface,
 } from "../_interfaces";
+import { getCollectionsByUserId, getMyCollections } from "../_services";
 import { filterByType } from "../_utils/filter-by";
 import MyCollections from "./collections";
+import FilterOptionsMenu from "./filter-options-menu";
 import FilterOrder from "./filter-order";
-export default function Collections() {
+import Skeleton from "./skeleton";
+
+interface Props {
+  userId?: string;
+}
+export default function Collections({ userId }: Props) {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
   const { t } = useTranslation();
@@ -25,14 +31,10 @@ export default function Collections() {
   );
   const [filterKey, setFilterKey] = useState<FilterKeys>("items");
   const [filterOrder, setFilterOrder] = useState<FilterOrderInterface>("ASC");
-
+  const { role } = useAppSelector((state) => state.user.user);
+  const router = useRouter();
   useEffect(() => {
-    getMyCollections()
-      .then((res) => setCollections(res.data))
-      .catch((res) => console.log(res))
-      .finally(() => {
-        setIsLoading(false);
-      });
+    handleRefreshCollections();
   }, []);
 
   const handleOpenModal = () => {
@@ -40,12 +42,22 @@ export default function Collections() {
   };
 
   const handleRefreshCollections = () => {
-    getMyCollections()
-      .then((res) => setCollections(res.data))
-      .catch((res) => console.log(res))
-      .finally(() => {
-        setIsLoading(false);
-      });
+    if (userId) {
+      if (role !== "ADMIN") return router.replace("/");
+      getCollectionsByUserId(userId)
+        .then((res) => setCollections(res.data))
+        .catch((res) => console.log(res))
+        .finally(() => {
+          setIsLoading(false);
+        });
+    } else {
+      getMyCollections()
+        .then((res) => setCollections(res.data))
+        .catch((res) => console.log(res))
+        .finally(() => {
+          setIsLoading(false);
+        });
+    }
   };
 
   const handleFilter = () => {
@@ -55,34 +67,36 @@ export default function Collections() {
   };
 
   return (
-    <Box>
-      <Box
-        sx={{
-          display: "flex",
-          gap: "10px",
-          mb: "30px",
-          justifyContent: "space-between",
-        }}
-      >
-        <Box sx={{ display: "flex", gap: "20px" }}>
-          <FilterOptionsMenu key={filterKey} setKey={setFilterKey} />
-          <FilterOrder
-            filterOrder={filterOrder}
-            setFilterOrder={setFilterOrder}
-          />
-          <Button variant="contained" onClick={handleFilter}>
-            {t("commons:filter")}
+    <Box sx={{ marginTop: "20px" }}>
+      {collections !== null && collections.length !== 0 && (
+        <Box
+          sx={{
+            display: "flex",
+            gap: "10px",
+            mb: "30px",
+            justifyContent: "space-between",
+          }}
+        >
+          <Box sx={{ display: "flex", gap: "20px" }}>
+            <FilterOptionsMenu key={filterKey} setKey={setFilterKey} />
+            <FilterOrder
+              filterOrder={filterOrder}
+              setFilterOrder={setFilterOrder}
+            />
+            <Button variant="contained" onClick={handleFilter}>
+              {t("commons:filter")}
+            </Button>
+          </Box>
+          <Button
+            onClick={handleOpenModal}
+            sx={{ display: "flex", gap: "10px" }}
+            variant="contained"
+          >
+            <AddCircleOutlineOutlinedIcon sx={{ color: "white" }} />
+            {t("commons:add")}
           </Button>
         </Box>
-        <Button
-          onClick={handleOpenModal}
-          sx={{ display: "flex", gap: "10px" }}
-          variant="contained"
-        >
-          <AddCircleOutlineOutlinedIcon sx={{ color: "white" }} />
-          {t("commons:add")}
-        </Button>
-      </Box>
+      )}
       <Box sx={{ display: "flex", flexDirection: "column", gap: "15px" }}>
         {isLoading || collections === null ? (
           <Skeleton />
@@ -92,6 +106,9 @@ export default function Collections() {
             collections={collections}
           />
         )}
+        {collections !== null && collections.length === 0 && (
+          <EmptyContent text={t("commons:noCollections")} />
+        )}
       </Box>
       <Modal
         aria-labelledby="parent-modal-title"
@@ -100,6 +117,7 @@ export default function Collections() {
         onClose={() => setIsOpenModal(false)}
       >
         <CreateCollectionForm
+          userId={userId}
           handleRefreshCollections={handleRefreshCollections}
           handleCLoseModal={() => {
             setIsOpenModal(false);

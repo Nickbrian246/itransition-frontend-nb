@@ -22,6 +22,8 @@ export default function Items({ items }: Props) {
           date={item.updatedAt}
           title={item.name}
           locale={locale}
+          editedBy={item.editedBy}
+          isEdited={item.isEdited}
         />
       ))}
     </Box>

@@ -1,7 +1,15 @@
 import { createSlice, createEntityAdapter } from "@reduxjs/toolkit";
-import { User } from "@/entities/user";
-import { getUser, loginUser, registerUser } from "./auth-thunk";
-import { setAccessToken } from "@/utils/localstorage/localstorage";
+import { User, UserPreferences } from "@/entities/user";
+import {
+  getUser,
+  loginUser,
+  registerUser,
+  saveUserPreference,
+} from "./auth-thunk";
+import {
+  setAccessToken,
+  setUserPreferencesInLocalStorage,
+} from "@/utils/localstorage/localstorage";
 export interface userState extends Omit<User, "password" | "lastName"> {
   isAuth: boolean;
 }
@@ -14,12 +22,17 @@ interface InitialState {
   user: userState;
   authError: AuthError;
 }
+const defaultUserPreference: UserPreferences = {
+  language: "en",
+  theme: "LIGHT",
+};
 const initialState: InitialState = {
   user: {
     email: "",
     firstName: "",
     role: null,
     isAuth: false,
+    userPreferences: defaultUserPreference,
   },
   authError: {
     duration: 3000,
@@ -41,12 +54,17 @@ export const userSlice = createSlice({
     cleanAuthErrorMessage: (state) => {
       state.authError = { isActive: false, message: "" };
     },
+    setUserPreference: (state, { payload }: { payload: UserPreferences }) => {},
   },
   extraReducers: (builder) => {
     builder
       .addCase(registerUser.fulfilled, (state, { payload }) => {
         setAccessToken(payload.metaData.access_token);
-        state.user = { ...payload.data, isAuth: true };
+        state.user = {
+          ...payload.data,
+          userPreferences: defaultUserPreference,
+          isAuth: true,
+        };
       })
       .addCase(registerUser.rejected, (state, { payload }) => {
         state.authError = {
@@ -57,6 +75,8 @@ export const userSlice = createSlice({
 
       .addCase(loginUser.fulfilled, (state, { payload }) => {
         setAccessToken(payload.metaData.access_token);
+        if (payload.data.userPreferences)
+          setUserPreferencesInLocalStorage(payload.data.userPreferences);
         state.user = { ...payload.data, isAuth: true };
       })
       .addCase(loginUser.rejected, (state, { payload }) => {
@@ -65,6 +85,11 @@ export const userSlice = createSlice({
 
       .addCase(getUser.fulfilled, (state, { payload }) => {
         state.user = { ...payload.data, isAuth: true };
+      })
+
+      .addCase(saveUserPreference.fulfilled, (state, { payload }) => {
+        if (payload.data) setUserPreferencesInLocalStorage(payload.data);
+        state.user.userPreferences = payload.data;
       });
   },
 });

@@ -18,7 +18,10 @@ export async function getCustomFieldsByCollectionId(
 }
 
 export async function createItem(
-  item: Pick<Item, "name" | "customFields" | "tagsIds" | "collectionId">
+  item: Pick<
+    Item,
+    "name" | "customFields" | "tagsIds" | "collectionId" | "userId"
+  >
 ): Promise<ApiSuccessResponseWithData<Item>> {
   try {
     const { data } = await axios.post<ApiSuccessResponseWithData<Item>>(

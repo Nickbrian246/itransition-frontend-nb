@@ -27,3 +27,16 @@ export async function deleteCollectionById(
     throw new Error(`${error}`);
   }
 }
+
+export async function getCollectionsByUserId(
+  id: string
+): Promise<ApiSuccessResponseWithData<Collections[]>> {
+  try {
+    const { data } = await axios.get<ApiSuccessResponseWithData<Collections[]>>(
+      `${BASE_URL}/collections/user/${id}`
+    );
+    return data;
+  } catch (error) {
+    throw new Error(`${error}`);
+  }
+}

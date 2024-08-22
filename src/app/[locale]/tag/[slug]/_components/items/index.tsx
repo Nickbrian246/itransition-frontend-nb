@@ -14,6 +14,8 @@ export default function ItemsCards({ tag, locale }: Props) {
       <Typography variant="h6"> Tag: {tag?.name}</Typography>
       {tag?.items.map((item) => (
         <ItemCard
+          editedBy={item.editedBy}
+          isEdited={item.isEdited}
           authorName={item.author.firstName}
           collectionName={item.collection.name}
           date={item.updatedAt}

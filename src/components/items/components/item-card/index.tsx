@@ -6,6 +6,7 @@ import { useTranslation } from "react-i18next";
 import Link from "next/link";
 import { Locale } from "@/types/types";
 import { timeFromNow } from "@/utils/date/date-distance";
+import { User } from "@/entities/user";
 interface Props {
   title: string;
   authorName: string;
@@ -13,6 +14,8 @@ interface Props {
   date: string;
   id: string;
   locale: Locale;
+  isEdited: boolean;
+  editedBy: User;
 }
 
 export default function ItemCard({
@@ -22,6 +25,8 @@ export default function ItemCard({
   title,
   locale,
   id,
+  editedBy,
+  isEdited,
 }: Props) {
   const { t } = useTranslation();
   const timeFrom = timeFromNow(new Date(date), locale);
@@ -43,9 +48,25 @@ export default function ItemCard({
         >
           <Box sx={{ display: "flex", justifyContent: "space-between" }}>
             <Typography variant="subtitle2">{title}</Typography>
-            <Typography variant="caption">
-              {t("commons:author")}: {authorName}
-            </Typography>
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                gap: "10px",
+                flexWrap: "wrap",
+                justifyContent: "flex-end",
+              }}
+            >
+              <Typography variant="caption">
+                {t("commons:author")}: {authorName}
+              </Typography>
+
+              {isEdited && (
+                <Typography variant="caption">
+                  {t("commons:editedBy")}: {editedBy.firstName}
+                </Typography>
+              )}
+            </Box>
           </Box>
           <Typography variant="body2">
             {" "}

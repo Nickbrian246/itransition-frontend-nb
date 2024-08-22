@@ -13,6 +13,8 @@ export default function Items({ items, locale }: Props) {
     <>
       {items.map((item) => (
         <ItemCard
+          editedBy={item.editedBy}
+          isEdited={item.isEdited}
           locale={locale}
           authorName={item.author.firstName}
           collectionName={item.collection.name}

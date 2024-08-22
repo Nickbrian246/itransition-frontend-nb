@@ -21,6 +21,7 @@ export default function IntegerField({
   gatherData,
   handleDeleteItem,
 }: Props) {
+  const [isDirty, setIsDirty] = useState<boolean>(false);
   const [numericField, setNumericField] = useState<EditCustomFields>({
     id: v4(),
     name,
@@ -29,11 +30,12 @@ export default function IntegerField({
   });
 
   useEffect(() => {
+    if (!isDirty) return;
     const timer = setTimeout(() => {
       gatherData(numericField);
     }, 900);
     return () => clearTimeout(timer);
-  }, [numericField]);
+  }, [numericField, isDirty]);
 
   useEffect(() => {
     if (value && id)
@@ -46,11 +48,16 @@ export default function IntegerField({
       return { ...prev, value: event.target.value };
     });
   };
+  const handleFocus = () => {
+    setIsDirty(true);
+  };
+
   return (
     <Box sx={{ display: "flex", flexDirection: "column", maxWidth: "300px" }}>
       <Typography variant="caption">{name}</Typography>
       <Box sx={{ display: "flex", alignItems: "center", gap: "10px" }}>
         <TextField
+          onFocus={handleFocus}
           disabled={!isEditable}
           onChange={handleTextArea}
           aria-label="empty textarea"

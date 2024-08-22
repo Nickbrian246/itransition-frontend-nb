@@ -1,6 +1,9 @@
 import { Collections } from "@/entities/collections";
 import axios from "axios";
-import { CreateCollection as CreateCollectionInterface } from "../interfaces";
+import {
+  CreateCollection as CreateCollectionInterface,
+  UpdateCollection,
+} from "../interfaces";
 import { ApiSuccessResponseWithData } from "@/types/api/api-response-interface";
 import { CustomField } from "@/entities/custom-field";
 import { Categories } from "@/entities/categories";
@@ -20,7 +23,7 @@ export async function CreateCollection(
   }
 }
 export async function editCollectionById(
-  collection: CreateCollectionInterface,
+  collection: UpdateCollection,
   id: string
 ): Promise<ApiSuccessResponseWithData<Collections>> {
   try {

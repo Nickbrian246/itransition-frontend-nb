@@ -1,64 +1,39 @@
-import {
-  Box,
-  TextField,
-  Autocomplete,
-  Typography,
-  Button,
-} from "@mui/material";
-import React, {
-  ChangeEvent,
-  ChangeEventHandler,
-  useEffect,
-  useState,
-} from "react";
+import { Categories } from "@/entities/categories";
+import { Box, Button, TextField, Typography } from "@mui/material";
+import React, { ChangeEvent, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { CustomInputLabel } from "../custom-components";
-import { CreateCollection as CreateCollectionInterface } from "./interfaces";
+import CustomTextArea from "../custom-components/custom-text-area";
+import CreateCustomCategory from "./components/add-custom-category";
 import AutoComplete from "./components/auto-complete";
 import CustomFields from "./components/custom-fields";
-import { useTranslation } from "react-i18next";
-import { Custom } from "./interfaces";
 import FileUploader from "./components/file-uploader";
+import MarkDownDescription from "./components/mark-down-description";
+import {
+  CreateCollection as CreateCollectionInterface,
+  Custom,
+  EditableCollection,
+  UpdateCollection,
+} from "./interfaces";
 import {
   CreateCollection,
   CreateCustomFIeldsByCollectionId,
   editCollectionById,
 } from "./services";
-import { Categories } from "@/entities/categories";
 import { adapterForCustomFields } from "./utils";
-import { Collections } from "@/entities/collections";
-import MarkDownDescription from "./components/mark-down-description";
-import CustomTextArea from "../custom-components/custom-text-area";
-import CreateCustomCategory from "./components/add-custom-category";
 
-interface EditableCollection
-  extends Omit<Collections, "user" | "updatedAt" | "category" | "categoryId"> {
-  categoryId: string | null;
-}
 interface Props {
   handleRefreshCollections: () => void;
   handleCLoseModal: () => void;
   editableCollectionData?: EditableCollection;
+  userId?: string;
 }
 
-const style = {
-  position: "absolute" as "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  padding: "10px",
-  width: "100%",
-  maxWidth: "900px",
-  bgcolor: "background.paper",
-  border: "2px solid #000",
-  boxShadow: 24,
-  pt: 2,
-  px: 4,
-  pb: 3,
-};
 export default function CreateCollectionForm({
   handleCLoseModal,
   handleRefreshCollections,
   editableCollectionData,
+  userId,
 }: Props) {
   const [imgSrc, setImgSrc] = useState<string | null>(null);
   const [categorySelected, setCategorySelected] = useState<Categories | null>(
@@ -72,7 +47,7 @@ export default function CreateCollectionForm({
     null
   );
   const [collectionData, setCreateCollectionData] = useState<
-    Omit<CreateCollectionInterface, "category" | "imageId" | "categoryId">
+    Pick<CreateCollectionInterface, "description" | "name">
   >({
     description: "",
     name: "",
@@ -139,6 +114,7 @@ export default function CreateCollectionForm({
       description: collectionData.description,
       name: collectionData.name,
       imageId: imgSrc,
+      userId: userId ?? null,
     };
     CreateCollection(data)
       .then((res) => {
@@ -147,7 +123,7 @@ export default function CreateCollectionForm({
       .catch((err) => console.log(err));
   };
   const handleEditCollection = () => {
-    const data: CreateCollectionInterface = {
+    const data: UpdateCollection = {
       category:
         categorySelected?.id ?? editableCollectionData?.categoryId ?? "",
       description: collectionData.description,
@@ -171,7 +147,19 @@ export default function CreateCollectionForm({
   return (
     <Box
       sx={{
-        ...style,
+        position: "absolute",
+        top: "50%",
+        left: "50%",
+        transform: "translate(-50%, -50%)",
+        padding: "10px",
+        width: "100%",
+        maxWidth: "900px",
+        bgcolor: "background.paper",
+        border: "2px solid #000",
+        boxShadow: 24,
+        pt: 2,
+        px: 4,
+        pb: 3,
         display: "flex",
         flexDirection: "column",
         gap: "20px",

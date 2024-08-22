@@ -22,7 +22,7 @@ export default function Item({ slug }: Props) {
   const [isEditable, setIsEditable] = useState<boolean>(false);
   const [isUserOwner, setIsUserOwner] = useState<boolean>(false);
   const [groupOfTags, setGroupTags] = useState<Tag[]>([]);
-  const { email } = useAppSelector((state) => state.user.user);
+  const { email, role } = useAppSelector((state) => state.user.user);
   const { t } = useTranslation();
   const router = useRouter();
 
@@ -31,12 +31,12 @@ export default function Item({ slug }: Props) {
   }, [slug]);
 
   useEffect(() => {
-    if (email === item?.author.email) {
+    if (email === item?.author.email || role === "ADMIN") {
       setIsUserOwner(true);
     } else {
       setIsUserOwner(false);
     }
-  }, [item?.author.email, email]);
+  }, [email]);
 
   const updateItem = () => {
     getItemById(slug)
@@ -55,7 +55,11 @@ export default function Item({ slug }: Props) {
       tagsIds.push(tag.id);
     }
     updateItemById(
-      { name: item.name, customFields: fieldsEdited, tagsIds: tagsIds },
+      {
+        name: item.name,
+        customFields: fieldsEdited,
+        tagsIds: tagsIds,
+      },
       item.id
     )
       .then((res) => {
