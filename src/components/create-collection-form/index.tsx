@@ -254,7 +254,8 @@ export default function CreateCollectionForm({
             !(
               collectionData.description.length !== 0 &&
               collectionData.name.length !== 0 &&
-              !isNewCategory
+              !isNewCategory &&
+              categorySelected
             )
           }
           variant="contained"
