@@ -6,7 +6,13 @@ import TranslationsProvider from "@/components/translations-provider/translation
 import { Locale } from "@/types/types";
 import Dashboard from "./_components";
 
-const i18nNamespaces = ["auth", "commons", "password-rules", "menu-options"];
+const i18nNamespaces = [
+  "auth",
+  "commons",
+  "password-rules",
+  "menu-options",
+  "userHeaders",
+];
 export default async function Page({
   params: { locale, slug },
 }: {
