@@ -17,6 +17,7 @@ import "dayjs/locale/es";
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { GetLikes } from "../../_interfaces";
+import { socket } from "@/lib/socket/socket";
 import {
   CreateComment,
   createLike,
@@ -27,6 +28,7 @@ import {
 interface Props {
   itemId: string;
 }
+
 export default function Comments({ itemId }: Props) {
   const [comments, setComments] = useState<CommentsInterface[]>([]);
   const [likes, setLikes] = useState<GetLikes | null>(null);
@@ -37,7 +39,21 @@ export default function Comments({ itemId }: Props) {
   useEffect(() => {
     getComments();
     getLikes();
-  }, []);
+  }, [itemId]);
+
+  useEffect(() => {
+    socket.connect();
+    socket.emit("commentsRoom", { itemId });
+
+    socket.on("newComment", () => {
+      getComments();
+    });
+
+    return () => {
+      socket.off("newComment");
+      socket.disconnect();
+    };
+  }, [itemId]);
 
   const getComments = () => {
     getCommentsByItemId(itemId)
