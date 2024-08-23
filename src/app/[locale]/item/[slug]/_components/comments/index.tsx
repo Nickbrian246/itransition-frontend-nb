@@ -25,6 +25,7 @@ import {
   getCommentsByItemId,
   getLIkes,
 } from "./services";
+import { useRouter } from "next/navigation";
 interface Props {
   itemId: string;
 }
@@ -33,8 +34,12 @@ export default function Comments({ itemId }: Props) {
   const [comments, setComments] = useState<CommentsInterface[]>([]);
   const [likes, setLikes] = useState<GetLikes | null>(null);
   const { locale } = useAppSelector((state) => state.locale);
+  const {
+    user: { isAuth },
+  } = useAppSelector((state) => state.user);
   const { t } = useTranslation();
   const [text, setText] = useState<string>("");
+  const router = useRouter();
 
   useEffect(() => {
     getComments();
@@ -72,6 +77,7 @@ export default function Comments({ itemId }: Props) {
 
   const handleCreateComment = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (!isAuth) return router.replace("/auth/login");
     CreateComment({ content: text, itemId })
       .then((res) => {
         setText("");
@@ -81,6 +87,7 @@ export default function Comments({ itemId }: Props) {
   };
 
   const handleCreateLike = () => {
+    if (!isAuth) return router.replace("/auth/login");
     createLike(itemId)
       .then((res) => {
         setLikes(res.data);
@@ -88,6 +95,7 @@ export default function Comments({ itemId }: Props) {
       .catch((err) => console.log(err));
   };
   const handleDislike = () => {
+    if (!isAuth) return router.replace("/auth/login");
     disLike(itemId)
       .then((res) => {
         setLikes(res.data);
