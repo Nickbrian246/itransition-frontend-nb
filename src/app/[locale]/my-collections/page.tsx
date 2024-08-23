@@ -5,7 +5,13 @@ import TranslationsProvider from "@/components/translations-provider/translation
 import Collections from "./_componets";
 import { Locale } from "@/types/types";
 
-const i18nNamespaces = ["auth", "commons", "password-rules", "menu-options"];
+const i18nNamespaces = [
+  "auth",
+  "commons",
+  "password-rules",
+  "menu-options",
+  "collection",
+];
 export default async function Page({
   params: { locale, slug },
 }: {
