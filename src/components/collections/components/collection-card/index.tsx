@@ -1,12 +1,11 @@
 "use client";
+import { timeFromNow } from "@/utils/date/date-distance";
 import { Box, Card, Typography } from "@mui/material";
-import React from "react";
 import Image from "next/image";
-import foodImage from "../../../../../public/assets/food.jpg";
-import { formatDistanceToNowStrict } from "date-fns";
-import { es } from "date-fns/locale";
 import Link from "next/link";
 import ReactMarkdown from "react-markdown";
+import foodImage from "../../../../../public/assets/food.jpg";
+import { useAppSelector } from "@/hooks/use-redux/redux";
 interface Props {
   title: string;
   description: string;
@@ -23,11 +22,8 @@ export default function CollectionCard({
   title,
   id,
 }: Props) {
-  const fechaPublicacion = new Date(date);
-  const tiempoTranscurrido = formatDistanceToNowStrict(fechaPublicacion, {
-    addSuffix: true,
-    locale: es,
-  });
+  const { locale } = useAppSelector((state) => state.locale);
+  const time = timeFromNow(new Date(date), locale);
   return (
     <Link style={{ textDecoration: "none" }} href={`/collection/${id}`}>
       <Card
@@ -70,7 +66,7 @@ export default function CollectionCard({
             sx={{ display: "flex", gap: "10px", justifyContent: "flex-end" }}
           >
             <Typography variant="caption"> {itemsCount} items</Typography>
-            <Typography variant="caption"> {tiempoTranscurrido} </Typography>
+            <Typography variant="caption"> {time} </Typography>
           </Box>
         </Box>
       </Card>
