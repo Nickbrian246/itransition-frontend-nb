@@ -18,6 +18,7 @@ import MyCollections from "./collections";
 import FilterOptionsMenu from "./filter-options-menu";
 import FilterOrder from "./filter-order";
 import Skeleton from "./skeleton";
+import CsvButton from "./csv-btn";
 
 interface Props {
   userId?: string;
@@ -33,6 +34,7 @@ export default function Collections({ userId }: Props) {
   const [filterOrder, setFilterOrder] = useState<FilterOrderInterface>("ASC");
   const { role } = useAppSelector((state) => state.user.user);
   const router = useRouter();
+
   useEffect(() => {
     handleRefreshCollections();
   }, []);
@@ -68,15 +70,15 @@ export default function Collections({ userId }: Props) {
 
   return (
     <Box sx={{ marginTop: "20px" }}>
-      {collections !== null && collections.length !== 0 && (
-        <Box
-          sx={{
-            display: "flex",
-            gap: "10px",
-            mb: "30px",
-            justifyContent: "space-between",
-          }}
-        >
+      <Box
+        sx={{
+          display: "flex",
+          gap: "10px",
+          mb: "30px",
+          justifyContent: "space-between",
+        }}
+      >
+        {collections !== null && collections.length !== 0 && (
           <Box sx={{ display: "flex", gap: "20px" }}>
             <FilterOptionsMenu key={filterKey} setKey={setFilterKey} />
             <FilterOrder
@@ -86,17 +88,22 @@ export default function Collections({ userId }: Props) {
             <Button variant="contained" onClick={handleFilter}>
               {t("commons:filter")}
             </Button>
+            <CsvButton collection={collections} />
           </Box>
-          <Button
-            onClick={handleOpenModal}
-            sx={{ display: "flex", gap: "10px" }}
-            variant="contained"
-          >
-            <AddCircleOutlineOutlinedIcon sx={{ color: "white" }} />
-            {t("commons:add")}
-          </Button>
-        </Box>
-      )}
+        )}
+
+        <Button
+          onClick={handleOpenModal}
+          sx={{ display: "flex", gap: "10px" }}
+          variant="contained"
+        >
+          <AddCircleOutlineOutlinedIcon sx={{ color: "white" }} />
+          {collections !== null && collections.length !== 0
+            ? t("commons:add")
+            : t("commons:createNewCollection")}
+        </Button>
+      </Box>
+
       <Box sx={{ display: "flex", flexDirection: "column", gap: "15px" }}>
         {isLoading || collections === null ? (
           <Skeleton />

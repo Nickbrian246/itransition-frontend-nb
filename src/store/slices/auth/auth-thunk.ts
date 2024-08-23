@@ -9,6 +9,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import { setTheme } from "../theme/theme-slice";
 import { setLocale } from "../current-locale";
+import { setUserPreferencesInLocalStorage } from "@/utils/localstorage/localstorage";
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 export const registerUser = createAsyncThunk<
@@ -72,6 +73,7 @@ export const saveUserPreference = createAsyncThunk<
       const { data } = await axios.post<
         ApiSuccessResponseWithData<UserPreferences>
       >(`${BASE_URL}/user-preferences`, userPreferences);
+      setUserPreferencesInLocalStorage(data.data);
       dispatch(setTheme(userPreferences.theme));
       dispatch(setLocale(userPreferences.language));
       return fulfillWithValue(data);

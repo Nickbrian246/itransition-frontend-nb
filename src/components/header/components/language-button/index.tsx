@@ -12,6 +12,7 @@ import { Locale } from "@/types/types";
 import { getUserPreferencesInLocalStorage } from "@/utils/localstorage/localstorage";
 import { setTheme } from "@/store/slices/theme/theme-slice";
 import { setLocale } from "@/store/slices/current-locale";
+import { saveUserPreference } from "@/store/slices/auth/auth-thunk";
 
 interface Props {
   languageMenuAnchorEl: null | HTMLElement;
@@ -37,15 +38,16 @@ export default function ChangeLanguage({
 
   useEffect(() => {
     const userPref = getUserPreferencesInLocalStorage();
+
     if (userPref) {
       dispatch(setTheme(userPref.theme));
       dispatch(setLocale(userPref.language));
     }
-    if (isAuth && userPref) {
-      dispatch(setLocale(userPref.language));
-      handleSelectLanguage(userPref.language);
-    }
-  }, [locale, dispatch]);
+    // if (isAuth && userPref) {
+    //   dispatch(setLocale(userPref.language));
+    //   handleSelectLanguage(userPref.language);
+    // }
+  }, [locale]);
 
   const handleClose = (event: Event | React.SyntheticEvent) => {
     if (
@@ -60,7 +62,7 @@ export default function ChangeLanguage({
 
   const handleSelectLanguage = (value: Locale) => {
     const newLocale = value as Locale;
-
+    dispatch(saveUserPreference({ language: newLocale, theme: theme }));
     const days = 30;
     const date = new Date();
     date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);

@@ -1,11 +1,15 @@
+"use client";
 import { Button } from "@mui/material";
 import React, { useEffect } from "react";
 import { deleteUsersByIds } from "./services";
+import { useTranslation } from "react-i18next";
 interface Props {
   usersSelected: any[];
   updateUsers: () => void;
 }
 export default function DeleteBtn({ usersSelected, updateUsers }: Props) {
+  const { t } = useTranslation();
+
   // const handleBlockBtn = () => {
   //   deleteUsersByIds()
   //     .then((res) => {})
@@ -17,7 +21,7 @@ export default function DeleteBtn({ usersSelected, updateUsers }: Props) {
       sx={{ bgcolor: "#d50000" }}
       variant="contained"
     >
-      delete
+      {t("commons:delete")}
     </Button>
   );
 }

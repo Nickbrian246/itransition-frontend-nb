@@ -45,7 +45,11 @@ export default function Dashboard() {
         gap: "10px",
       }}
     >
-      <UserActions usersSelected={selectedRows} updateUsers={getAllUsers} />
+      <UserActions
+        usersSelected={selectedRows}
+        updateUsers={getAllUsers}
+        users={rows}
+      />
       <UsersTable
         selectedRows={selectedRows}
         handleSelectionChange={handleSelectionChange}

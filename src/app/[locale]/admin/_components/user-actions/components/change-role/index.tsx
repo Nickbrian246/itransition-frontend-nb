@@ -1,22 +1,25 @@
 "use client";
+import { Role } from "@/entities/user";
 import {
-  SelectChangeEvent,
   Box,
+  Button,
   FormControl,
   InputLabel,
-  Select,
   MenuItem,
-  Button,
+  Select,
+  SelectChangeEvent,
 } from "@mui/material";
-import React, { useState } from "react";
+import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { changeRolesByIds } from "./services";
-import { Role, User } from "@/entities/user";
 interface Props {
   usersSelected: any[];
   updateUsers: () => void;
 }
 export default function ChangeRoles({ usersSelected, updateUsers }: Props) {
   const [role, setRole] = useState<Role>("USER");
+
+  const { t } = useTranslation();
 
   const handleChange = (event: SelectChangeEvent) => {
     setRole(event.target.value as Role);
@@ -35,11 +38,11 @@ export default function ChangeRoles({ usersSelected, updateUsers }: Props) {
 
   return (
     <Box
-      sx={{ minWidth: 420, display: "flex", gap: "10px", alignItems: "center" }}
+      sx={{ width: 320, display: "flex", gap: "10px", alignItems: "center" }}
     >
       <FormControl fullWidth>
         <InputLabel id="demo-simple-select-label">
-          seleccione el rol{" "}
+          {t("commons:selectRole")}
         </InputLabel>
         <Select
           labelId="demo-simple-select-label"
@@ -55,11 +58,11 @@ export default function ChangeRoles({ usersSelected, updateUsers }: Props) {
       </FormControl>
       <Button
         disabled={usersSelected.length === 0}
-        sx={{ padding: "5px", width: "100%", height: "40px" }}
+        sx={{ padding: "5px", width: "200px", height: "40px" }}
         variant="contained"
         onClick={handleChangeRole}
       >
-        Editar roles
+        {t("commons:editRole")}
       </Button>
     </Box>
   );
