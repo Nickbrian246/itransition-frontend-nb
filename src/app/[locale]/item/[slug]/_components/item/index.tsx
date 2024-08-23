@@ -23,6 +23,7 @@ export default function Item({ slug }: Props) {
   const [isUserOwner, setIsUserOwner] = useState<boolean>(false);
   const [groupOfTags, setGroupTags] = useState<Tag[]>([]);
   const { email, role } = useAppSelector((state) => state.user.user);
+
   const { t } = useTranslation();
   const router = useRouter();
 
