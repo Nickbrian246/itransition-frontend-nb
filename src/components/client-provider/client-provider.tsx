@@ -10,10 +10,10 @@ export default function ClientComponent({
 }: {
   children: Readonly<ReactNode>;
 }) {
-  useEffect(() => {
-    const token = localStorage.getItem("access_token");
-    axios.defaults.headers.Authorization = `Bearer ${token}`;
-  }, []);
+  // useEffect(() => {
+  //   const token = localStorage.getItem("access_token");
+  //   axios.defaults.headers.Authorization = `Bearer ${token}`;
+  // }, []);
   return (
     <section>
       <Provider store={store}>
