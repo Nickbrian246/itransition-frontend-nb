@@ -17,10 +17,16 @@ export default function UnLockBtn({ usersSelected, updateUsers }: Props) {
   const dispatch = useAppDispatch();
   const router = useRouter();
 
-  const handleBlockBtn = () => {
+  const handleUnlock = () => {
     unLockUsersByIds({ usersIds: usersSelected })
       .then((res) => {
         updateUsers();
+        dispatch(
+          setGlobalWarning({
+            message: `users ${t(`commons:unLock`)}`,
+            severity: "success",
+          })
+        );
       })
       .catch((err: ErrorResponse<string>) => {
         dispatch(
@@ -39,7 +45,7 @@ export default function UnLockBtn({ usersSelected, updateUsers }: Props) {
   return (
     <Button
       disabled={usersSelected.length === 0}
-      onClick={handleBlockBtn}
+      onClick={handleUnlock}
       sx={{ bgcolor: "#43a047" }}
       variant="contained"
     >

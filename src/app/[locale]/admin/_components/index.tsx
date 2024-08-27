@@ -22,7 +22,12 @@ export default function Dashboard() {
   const router = useRouter();
   const dispatch = useAppDispatch();
   useEffect(() => {
-    if (role !== "ADMIN") return router.replace("/");
+    if (role !== "ADMIN") {
+      dispatch(
+        setGlobalWarning({ message: "only admin users", severity: "error" })
+      );
+      return router.replace("/");
+    }
     getAllUsers();
   }, [role]);
 

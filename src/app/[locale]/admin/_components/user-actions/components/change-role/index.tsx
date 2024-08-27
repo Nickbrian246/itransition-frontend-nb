@@ -16,6 +16,7 @@ import { setGlobalWarning } from "@/store/slices/global-warning/slice";
 import { ErrorResponse } from "@/types/api/api-error.interface";
 import { errorsRedirectToHome } from "@/utils/errors-actions/errors";
 import { useRouter } from "next/navigation";
+import { useAppDispatch } from "@/hooks/use-redux/redux";
 interface Props {
   usersSelected: any[];
   updateUsers: () => void;
@@ -24,7 +25,7 @@ export default function ChangeRoles({ usersSelected, updateUsers }: Props) {
   const [role, setRole] = useState<Role>("USER");
   const router = useRouter();
   const { t } = useTranslation();
-
+  const dispatch = useAppDispatch();
   const handleChange = (event: SelectChangeEvent) => {
     setRole(event.target.value as Role);
   };
@@ -36,6 +37,12 @@ export default function ChangeRoles({ usersSelected, updateUsers }: Props) {
     })
       .then((res) => {
         updateUsers();
+        dispatch(
+          setGlobalWarning({
+            message: "roles updated successfully",
+            severity: "success",
+          })
+        );
       })
       .catch((err: ErrorResponse<string>) => {
         dispatch(
@@ -82,7 +89,4 @@ export default function ChangeRoles({ usersSelected, updateUsers }: Props) {
       </Button>
     </Box>
   );
-}
-function dispatch(arg0: any) {
-  throw new Error("Function not implemented.");
 }
