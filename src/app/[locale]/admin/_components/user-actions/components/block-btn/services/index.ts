@@ -1,5 +1,5 @@
 import { UsersIds } from "@/app/[locale]/admin/_interfaces";
-import axios from "axios";
+import axios from "@/lib/axios/axios";
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 export async function blockUsersByIds(users: UsersIds): Promise<string> {
@@ -7,6 +7,9 @@ export async function blockUsersByIds(users: UsersIds): Promise<string> {
     const { statusText } = await axios.patch(`${BASE_URL}/users/block`, users);
     return statusText;
   } catch (error) {
-    throw new Error(`${error}`);
+    //@ts-ignore
+    const err: ErrorResponse<string> = error.response.data;
+
+    throw err;
   }
 }

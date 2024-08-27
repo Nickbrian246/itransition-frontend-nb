@@ -12,15 +12,20 @@ import {
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { changeRolesByIds } from "./services";
+import { setGlobalWarning } from "@/store/slices/global-warning/slice";
+import { ErrorResponse } from "@/types/api/api-error.interface";
+import { errorsRedirectToHome } from "@/utils/errors-actions/errors";
+import { useRouter } from "next/navigation";
+import { useAppDispatch } from "@/hooks/use-redux/redux";
 interface Props {
   usersSelected: any[];
   updateUsers: () => void;
 }
 export default function ChangeRoles({ usersSelected, updateUsers }: Props) {
   const [role, setRole] = useState<Role>("USER");
-
+  const router = useRouter();
   const { t } = useTranslation();
-
+  const dispatch = useAppDispatch();
   const handleChange = (event: SelectChangeEvent) => {
     setRole(event.target.value as Role);
   };
@@ -32,8 +37,26 @@ export default function ChangeRoles({ usersSelected, updateUsers }: Props) {
     })
       .then((res) => {
         updateUsers();
+        dispatch(
+          setGlobalWarning({
+            message: "roles updated successfully",
+            severity: "success",
+          })
+        );
       })
-      .catch((err) => console.log(err));
+      .catch((err: ErrorResponse<string>) => {
+        dispatch(
+          setGlobalWarning({
+            message: t(`errors:${err.message}`),
+            severity: "error",
+          })
+        );
+        if (
+          errorsRedirectToHome[err.message as keyof typeof errorsRedirectToHome]
+        ) {
+          router.replace("/");
+        }
+      });
   };
 
   return (

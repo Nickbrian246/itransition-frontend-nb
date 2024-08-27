@@ -6,13 +6,19 @@ import { useTranslation } from "react-i18next";
 import LatestItems from "./components/items";
 import Skeletons from "./components/skeleton";
 import { getLatestItems } from "./services/item";
-import { useAppSelector } from "@/hooks/use-redux/redux";
+import { useAppDispatch, useAppSelector } from "@/hooks/use-redux/redux";
+import { ErrorResponse } from "@/types/api/api-error.interface";
+import { setGlobalWarning } from "@/store/slices/global-warning/slice";
+import { errorsRedirectToHome } from "@/utils/errors-actions/errors";
+import { useRouter } from "next/navigation";
 
 export default function Items() {
   const [items, setItems] = useState<Item[] | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const { locale } = useAppSelector((state) => state.locale);
   const { t } = useTranslation();
+  const dispatch = useAppDispatch();
+  const router = useRouter();
 
   useEffect(() => {
     getLatestItems()
@@ -20,7 +26,19 @@ export default function Items() {
         setItems(res.data);
         setIsLoading(false);
       })
-      .catch((err) => console.log(err))
+      .catch((err: ErrorResponse<string>) => {
+        dispatch(
+          setGlobalWarning({
+            message: t(`errors:${err.message}`),
+            severity: "error",
+          })
+        );
+        if (
+          errorsRedirectToHome[err.message as keyof typeof errorsRedirectToHome]
+        ) {
+          router.replace("/");
+        }
+      })
       .finally(() => setIsLoading(false));
   }, []);
   return (

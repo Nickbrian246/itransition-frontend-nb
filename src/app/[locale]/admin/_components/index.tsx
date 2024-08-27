@@ -6,17 +6,28 @@ import { Box } from "@mui/material";
 import { User } from "@/entities/user";
 import { getUsers } from "../_services";
 import { GridRowSelectionModel, GridCallbackDetails } from "@mui/x-data-grid";
-import { useAppSelector } from "@/hooks/use-redux/redux";
+import { useAppDispatch, useAppSelector } from "@/hooks/use-redux/redux";
 import { useRouter } from "next/navigation";
+import { ErrorResponse } from "@/types/api/api-error.interface";
+import { setGlobalWarning } from "@/store/slices/global-warning/slice";
+import { errorsRedirectToHome } from "@/utils/errors-actions/errors";
+import { useTranslation } from "react-i18next";
 
 export default function Dashboard() {
   const [rows, setRows] = useState<User[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [selectedRows, setSelectedRows] = useState<any>([]);
   const { role } = useAppSelector((state) => state.user.user);
+  const { t } = useTranslation();
   const router = useRouter();
+  const dispatch = useAppDispatch();
   useEffect(() => {
-    if (role !== "ADMIN") return router.replace("/");
+    if (role !== "ADMIN") {
+      dispatch(
+        setGlobalWarning({ message: "only admin users", severity: "error" })
+      );
+      return router.replace("/");
+    }
     getAllUsers();
   }, [role]);
 
@@ -25,7 +36,19 @@ export default function Dashboard() {
     setSelectedRows([]);
     getUsers()
       .then((res) => setRows(res.data))
-      .catch((err) => console.log(err))
+      .catch((err: ErrorResponse<string>) => {
+        dispatch(
+          setGlobalWarning({
+            message: t(`errors:${err.message}`),
+            severity: "error",
+          })
+        );
+        if (
+          errorsRedirectToHome[err.message as keyof typeof errorsRedirectToHome]
+        ) {
+          router.replace("/");
+        }
+      })
       .finally(() => setIsLoading(false));
   };
 

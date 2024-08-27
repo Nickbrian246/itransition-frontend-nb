@@ -1,7 +1,7 @@
 "use client";
 import CustomTextArea from "@/components/custom-components/custom-text-area";
 import { Comments as CommentsInterface } from "@/entities/comments";
-import { useAppSelector } from "@/hooks/use-redux/redux";
+import { useAppDispatch, useAppSelector } from "@/hooks/use-redux/redux";
 import { timeFromNow } from "@/utils/date/date-distance";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import ThumbUpOutlinedIcon from "@mui/icons-material/ThumbUpOutlined";
@@ -26,6 +26,9 @@ import {
   getLIkes,
 } from "./services";
 import { useRouter } from "next/navigation";
+import { setGlobalWarning } from "@/store/slices/global-warning/slice";
+import { errorsRedirectToHome } from "@/utils/errors-actions/errors";
+import { ErrorResponse } from "@/types/api/api-error.interface";
 interface Props {
   itemId: string;
 }
@@ -33,13 +36,14 @@ interface Props {
 export default function Comments({ itemId }: Props) {
   const [comments, setComments] = useState<CommentsInterface[]>([]);
   const [likes, setLikes] = useState<GetLikes | null>(null);
+  const [text, setText] = useState<string>("");
+  const { t } = useTranslation();
   const { locale } = useAppSelector((state) => state.locale);
+  const dispatch = useAppDispatch();
+  const router = useRouter();
   const {
     user: { isAuth },
   } = useAppSelector((state) => state.user);
-  const { t } = useTranslation();
-  const [text, setText] = useState<string>("");
-  const router = useRouter();
 
   useEffect(() => {
     getComments();
@@ -63,12 +67,36 @@ export default function Comments({ itemId }: Props) {
   const getComments = () => {
     getCommentsByItemId(itemId)
       .then((res) => setComments(res.data))
-      .catch((err) => console.log(err));
+      .catch((err: ErrorResponse<string>) => {
+        dispatch(
+          setGlobalWarning({
+            message: t(`errors:${err.message}`),
+            severity: "error",
+          })
+        );
+        if (
+          errorsRedirectToHome[err.message as keyof typeof errorsRedirectToHome]
+        ) {
+          router.replace("/");
+        }
+      });
   };
   const getLikes = () => {
     getLIkes(itemId)
       .then((res) => setLikes(res.data))
-      .catch((err) => console.log(err));
+      .catch((err: ErrorResponse<string>) => {
+        dispatch(
+          setGlobalWarning({
+            message: t(`errors:${err.message}`),
+            severity: "error",
+          })
+        );
+        if (
+          errorsRedirectToHome[err.message as keyof typeof errorsRedirectToHome]
+        ) {
+          router.replace("/");
+        }
+      });
   };
 
   const handleText = (e: ChangeEvent<HTMLTextAreaElement>) => {
@@ -83,7 +111,19 @@ export default function Comments({ itemId }: Props) {
         setText("");
         getComments();
       })
-      .catch((err) => console.log(err));
+      .catch((err: ErrorResponse<string>) => {
+        dispatch(
+          setGlobalWarning({
+            message: t(`errors:${err.message}`),
+            severity: "error",
+          })
+        );
+        if (
+          errorsRedirectToHome[err.message as keyof typeof errorsRedirectToHome]
+        ) {
+          router.replace("/");
+        }
+      });
   };
 
   const handleCreateLike = () => {
@@ -92,7 +132,19 @@ export default function Comments({ itemId }: Props) {
       .then((res) => {
         setLikes(res.data);
       })
-      .catch((err) => console.log(err));
+      .catch((err: ErrorResponse<string>) => {
+        dispatch(
+          setGlobalWarning({
+            message: t(`errors:${err.message}`),
+            severity: "error",
+          })
+        );
+        if (
+          errorsRedirectToHome[err.message as keyof typeof errorsRedirectToHome]
+        ) {
+          router.replace("/");
+        }
+      });
   };
   const handleDislike = () => {
     if (!isAuth) return router.replace("/auth/login");
@@ -100,7 +152,19 @@ export default function Comments({ itemId }: Props) {
       .then((res) => {
         setLikes(res.data);
       })
-      .catch((err) => console.log(err));
+      .catch((err: ErrorResponse<string>) => {
+        dispatch(
+          setGlobalWarning({
+            message: t(`errors:${err.message}`),
+            severity: "error",
+          })
+        );
+        if (
+          errorsRedirectToHome[err.message as keyof typeof errorsRedirectToHome]
+        ) {
+          router.replace("/");
+        }
+      });
   };
   return (
     <Box>

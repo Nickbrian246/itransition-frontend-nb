@@ -1,6 +1,6 @@
 import { Collections } from "@/entities/collections";
 import { ApiSuccessResponseWithData } from "@/types/api/api-response-interface";
-import axios from "axios";
+import axios from "@/lib/axios/axios";
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 export async function getLatestCollections(): Promise<
@@ -12,6 +12,9 @@ export async function getLatestCollections(): Promise<
     );
     return data;
   } catch (error) {
-    throw Error(`${error}`);
+    //@ts-ignore
+    const err: ErrorResponse<string> = error.response.data;
+
+    throw err;
   }
 }

@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from "@/lib/axios/axios";
 import { Tag } from "@/entities/tags";
 import { ApiSuccessResponseWithData } from "@/types/api/api-response-interface";
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
@@ -10,6 +10,8 @@ export async function getTags(): Promise<ApiSuccessResponseWithData<Tag[]>> {
     );
     return data.data;
   } catch (error) {
-    throw new Error(`${error}`);
+    //@ts-ignore
+    const err: ErrorResponse<string> = error.response.data;
+    throw err;
   }
 }

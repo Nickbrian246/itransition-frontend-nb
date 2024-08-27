@@ -1,6 +1,6 @@
-import { Tag, TagWithItems } from "@/entities/tags";
+import { TagWithItems } from "@/entities/tags";
 import { ApiSuccessResponseWithData } from "@/types/api/api-response-interface";
-import axios from "axios";
+import axios from "@/lib/axios/axios";
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 export async function getItemsByTagId(
   id: string
@@ -11,6 +11,9 @@ export async function getItemsByTagId(
     );
     return data;
   } catch (error) {
-    throw new Error(`${error}`);
+    //@ts-ignore
+    const err: ErrorResponse<string> = error.response.data;
+
+    throw err;
   }
 }

@@ -1,6 +1,5 @@
 import { CreateCustomFieldFromItem } from "@/entities/custom-field";
-import { CustomFieldForItem } from "@/entities/item";
-import React, { SetStateAction, useState } from "react";
+import React, { SetStateAction } from "react";
 import { fields } from "./utils";
 
 interface Props {

@@ -3,7 +3,13 @@ import Header from "@/components/header";
 import TranslationsProvider from "@/components/translations-provider/translations-provider";
 import { Locale } from "@/types/types";
 import Item from "./_components/item";
-const i18nNamespaces = ["auth", "commons", "password-rules", "menu-options"];
+const i18nNamespaces = [
+  "auth",
+  "commons",
+  "password-rules",
+  "menu-options",
+  "errors",
+];
 export default async function Page({
   params: { locale, slug },
 }: {

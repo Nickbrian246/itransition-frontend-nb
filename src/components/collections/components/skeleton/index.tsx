@@ -7,9 +7,9 @@ export default function Skeletons() {
     <>
       {arr.map((_, index) => {
         return index % 2 === 0 ? (
-          <ItemCardNoImgSkeleton />
+          <ItemCardNoImgSkeleton key={index} />
         ) : (
-          <CollectionCardSkeleton />
+          <CollectionCardSkeleton key={index} />
         );
       })}
     </>
