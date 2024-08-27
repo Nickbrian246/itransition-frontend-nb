@@ -4,7 +4,7 @@ export function setAccessToken(token: string) {
   localStorage.setItem("access_token", token);
 }
 export function getAccessToken() {
-  if (window === null) return null;
+  if (typeof window === "undefined") return null;
   return localStorage.getItem("access_token");
 }
 
