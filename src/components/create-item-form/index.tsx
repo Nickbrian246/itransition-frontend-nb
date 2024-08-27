@@ -9,6 +9,8 @@ import TagsSelector from "../tag-selector";
 import { Tag } from "@/entities/tags";
 import Modal from "@mui/material/Modal";
 import { useTranslation } from "react-i18next";
+import { useAppDispatch } from "@/hooks/use-redux/redux";
+import { setGlobalWarning } from "@/store/slices/global-warning/slice";
 
 interface Props {
   collectionId: string;
@@ -30,12 +32,20 @@ export default function CreateItemModalForm({
   const [customFields, setCustomFields] = useState<CustomField[]>([]);
   const [fieldsData, setFieldData] = useState<EditCustomFields[]>([]);
   const [tagsSelected, setTagsSelected] = useState<Tag[]>([]);
+  const dispatch = useAppDispatch();
   const { t } = useTranslation();
 
   useEffect(() => {
     getCustomFieldsByCollectionId(collectionId)
       .then((res) => setCustomFields(res.data))
-      .catch((err) => console.log(err));
+      .catch((err) =>
+        dispatch(
+          setGlobalWarning({
+            message: `${err}`,
+            severity: "error",
+          })
+        )
+      );
   }, [collectionId]);
 
   const handleCreateItem = () => {
@@ -54,8 +64,21 @@ export default function CreateItemModalForm({
         updateData();
         setTagsSelected([]);
         handleClose();
+        dispatch(
+          setGlobalWarning({
+            severity: "success",
+            message: t("commons:itemCreated"),
+          })
+        );
       })
-      .catch((err) => console.log(err));
+      .catch((err) =>
+        dispatch(
+          setGlobalWarning({
+            message: `${err}`,
+            severity: "error",
+          })
+        )
+      );
   };
   const handleName = (e: ChangeEvent<HTMLInputElement>) => {
     setName(e.target.value);

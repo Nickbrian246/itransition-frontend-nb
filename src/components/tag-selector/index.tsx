@@ -6,6 +6,11 @@ import { getTags } from "../tags-carousel/services";
 import AddNewTag from "./component/add-new-tag";
 import TagCardEditable from "./component/tag-card";
 import { useTranslation } from "react-i18next";
+import { ErrorResponse } from "@/types/api/api-error.interface";
+import { setGlobalWarning } from "@/store/slices/global-warning/slice";
+import { errorsRedirectToHome } from "@/utils/errors-actions/errors";
+import { useAppDispatch } from "@/hooks/use-redux/redux";
+import { useRouter } from "next/navigation";
 
 interface Props {
   setTagsSelected: React.Dispatch<SetStateAction<Tag[]>>;
@@ -14,6 +19,8 @@ interface Props {
 export default function TagsSelector({ setTagsSelected, tagsSelected }: Props) {
   const [tags, setTags] = useState<Tag[]>([]);
   const [isSetNewTag, setIsSetNewTag] = useState<boolean>(false);
+  const dispatch = useAppDispatch();
+  const router = useRouter();
   const { t } = useTranslation();
 
   useEffect(() => {
@@ -31,7 +38,19 @@ export default function TagsSelector({ setTagsSelected, tagsSelected }: Props) {
             .concat({ label: "Other", name: "other", id: "custom" })
         )
       )
-      .catch((err) => console.log(err));
+      .catch((err: ErrorResponse<string>) => {
+        dispatch(
+          setGlobalWarning({
+            message: t(`errors:${err.message}`),
+            severity: "error",
+          })
+        );
+        if (
+          errorsRedirectToHome[err.message as keyof typeof errorsRedirectToHome]
+        ) {
+          router.replace("/");
+        }
+      });
   };
 
   const handleAddTags = (event: React.SyntheticEvent, value: Tag | null) => {

@@ -10,6 +10,9 @@ export async function unLockUsersByIds(users: UsersIds): Promise<string> {
     );
     return statusText;
   } catch (error) {
-    throw new Error(`${error}`);
+    //@ts-ignore
+    const err: ErrorResponse<string> = error.response.data;
+
+    throw err;
   }
 }

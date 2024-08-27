@@ -7,6 +7,9 @@ export async function deleteUsersByIds(users: UsersIds): Promise<string> {
     const { statusText } = await axios.put(`${BASE_URL}/users`, users);
     return statusText;
   } catch (error) {
-    throw new Error(`${error}`);
+    //@ts-ignore
+    const err: ErrorResponse<string> = error.response.data;
+
+    throw err;
   }
 }

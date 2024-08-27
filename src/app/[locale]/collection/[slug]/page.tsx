@@ -3,7 +3,7 @@ import Header from "@/components/header";
 import TranslationsProvider from "@/components/translations-provider/translations-provider";
 import CollectionPage from "./_components";
 import { Locale } from "@/types/types";
-const i18nNamespaces = ["home", "menu-options", "feed", "commons"];
+const i18nNamespaces = ["home", "menu-options", "feed", "commons", "errors"];
 export default async function Page({
   params: { locale, slug },
 }: {

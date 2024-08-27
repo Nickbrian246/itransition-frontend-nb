@@ -12,7 +12,10 @@ export async function getItemById(
     const { data } = await axios.get(`${BASE_URL}/items/${id}`);
     return data;
   } catch (error) {
-    throw new Error(`${error}`);
+    //@ts-ignore
+    const err: ErrorResponse<string> = error.response.data;
+
+    throw err;
   }
 }
 
@@ -27,7 +30,10 @@ export async function updateItemById(
     );
     return data;
   } catch (error) {
-    throw new Error(`${error}`);
+    //@ts-ignore
+    const err: ErrorResponse<string> = error.response.data;
+
+    throw err;
   }
 }
 export async function deleteItemById(id: string): Promise<{
@@ -40,6 +46,9 @@ export async function deleteItemById(id: string): Promise<{
     );
     return { statusText, status };
   } catch (error) {
-    throw new Error(`${error}`);
+    //@ts-ignore
+    const err: ErrorResponse<string> = error.response.data;
+
+    throw err;
   }
 }

@@ -1,4 +1,5 @@
 import { Collections } from "@/entities/collections";
+import { ErrorResponse } from "@/types/api/api-error.interface";
 import { ApiSuccessResponseWithData } from "@/types/api/api-response-interface";
 import axios from "axios";
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
@@ -12,7 +13,10 @@ export async function getMyCollections(): Promise<
     );
     return data;
   } catch (error) {
-    throw new Error(`${error}`);
+    //@ts-ignore
+    const err: ErrorResponse<string> = error.response.data;
+
+    throw err;
   }
 }
 export async function deleteCollectionById(
@@ -24,7 +28,10 @@ export async function deleteCollectionById(
     >(`${BASE_URL}/collections/${id}`);
     return { status, statusText };
   } catch (error) {
-    throw new Error(`${error}`);
+    //@ts-ignore
+    const err: ErrorResponse<string> = error.response.data;
+
+    throw err;
   }
 }
 
@@ -37,6 +44,9 @@ export async function getCollectionsByUserId(
     );
     return data;
   } catch (error) {
-    throw new Error(`${error}`);
+    //@ts-ignore
+    const err: ErrorResponse<string> = error.response.data;
+
+    throw err;
   }
 }

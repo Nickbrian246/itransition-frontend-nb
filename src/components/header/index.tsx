@@ -5,19 +5,27 @@ import { getAccessToken } from "@/utils/localstorage/localstorage";
 import ComputerOutlinedIcon from "@mui/icons-material/ComputerOutlined";
 import { Box, Typography } from "@mui/material";
 import Link from "next/link";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import MenuButton from "./components/menu-button";
 import { Locale } from "@/types/types";
 import { setLocale } from "@/store/slices/current-locale";
 import TextSearch from "../text-search";
+import GlobalWarning from "../global-warning";
+import { disableGlobalWarning } from "@/store/slices/global-warning/slice";
+
 interface Props {
   locale: Locale;
 }
 export default function Header({ locale }: Props) {
   const { isAuth } = useAppSelector((state) => state.user.user);
+  const { isActive, message, severity } = useAppSelector(
+    (state) => state.globalWarning
+  );
+
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
+
   useEffect(() => {
     const token = getAccessToken();
 
@@ -31,6 +39,15 @@ export default function Header({ locale }: Props) {
       dispatch(setLocale(locale));
     }
   }, [locale, dispatch]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      dispatch(disableGlobalWarning());
+    }, 3000);
+
+    return () => clearTimeout(timer);
+  }, [isActive]);
+
   return (
     <header
       style={{
@@ -39,8 +56,18 @@ export default function Header({ locale }: Props) {
         padding: "10px",
         gap: "5px",
         justifyContent: "space-between",
+        position: "relative",
       }}
     >
+      {isActive && (
+        <GlobalWarning
+          sx={{
+            bottom: "-100px",
+          }}
+          message={message}
+          severity={severity}
+        />
+      )}
       <Box sx={{ display: "flex", alignItems: "center", gap: "10px" }}>
         <Link style={{ textDecoration: "none" }} href={"/"}>
           <Typography variant="h1" sx={{ fontWeight: "800" }}>

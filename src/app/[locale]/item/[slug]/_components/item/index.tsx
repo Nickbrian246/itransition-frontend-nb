@@ -2,7 +2,7 @@
 import { EditCustomFields } from "@/components/custom-fields";
 import UserOptions from "@/components/user-options";
 import { Tag } from "@/entities/tags";
-import { useAppSelector } from "@/hooks/use-redux/redux";
+import { useAppDispatch, useAppSelector } from "@/hooks/use-redux/redux";
 import { Box, Button, Card, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { ItemWithEditableCustomFields } from "../../_interfaces";
@@ -12,6 +12,9 @@ import CustomFields from "../custom-fields";
 import Tags from "../tags";
 import { useTranslation } from "react-i18next";
 import { useRouter } from "next/navigation";
+import { ErrorResponse } from "@/types/api/api-error.interface";
+import { setGlobalWarning } from "@/store/slices/global-warning/slice";
+import { errorsRedirectToHome } from "@/utils/errors-actions/errors";
 
 interface Props {
   slug: string;
@@ -23,7 +26,7 @@ export default function Item({ slug }: Props) {
   const [isUserOwner, setIsUserOwner] = useState<boolean>(false);
   const [groupOfTags, setGroupTags] = useState<Tag[]>([]);
   const { email, role } = useAppSelector((state) => state.user.user);
-
+  const dispatch = useAppDispatch();
   const { t } = useTranslation();
   const router = useRouter();
 
@@ -46,7 +49,19 @@ export default function Item({ slug }: Props) {
         setGroupTags(res.data.tag);
         setFieldsEdit(res.data.customFields);
       })
-      .catch((err) => console.log(err));
+      .catch((err: ErrorResponse<string>) => {
+        dispatch(
+          setGlobalWarning({
+            message: t(`errors:${err.message}`),
+            severity: "error",
+          })
+        );
+        if (
+          errorsRedirectToHome[err.message as keyof typeof errorsRedirectToHome]
+        ) {
+          router.replace("/");
+        }
+      });
   };
 
   const handleSaveEdit = () => {
@@ -67,7 +82,19 @@ export default function Item({ slug }: Props) {
         updateItem();
         setIsEditable(false);
       })
-      .catch((err) => console.log(err));
+      .catch((err: ErrorResponse<string>) => {
+        dispatch(
+          setGlobalWarning({
+            message: t(`errors:${err.message}`),
+            severity: "error",
+          })
+        );
+        if (
+          errorsRedirectToHome[err.message as keyof typeof errorsRedirectToHome]
+        ) {
+          router.replace("/");
+        }
+      });
   };
 
   const handleDeleteItem = () => {
@@ -75,7 +102,19 @@ export default function Item({ slug }: Props) {
       .then((res) => {
         router.back();
       })
-      .catch((err) => console.log(err));
+      .catch((err: ErrorResponse<string>) => {
+        dispatch(
+          setGlobalWarning({
+            message: t(`errors:${err.message}`),
+            severity: "error",
+          })
+        );
+        if (
+          errorsRedirectToHome[err.message as keyof typeof errorsRedirectToHome]
+        ) {
+          router.replace("/");
+        }
+      });
   };
 
   return (

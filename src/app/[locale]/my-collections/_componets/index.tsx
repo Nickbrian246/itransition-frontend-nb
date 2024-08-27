@@ -19,6 +19,10 @@ import FilterOptionsMenu from "./filter-options-menu";
 import FilterOrder from "./filter-order";
 import Skeleton from "./skeleton";
 import CsvButton from "./csv-btn";
+import { useDispatch } from "react-redux";
+import { setGlobalWarning } from "@/store/slices/global-warning/slice";
+import { ErrorResponse } from "@/types/api/api-error.interface";
+import { errorsRedirectToHome } from "@/utils/errors-actions/errors";
 
 interface Props {
   userId?: string;
@@ -27,13 +31,14 @@ export default function Collections({ userId }: Props) {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
   const { t } = useTranslation();
-  const [collections, setCollections] = useState<CollectionInterface[] | null>(
-    null
-  );
   const [filterKey, setFilterKey] = useState<FilterKeys>("items");
   const [filterOrder, setFilterOrder] = useState<FilterOrderInterface>("ASC");
   const { role } = useAppSelector((state) => state.user.user);
   const router = useRouter();
+  const dispatch = useDispatch();
+  const [collections, setCollections] = useState<CollectionInterface[] | null>(
+    null
+  );
 
   useEffect(() => {
     handleRefreshCollections();
@@ -48,14 +53,42 @@ export default function Collections({ userId }: Props) {
       if (role !== "ADMIN") return router.replace("/");
       getCollectionsByUserId(userId)
         .then((res) => setCollections(res.data))
-        .catch((res) => console.log(res))
+        .catch((err: ErrorResponse<string>) => {
+          dispatch(
+            setGlobalWarning({
+              message: t(`errors:${err.message}`),
+              severity: "error",
+            })
+          );
+          if (
+            errorsRedirectToHome[
+              err.message as keyof typeof errorsRedirectToHome
+            ]
+          ) {
+            router.replace("/");
+          }
+        })
         .finally(() => {
           setIsLoading(false);
         });
     } else {
       getMyCollections()
         .then((res) => setCollections(res.data))
-        .catch((res) => console.log(res))
+        .catch((err: ErrorResponse<string>) => {
+          dispatch(
+            setGlobalWarning({
+              message: t(`errors:${err.message}`),
+              severity: "error",
+            })
+          );
+          if (
+            errorsRedirectToHome[
+              err.message as keyof typeof errorsRedirectToHome
+            ]
+          ) {
+            router.replace("/");
+          }
+        })
         .finally(() => {
           setIsLoading(false);
         });

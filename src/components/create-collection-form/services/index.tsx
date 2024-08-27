@@ -19,7 +19,10 @@ export async function CreateCollection(
     );
     return data;
   } catch (error) {
-    throw new Error(`${error}`);
+    //@ts-ignore
+    const err: ErrorResponse<string> = error.response.data;
+
+    throw err;
   }
 }
 export async function editCollectionById(
@@ -33,7 +36,10 @@ export async function editCollectionById(
     );
     return data;
   } catch (error) {
-    throw new Error(`${error}`);
+    //@ts-ignore
+    const err: ErrorResponse<string> = error.response.data;
+
+    throw err;
   }
 }
 
@@ -48,7 +54,10 @@ export async function CreateCustomFIeldsByCollectionId(fields: CustomField[]) {
     );
     return status;
   } catch (error) {
-    throw new Error(`${error}`);
+    //@ts-ignore
+    const err: ErrorResponse<string> = error.response.data;
+
+    throw err;
   }
 }
 
@@ -59,6 +68,9 @@ export async function CreateNewCategory(
     const { data } = await axios.post(`${BASE_URL}/categories`, { name });
     return data;
   } catch (error) {
-    throw new Error(`${error}`);
+    //@ts-ignore
+    const err: ErrorResponse<string> = error.response.data;
+
+    throw err;
   }
 }

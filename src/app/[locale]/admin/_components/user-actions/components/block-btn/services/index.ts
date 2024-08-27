@@ -7,6 +7,9 @@ export async function blockUsersByIds(users: UsersIds): Promise<string> {
     const { statusText } = await axios.patch(`${BASE_URL}/users/block`, users);
     return statusText;
   } catch (error) {
-    throw new Error(`${error}`);
+    //@ts-ignore
+    const err: ErrorResponse<string> = error.response.data;
+
+    throw err;
   }
 }

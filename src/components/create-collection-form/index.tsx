@@ -21,6 +21,11 @@ import {
   editCollectionById,
 } from "./services";
 import { adapterForCustomFields } from "./utils";
+import { useAppDispatch } from "@/hooks/use-redux/redux";
+import { setGlobalWarning } from "@/store/slices/global-warning/slice";
+import { ErrorResponse } from "@/types/api/api-error.interface";
+import { errorsRedirectToHome } from "@/utils/errors-actions/errors";
+import { useRouter } from "next/navigation";
 
 interface Props {
   handleRefreshCollections: () => void;
@@ -36,13 +41,14 @@ export default function CreateCollectionForm({
   userId,
 }: Props) {
   const [imgSrc, setImgSrc] = useState<string | null>(null);
-  const [categorySelected, setCategorySelected] = useState<Categories | null>(
-    null
-  );
   const [customFields, setCustomFields] = useState<Custom[]>([]);
   const [isEditable, setIsEditable] = useState<boolean>(false);
   const [isNewCategory, setIsNewCategory] = useState<boolean>(false);
   const { t } = useTranslation();
+  const dispatch = useAppDispatch();
+  const [categorySelected, setCategorySelected] = useState<Categories | null>(
+    null
+  );
   const [idCollectionCreated, setIdCollectionCreated] = useState<string | null>(
     null
   );
@@ -52,6 +58,7 @@ export default function CreateCollectionForm({
     description: "",
     name: "",
   });
+  const router = useRouter();
 
   useEffect(() => {
     if (!idCollectionCreated) return;
@@ -64,7 +71,19 @@ export default function CreateCollectionForm({
         handleRefreshCollections();
         handleCLoseModal();
       })
-      .catch((err) => console.log(err));
+      .catch((err: ErrorResponse<string>) => {
+        dispatch(
+          setGlobalWarning({
+            message: t("commons:collectionCreated"),
+            severity: "error",
+          })
+        );
+        if (
+          errorsRedirectToHome[err.message as keyof typeof errorsRedirectToHome]
+        ) {
+          router.replace("/");
+        }
+      });
   }, [idCollectionCreated]);
 
   useEffect(() => {
@@ -79,6 +98,7 @@ export default function CreateCollectionForm({
       });
     }
   }, [editableCollectionData]);
+
   const handleName = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     const name = e.target.name;
@@ -90,6 +110,7 @@ export default function CreateCollectionForm({
       };
     });
   };
+
   const handleDescription = (event: ChangeEvent<HTMLTextAreaElement>) => {
     setCreateCollectionData((prev) => {
       return {
@@ -119,8 +140,26 @@ export default function CreateCollectionForm({
     CreateCollection(data)
       .then((res) => {
         setIdCollectionCreated(res.data.id);
+        dispatch(
+          setGlobalWarning({
+            message: t("commons:collectionCreated"),
+            severity: "success",
+          })
+        );
       })
-      .catch((err) => console.log(err));
+      .catch((err: ErrorResponse<string>) => {
+        dispatch(
+          setGlobalWarning({
+            message: t(`errors:${err.message}`),
+            severity: "error",
+          })
+        );
+        if (
+          errorsRedirectToHome[err.message as keyof typeof errorsRedirectToHome]
+        ) {
+          router.replace("/");
+        }
+      });
   };
   const handleEditCollection = () => {
     const data: UpdateCollection = {
@@ -135,13 +174,37 @@ export default function CreateCollectionForm({
       .then((res) => {
         handleRefreshCollections();
         handleCLoseModal();
+        dispatch(
+          setGlobalWarning({
+            message: t("commons:collectionEdited"),
+            severity: "success",
+          })
+        );
       })
-      .catch((err) => console.log(err));
+      .catch((err: ErrorResponse<string>) => {
+        dispatch(
+          setGlobalWarning({
+            message: t(`errors:${err.message}`),
+            severity: "error",
+          })
+        );
+        if (
+          errorsRedirectToHome[err.message as keyof typeof errorsRedirectToHome]
+        ) {
+          router.replace("/");
+        }
+      });
   };
 
   const newCategoryCreated = (category: Categories) => {
     setCategorySelected(category);
     setIsNewCategory(false);
+    dispatch(
+      setGlobalWarning({
+        message: t("commons:newCategoryCreated"),
+        severity: "success",
+      })
+    );
   };
 
   return (

@@ -11,7 +11,8 @@ interface Props {
 export default function CustomContainer({ children, sx }: Props) {
   const theme = useAppSelector((state) => state.theme.theme);
 
-  const bgGround = theme === "DARK" ? colors.backGroundDarkModeGrayBox : null;
+  const bgGround =
+    theme === "DARK" ? colors.backGroundDarkModeGrayBox : colors.main;
   const border = theme === "LIGHT" ? `1px solid ${colors.border}` : null;
   return (
     <Box sx={{ background: `${bgGround}`, border: `${border}`, ...sx }}>

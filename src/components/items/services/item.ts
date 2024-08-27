@@ -11,6 +11,9 @@ export async function getLatestItems(): Promise<
     );
     return data;
   } catch (error) {
-    throw new Error(`${error}`);
+    //@ts-ignore
+    const err: ErrorResponse<string> = error.response.data;
+
+    throw err;
   }
 }

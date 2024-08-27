@@ -1,13 +1,18 @@
 "use client";
-import React, { useEffect, useState } from "react";
 import EmptyContent from "@/components/empty-content";
-import { getItemsByTagId } from "../_services";
-import { Tag, TagWithItems } from "@/entities/tags";
-import { Box } from "@mui/material";
-import Skeleton from "./skeleton";
-import ItemsCards from "./items";
-import { useTranslation } from "react-i18next";
+import { TagWithItems } from "@/entities/tags";
+import { useAppDispatch } from "@/hooks/use-redux/redux";
+import { setGlobalWarning } from "@/store/slices/global-warning/slice";
+import { ErrorResponse } from "@/types/api/api-error.interface";
 import { Locale } from "@/types/types";
+import { errorsRedirectToHome } from "@/utils/errors-actions/errors";
+import { Box } from "@mui/material";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { getItemsByTagId } from "../_services";
+import ItemsCards from "./items";
+import Skeleton from "./skeleton";
 interface Props {
   slug: string;
   locale: Locale;
@@ -16,11 +21,25 @@ export default function Items({ slug, locale }: Props) {
   const [tag, setTag] = useState<TagWithItems | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const { t } = useTranslation();
+  const router = useRouter();
+  const dispatch = useAppDispatch();
   //TODO SOLUTION MANY TO MANY PROBLEMS
   useEffect(() => {
     getItemsByTagId(slug)
       .then((res) => setTag(res.data))
-      .catch((res) => console.log(res))
+      .catch((err: ErrorResponse<string>) => {
+        dispatch(
+          setGlobalWarning({
+            message: t(`errors:${err.message}`),
+            severity: "error",
+          })
+        );
+        if (
+          errorsRedirectToHome[err.message as keyof typeof errorsRedirectToHome]
+        ) {
+          router.replace("/");
+        }
+      })
       .finally(() => {
         setIsLoading(false);
       });

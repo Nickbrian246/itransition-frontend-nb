@@ -11,6 +11,7 @@ const i18nNamespaces = [
   "password-rules",
   "menu-options",
   "collection",
+  "errors",
 ];
 export default async function Page({
   params: { locale, slug },
