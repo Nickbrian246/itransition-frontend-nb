@@ -1,5 +1,5 @@
 import { ApiSuccessResponseWithData } from "@/types/api/api-response-interface";
-import axios from "axios";
+import axios from "@/lib/axios/axios";
 import { ItemWithEditableCustomFields } from "../_interfaces";
 import { Item } from "@/entities/item";
 

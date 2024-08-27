@@ -1,7 +1,7 @@
 import { Collections } from "@/entities/collections";
 import { Item } from "@/entities/item";
 import { ApiSuccessResponseWithData } from "@/types/api/api-response-interface";
-import axios from "axios";
+import axios from "@/lib/axios/axios";
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 export async function getCollectionById(
@@ -12,7 +12,9 @@ export async function getCollectionById(
 
     return data;
   } catch (error) {
-    throw Error(`${error}`);
+    //@ts-ignore
+    const err: ErrorResponse<string> = error.response.data;
+    throw err;
   }
 }
 
@@ -24,6 +26,8 @@ export async function getItemsByCollectionId(
 
     return data;
   } catch (error) {
-    throw Error(`${error}`);
+    //@ts-ignore
+    const err: ErrorResponse<string> = error.response.data;
+    throw err;
   }
 }

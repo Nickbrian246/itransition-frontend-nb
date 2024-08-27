@@ -1,7 +1,7 @@
 import { Collections } from "@/entities/collections";
 import { ErrorResponse } from "@/types/api/api-error.interface";
 import { ApiSuccessResponseWithData } from "@/types/api/api-response-interface";
-import axios from "axios";
+import axios from "@/lib/axios/axios";
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 export async function getMyCollections(): Promise<

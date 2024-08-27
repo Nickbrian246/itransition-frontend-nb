@@ -1,5 +1,5 @@
 import { Collections } from "@/entities/collections";
-import axios from "axios";
+import axios from "@/lib/axios/axios";
 import {
   CreateCollection as CreateCollectionInterface,
   UpdateCollection,
