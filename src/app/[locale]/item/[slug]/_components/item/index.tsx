@@ -6,7 +6,12 @@ import { useAppDispatch, useAppSelector } from "@/hooks/use-redux/redux";
 import { Box, Button, Card, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { ItemWithEditableCustomFields } from "../../_interfaces";
-import { deleteItemById, getItemById, updateItemById } from "../../_services";
+import {
+  deleteItemById,
+  getItemById,
+  getTagsByItemId,
+  updateItemById,
+} from "../../_services";
 import Comments from "../comments";
 import CustomFields from "../custom-fields";
 import Tags from "../tags";
@@ -42,11 +47,18 @@ export default function Item({ slug }: Props) {
     }
   }, [email]);
 
+  // useEffect(() => {
+  //   if (!item) return;
+  //   getTagsByItemId(item.id)
+  //     .then((res) => console.log(res.data.tag))
+  //     .catch((err) => console.log(err));
+  // }, [item]);
+
   const updateItem = () => {
     getItemById(slug)
       .then((res) => {
         setItem(res.data);
-        setGroupTags(res.data.tag);
+        setGroupTags(res.data.tags.map((t) => t.tag));
         setFieldsEdit(res.data.customFields);
       })
       .catch((err: ErrorResponse<string>) => {
@@ -145,10 +157,10 @@ export default function Item({ slug }: Props) {
       <Typography align="center" variant="h5">
         {item?.name}
       </Typography>
-      {item?.tag && (
+      {item?.tags && (
         <Tags
           isEditable={isEditable}
-          tags={item.tag}
+          tags={item.tags.map((t) => t.tag)}
           setTagsSelected={setGroupTags}
           tagsSelected={groupOfTags}
         />

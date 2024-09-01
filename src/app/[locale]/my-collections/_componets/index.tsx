@@ -109,10 +109,11 @@ export default function Collections({ userId }: Props) {
           gap: "10px",
           mb: "30px",
           justifyContent: "space-between",
+          flexWrap: "wrap",
         }}
       >
         {collections !== null && collections.length !== 0 && (
-          <Box sx={{ display: "flex", gap: "20px" }}>
+          <Box sx={{ display: "flex", gap: "20px", flexWrap: "wrap" }}>
             <FilterOptionsMenu key={filterKey} setKey={setFilterKey} />
             <FilterOrder
               filterOrder={filterOrder}

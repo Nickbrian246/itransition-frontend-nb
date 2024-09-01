@@ -9,6 +9,7 @@ export async function getCollectionById(
 ): Promise<ApiSuccessResponseWithData<Collections>> {
   try {
     const { data } = await axios.get(`${BASE_URL}/collections/${id}`);
+    console.log(data);
 
     return data;
   } catch (error) {

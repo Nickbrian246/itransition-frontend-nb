@@ -10,3 +10,11 @@ export interface TagWithItems {
   name: string;
   items: Item[];
 }
+
+export interface Tags {
+  id: string;
+  itemId: string;
+  tagId: string;
+  createdAt: string;
+  tag: Tag;
+}

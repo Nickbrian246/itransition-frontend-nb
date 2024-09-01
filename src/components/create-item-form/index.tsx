@@ -2,7 +2,11 @@
 import { Box, Button, TextField, Typography } from "@mui/material";
 import React, { ChangeEvent, useEffect, useState } from "react";
 import { CustomInputLabel } from "../custom-components";
-import { createItem, getCustomFieldsByCollectionId } from "./services";
+import {
+  createItem,
+  getCustomFieldsByCollectionId,
+  crateItemsTags,
+} from "./services";
 import CustomFields, { EditCustomFields } from "../custom-fields";
 import { CustomField } from "@/entities/custom-field";
 import TagsSelector from "../tag-selector";
@@ -11,6 +15,7 @@ import Modal from "@mui/material/Modal";
 import { useTranslation } from "react-i18next";
 import { useAppDispatch } from "@/hooks/use-redux/redux";
 import { setGlobalWarning } from "@/store/slices/global-warning/slice";
+import { Item } from "@/entities/item";
 
 interface Props {
   collectionId: string;
@@ -32,6 +37,7 @@ export default function CreateItemModalForm({
   const [customFields, setCustomFields] = useState<CustomField[]>([]);
   const [fieldsData, setFieldData] = useState<EditCustomFields[]>([]);
   const [tagsSelected, setTagsSelected] = useState<Tag[]>([]);
+  const [itemCreated, setItemCreated] = useState<Item>();
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
 
@@ -48,28 +54,45 @@ export default function CreateItemModalForm({
       );
   }, [collectionId]);
 
-  const handleCreateItem = () => {
-    const tags: string[] = [];
-    for (let tag of tagsSelected) {
-      tags.push(tag.id);
+  useEffect(() => {
+    console.log();
+
+    if (itemCreated && tagsSelected) {
+      crateItemsTags({
+        itemId: itemCreated.id,
+        tagsIds: tagsSelected.map((t) => t.id),
+      })
+        .then((res) => {
+          updateData();
+          setTagsSelected([]);
+          handleClose();
+          dispatch(
+            setGlobalWarning({
+              severity: "success",
+              message: t("commons:itemCreated"),
+            })
+          );
+        })
+        .catch((err) =>
+          dispatch(
+            setGlobalWarning({
+              message: `${err}`,
+              severity: "error",
+            })
+          )
+        );
     }
+  }, [itemCreated]);
+
+  const handleCreateItem = () => {
     createItem({
       name: name,
-      tagsIds: tags,
       customFields: fieldsData,
       collectionId: collectionId,
       userId: itemOwnerId ?? null,
     })
       .then((res) => {
-        updateData();
-        setTagsSelected([]);
-        handleClose();
-        dispatch(
-          setGlobalWarning({
-            severity: "success",
-            message: t("commons:itemCreated"),
-          })
-        );
+        setItemCreated(res.data);
       })
       .catch((err) =>
         dispatch(
@@ -80,6 +103,7 @@ export default function CreateItemModalForm({
         )
       );
   };
+
   const handleName = (e: ChangeEvent<HTMLInputElement>) => {
     setName(e.target.value);
   };
