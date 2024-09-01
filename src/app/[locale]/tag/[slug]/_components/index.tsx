@@ -1,6 +1,7 @@
 "use client";
 import EmptyContent from "@/components/empty-content";
-import { TagWithItems } from "@/entities/tags";
+import { Item } from "@/entities/item";
+import { Tag } from "@/entities/tags";
 import { useAppDispatch } from "@/hooks/use-redux/redux";
 import { setGlobalWarning } from "@/store/slices/global-warning/slice";
 import { ErrorResponse } from "@/types/api/api-error.interface";
@@ -10,7 +11,7 @@ import { Box } from "@mui/material";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { getItemsByTagId } from "../_services";
+import { getItemsByTagId, getTagById } from "../_services";
 import ItemsCards from "./items";
 import Skeleton from "./skeleton";
 interface Props {
@@ -18,15 +19,16 @@ interface Props {
   locale: Locale;
 }
 export default function Items({ slug, locale }: Props) {
-  const [tag, setTag] = useState<TagWithItems | null>(null);
+  const [tag, setTag] = useState<Tag>();
+  const [items, setItems] = useState<Item[]>();
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const { t } = useTranslation();
   const router = useRouter();
   const dispatch = useAppDispatch();
-  //TODO SOLUTION MANY TO MANY PROBLEMS
+
   useEffect(() => {
     getItemsByTagId(slug)
-      .then((res) => setTag(res.data))
+      .then((res) => setItems(res.data.map((i) => i.item)))
       .catch((err: ErrorResponse<string>) => {
         dispatch(
           setGlobalWarning({
@@ -43,7 +45,19 @@ export default function Items({ slug, locale }: Props) {
       .finally(() => {
         setIsLoading(false);
       });
+
+    getTagById(slug)
+      .then((res) => setTag(res.data))
+      .catch((err) =>
+        dispatch(
+          setGlobalWarning({
+            message: `${err}`,
+            severity: "error",
+          })
+        )
+      );
   }, [slug]);
+
   return (
     <Box
       sx={{
@@ -52,12 +66,12 @@ export default function Items({ slug, locale }: Props) {
         gap: "20px",
       }}
     >
-      {isLoading || tag === null ? (
+      {isLoading || tag === null || items === undefined ? (
         <Skeleton />
       ) : (
-        <ItemsCards locale={locale} tag={tag} />
+        <ItemsCards locale={locale} items={items} tagName={tag?.name ?? ""} />
       )}
-      {!isLoading && tag !== null && tag.items.length === 0 && (
+      {!isLoading && tag !== null && items?.length === 0 && (
         <EmptyContent text={t("commons:noItems")} />
       )}
     </Box>

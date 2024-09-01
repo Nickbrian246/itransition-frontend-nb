@@ -2,7 +2,6 @@
 import { Box, Card, Typography } from "@mui/material";
 import React from "react";
 import { useTranslation } from "react-i18next";
-
 import Link from "next/link";
 import { Locale } from "@/types/types";
 import { timeFromNow } from "@/utils/date/date-distance";

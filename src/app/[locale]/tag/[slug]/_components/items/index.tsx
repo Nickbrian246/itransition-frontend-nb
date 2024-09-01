@@ -1,18 +1,17 @@
 import ItemCard from "@/components/items/components/item-card";
 import { Item } from "@/entities/item";
-import { TagWithItems } from "@/entities/tags";
 import { Locale } from "@/types/types";
 import { Typography } from "@mui/material";
-import React from "react";
 interface Props {
-  tag: TagWithItems;
+  tagName: string;
+  items: Item[];
   locale: Locale;
 }
-export default function ItemsCards({ tag, locale }: Props) {
+export default function ItemsCards({ tagName, locale, items }: Props) {
   return (
     <>
-      <Typography variant="h6"> Tag: {tag?.name}</Typography>
-      {tag?.items.map((item) => (
+      <Typography variant="h6"> Tag: {tagName}</Typography>
+      {items.map((item) => (
         <ItemCard
           editedBy={item.editedBy}
           isEdited={item.isEdited}

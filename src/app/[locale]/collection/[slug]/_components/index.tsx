@@ -9,7 +9,10 @@ import { Collections } from "@/entities/collections";
 import { Item } from "@/entities/item";
 import { useTranslation } from "react-i18next";
 import { Button } from "@mui/material";
-import { useAppSelector } from "@/hooks/use-redux/redux";
+import { useAppDispatch, useAppSelector } from "@/hooks/use-redux/redux";
+import { setGlobalWarning } from "@/store/slices/global-warning/slice";
+import { errorsRedirectToHome } from "@/utils/errors-actions/errors";
+import { useRouter } from "next/navigation";
 
 interface Props {
   slug: string;
@@ -19,10 +22,13 @@ export default function CollectionPage({ slug }: Props) {
   const [items, setItems] = useState<Item[]>([]);
   const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
   const { locale } = useAppSelector((state) => state.locale);
+  const dispatch = useAppDispatch();
+  const router = useRouter();
   const {
     user: { email, role },
   } = useAppSelector((state) => state.user);
   const { t } = useTranslation();
+
   useEffect(() => {
     updateData();
   }, [slug]);
@@ -30,15 +36,38 @@ export default function CollectionPage({ slug }: Props) {
   const updateData = () => {
     getCollectionById(slug)
       .then((res) => {
-        console.log(res.data);
         setCollection(res.data);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        dispatch(
+          setGlobalWarning({
+            message: t(`errors:${err.message}`),
+            severity: "error",
+          })
+        );
+        if (
+          errorsRedirectToHome[err.message as keyof typeof errorsRedirectToHome]
+        ) {
+          router.replace("/");
+        }
+      });
     getItemsByCollectionId(slug)
       .then((res) => {
         setItems(res.data);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        dispatch(
+          setGlobalWarning({
+            message: t(`errors:${err.message}`),
+            severity: "error",
+          })
+        );
+        if (
+          errorsRedirectToHome[err.message as keyof typeof errorsRedirectToHome]
+        ) {
+          router.replace("/");
+        }
+      });
   };
   return (
     <>

@@ -1,3 +1,4 @@
+"use client";
 import TagCard from "@/components/tag-card";
 import TagsSelector from "@/components/tag-selector";
 import { Tag } from "@/entities/tags";

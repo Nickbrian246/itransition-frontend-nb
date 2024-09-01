@@ -2,6 +2,7 @@ import { ApiSuccessResponseWithData } from "@/types/api/api-response-interface";
 import axios from "@/lib/axios/axios";
 import { ItemWithEditableCustomFields } from "../_interfaces";
 import { Item } from "@/entities/item";
+import { Tag } from "@/entities/tags";
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
@@ -10,6 +11,20 @@ export async function getItemById(
 ): Promise<ApiSuccessResponseWithData<ItemWithEditableCustomFields>> {
   try {
     const { data } = await axios.get(`${BASE_URL}/items/${id}`);
+    return data;
+  } catch (error) {
+    //@ts-ignore
+    const err: ErrorResponse<string> = error.response.data;
+
+    throw err;
+  }
+}
+
+export async function getTagsByItemId(
+  id: string
+): Promise<ApiSuccessResponseWithData<Tag[]>> {
+  try {
+    const { data } = await axios.get(`${BASE_URL}/items-tags/${id}`);
     return data;
   } catch (error) {
     //@ts-ignore

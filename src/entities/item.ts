@@ -1,7 +1,7 @@
 import { Collections } from "./collections";
 import { CustomField } from "./custom-field";
 import { User } from "./user";
-import { Tag } from "./tags";
+import { Tag, Tags } from "./tags";
 import { Comments } from "./comments";
 export type CustomFieldForItem = Omit<CustomField, "collectionId">;
 export interface Item {
@@ -13,7 +13,7 @@ export interface Item {
   user: User;
   userId: string | null;
   tagsIds: string[];
-  tag: Tag[];
+  tags: Tags[];
   isEdited: boolean;
   editedBy: User;
   customFields?: CustomFieldForItem[];
