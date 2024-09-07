@@ -5,7 +5,6 @@ export const filterByType = (
   filterOrder: FilterOrder,
   collections: Collections[]
 ) => {
-  console.log("entrando");
   if (!collections) return null;
   const collectionsData = [...collections];
   if (type === "items") {

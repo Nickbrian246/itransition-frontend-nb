@@ -5,6 +5,8 @@ import { Autocomplete, TextField } from "@mui/material";
 import Skeleton from "@mui/material/Skeleton";
 import { categoriesAdapter } from "@/utils/localstorage/auto-complete-adapter";
 import { useTranslation } from "react-i18next";
+import { useAppDispatch } from "@/hooks/use-redux/redux";
+import { setGlobalWarning } from "@/store/slices/global-warning/slice";
 
 interface Props {
   handleSelectCategory: (
@@ -20,6 +22,7 @@ export default function AutoComplete({
 }: Props) {
   const [categories, setCategories] = useState<Categories[] | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const dispatch = useAppDispatch();
   const { t } = useTranslation();
 
   useEffect(() => {
@@ -32,7 +35,14 @@ export default function AutoComplete({
         });
         setCategories(a);
       })
-      .catch((err) => console.log(err))
+      .catch((err) => {
+        dispatch(
+          setGlobalWarning({
+            message: `${err}`,
+            severity: "error",
+          })
+        );
+      })
       .finally(() => setIsLoading(false));
   }, []);
 

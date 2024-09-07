@@ -55,8 +55,6 @@ export default function CreateItemModalForm({
   }, [collectionId]);
 
   useEffect(() => {
-    console.log();
-
     if (itemCreated && tagsSelected) {
       crateItemsTags({
         itemId: itemCreated.id,

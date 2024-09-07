@@ -62,8 +62,6 @@ export default function IntegerField({ isEditable, name, gatherData }: Props) {
   }, [numericField]);
 
   const handleTextArea = (event: ChangeEvent<HTMLTextAreaElement>) => {
-    console.log(event.target.value);
-
     setNumericField((prev) => {
       return { ...prev, value: event.target.value };
     });
