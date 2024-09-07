@@ -26,6 +26,7 @@ import { loginUser } from "@/store/slices/auth/auth-thunk";
 import { cleanAuthErrorMessage } from "@/store/slices/auth/auth-slice";
 import { useRouter } from "next/navigation";
 import GoogleAuthBtn from "../auth-third-party/google";
+import GithubAuthBtn from "../auth-third-party/github";
 
 export default function Login() {
   const [hidePassword, setHidePassword] = useState<boolean>(false);
@@ -215,13 +216,14 @@ export default function Login() {
             justifyContent: "center",
             mt: "10px",
             flexDirection: "column",
-            gap: "5px",
+            gap: "10px",
           }}
         >
           <Typography variant="caption" textAlign="center">
             Continue with
           </Typography>
           <GoogleAuthBtn />
+          <GithubAuthBtn />
         </Box>
       </CustomContainer>
     </section>
