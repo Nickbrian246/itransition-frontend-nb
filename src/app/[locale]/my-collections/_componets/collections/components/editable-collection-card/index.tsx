@@ -3,7 +3,7 @@ import { deleteCollectionById } from "@/app/[locale]/my-collections/_services";
 import CreateCollectionForm from "@/components/create-collection-form";
 import UserOptions from "@/components/user-options";
 import { User } from "@/entities/user";
-import { useAppSelector } from "@/hooks/use-redux/redux";
+import { useAppDispatch, useAppSelector } from "@/hooks/use-redux/redux";
 import { timeFromNow } from "@/utils/date/date-distance";
 import { Box, Card, Divider, Modal, Typography } from "@mui/material";
 import Image from "next/image";
@@ -16,6 +16,7 @@ import { CustomField } from "@/entities/custom-field";
 import CustomFields from "@/components/custom-fields";
 import EditableCustomField from "@/components/editable-custom-field";
 import EmptyContent from "@/components/empty-content";
+import { setGlobalWarning } from "@/store/slices/global-warning/slice";
 interface Props {
   title: string;
   description: string;
@@ -48,6 +49,7 @@ export default function EditableCollectionCard({
   const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
   const { t } = useTranslation();
   const [fields, setFields] = useState<CustomField[]>();
+  const dispatch = useAppDispatch();
   useEffect(() => {
     if (customFields) {
       setFields(() => {
@@ -59,12 +61,15 @@ export default function EditableCollectionCard({
   const handleDeleteItem = () => {
     deleteCollectionById(id)
       .then((res) => {
-        console.log(res);
-
         handleRefreshCollections();
       })
       .catch((err) => {
-        console.log(err);
+        dispatch(
+          setGlobalWarning({
+            message: `${err}`,
+            severity: "error",
+          })
+        );
       });
   };
   return (

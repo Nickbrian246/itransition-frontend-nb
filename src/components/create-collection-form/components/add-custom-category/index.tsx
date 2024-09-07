@@ -5,6 +5,8 @@ import React, { ChangeEvent, useState } from "react";
 import { CreateNewCategory } from "../../services";
 import { Categories } from "@/entities/categories";
 import { useTranslation } from "react-i18next";
+import { useAppDispatch } from "@/hooks/use-redux/redux";
+import { setGlobalWarning } from "@/store/slices/global-warning/slice";
 interface Props {
   updateCategories?: () => {};
   newCategoryCreated: (category: Categories) => void;
@@ -17,6 +19,7 @@ export default function CreateCustomCategory({
 }: Props) {
   const [newCategory, setNewCategory] = useState<string>("");
   const { t } = useTranslation();
+  const dispatch = useAppDispatch();
 
   const handleNewCategory = (e: ChangeEvent<HTMLInputElement>) => {
     setNewCategory(e.target.value);
@@ -27,7 +30,14 @@ export default function CreateCustomCategory({
       .then((res) => {
         newCategoryCreated(res.data);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        dispatch(
+          setGlobalWarning({
+            message: `${err}`,
+            severity: "error",
+          })
+        );
+      });
   };
   return (
     <Box sx={{ display: "flex", alignItems: "center", gap: "10px" }}>

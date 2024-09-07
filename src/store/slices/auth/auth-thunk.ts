@@ -68,33 +68,41 @@ export const loginUser = createAsyncThunk<
 );
 
 export const getUser = createAsyncThunk<
-  ApiSuccessResponseWithData<UserApiResponse>
->("getUser", async (_, { fulfillWithValue, dispatch, rejectWithValue }) => {
-  try {
-    const { data } = await axios.get<
-      ApiSuccessResponseWithMetaData<UserApiResponse, AccessToken>
-    >(`${BASE_URL}/users/user`);
-    const {
-      data: { userPreferences },
-    } = data;
-    if (userPreferences?.language && userPreferences?.theme) {
-      dispatch(setTheme(data.data.userPreferences.theme));
-      dispatch(setLocale(data.data.userPreferences.language));
-    }
+  ApiSuccessResponseWithData<UserApiResponse>,
+  string
+>(
+  "getUser",
+  async (accessToken, { fulfillWithValue, dispatch, rejectWithValue }) => {
+    try {
+      const { data } = await axios.get<
+        ApiSuccessResponseWithMetaData<UserApiResponse, AccessToken>
+      >(`${BASE_URL}/users/user`, {
+        headers: {
+          Authorization: `bearer ${accessToken}`,
+        },
+      });
+      const {
+        data: { userPreferences },
+      } = data;
+      if (userPreferences?.language && userPreferences?.theme) {
+        dispatch(setTheme(data.data.userPreferences.theme));
+        dispatch(setLocale(data.data.userPreferences.language));
+      }
 
-    return fulfillWithValue(data);
-  } catch (error: any) {
-    //@ts-ignore
-    let err: ErrorResponse<string> = error.response.data;
-    dispatch(
-      setGlobalWarning({
-        message: err.message,
-        severity: "error",
-      })
-    );
-    return rejectWithValue(err.message);
+      return fulfillWithValue(data);
+    } catch (error: any) {
+      //@ts-ignore
+      let err: ErrorResponse<string> = error.response.data;
+      dispatch(
+        setGlobalWarning({
+          message: err.message,
+          severity: "error",
+        })
+      );
+      return rejectWithValue(err.message);
+    }
   }
-});
+);
 
 export const saveUserPreference = createAsyncThunk<
   ApiSuccessResponseWithData<UserPreferences>,

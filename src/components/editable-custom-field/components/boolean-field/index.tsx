@@ -57,8 +57,6 @@ export default function BooleanField({
   }, [value]);
 
   const handleCheckBox = (event: ChangeEvent<HTMLInputElement>) => {
-    console.log(event.target.checked);
-
     setCheckBoxField((prev) => ({
       ...prev,
       value: event.target.checked ? "true" : "false",

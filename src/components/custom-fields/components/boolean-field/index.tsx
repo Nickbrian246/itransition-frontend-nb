@@ -32,8 +32,6 @@ export default function BooleanField({ isEditable, gatherData, name }: Props) {
   }, [checkBoxField]);
 
   const handleCheckBox = (event: ChangeEvent<HTMLInputElement>) => {
-    console.log(event.target.checked);
-
     setCheckBoxField((prev) => ({
       ...prev,
       value: event.target.checked ? "true" : "false",

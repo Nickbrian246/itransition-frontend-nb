@@ -1,7 +1,10 @@
 "use client";
 import { useAppDispatch, useAppSelector } from "@/hooks/use-redux/redux";
 import { getUser } from "@/store/slices/auth/auth-thunk";
-import { getAccessToken } from "@/utils/localstorage/localstorage";
+import {
+  getAccessToken,
+  setAccessToken,
+} from "@/utils/localstorage/localstorage";
 import ComputerOutlinedIcon from "@mui/icons-material/ComputerOutlined";
 import { Box, Typography } from "@mui/material";
 import Link from "next/link";
@@ -13,12 +16,16 @@ import { setLocale } from "@/store/slices/current-locale";
 import TextSearch from "../text-search";
 import GlobalWarning from "../global-warning";
 import { disableGlobalWarning } from "@/store/slices/global-warning/slice";
+import { useRouter, useSearchParams } from "next/navigation";
 
 interface Props {
   locale: Locale;
 }
 export default function Header({ locale }: Props) {
   const { isAuth } = useAppSelector((state) => state.user.user);
+  const params = useSearchParams();
+  const router = useRouter();
+  const accessToken = params.get("access_token");
   const { isActive, message, severity } = useAppSelector(
     (state) => state.globalWarning
   );
@@ -28,11 +35,10 @@ export default function Header({ locale }: Props) {
 
   useEffect(() => {
     const token = getAccessToken();
-
-    if (token && !isAuth) {
-      dispatch(getUser());
+    if (token) {
+      dispatch(getUser(token));
     }
-  }, [dispatch, isAuth]);
+  }, [isAuth]);
 
   useEffect(() => {
     if (locale) {
@@ -47,6 +53,13 @@ export default function Header({ locale }: Props) {
 
     return () => clearTimeout(timer);
   }, [isActive]);
+
+  useEffect(() => {
+    if (accessToken) {
+      setAccessToken(accessToken);
+      router.replace("/");
+    }
+  }, [accessToken]);
 
   return (
     <header
