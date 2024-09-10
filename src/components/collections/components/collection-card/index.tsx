@@ -4,14 +4,13 @@ import { Box, Card, Typography } from "@mui/material";
 import Image from "next/image";
 import Link from "next/link";
 import ReactMarkdown from "react-markdown";
-import foodImage from "../../../../../public/assets/food.jpg";
 import { useAppSelector } from "@/hooks/use-redux/redux";
 interface Props {
   title: string;
   description: string;
   itemsCount: number;
   date: string;
-  imgId: string;
+  imgId?: string;
   id: string;
 }
 export default function CollectionCard({
@@ -37,19 +36,22 @@ export default function CollectionCard({
           },
         }}
       >
-        <Box
-          sx={{
-            position: "relative",
-            width: "300px",
-          }}
-        >
-          <Image
-            style={{ borderRadius: "10px" }}
-            width={300}
-            alt="collection image"
-            src={foodImage}
-          />
-        </Box>
+        {imgId && (
+          <Box
+            sx={{
+              position: "relative",
+              width: "300px",
+            }}
+          >
+            <Image
+              style={{ borderRadius: "10px" }}
+              width={300}
+              height={200}
+              alt="collection image"
+              src={imgId}
+            />
+          </Box>
+        )}
         <Box
           sx={{
             display: "flex",

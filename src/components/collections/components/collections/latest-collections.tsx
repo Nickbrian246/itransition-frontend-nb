@@ -12,7 +12,7 @@ export default function LatestCollections({ collections }: Props) {
           date={collection.updatedAt}
           description={collection.description}
           itemsCount={collection.items ? collection.items.length : 0}
-          imgId="hello"
+          imgId={collection.imageId ?? undefined}
           title={collection.name}
           key={collection.id}
           id={collection.id}
