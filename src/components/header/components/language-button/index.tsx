@@ -1,18 +1,16 @@
 "use client";
-
-import React, { useEffect, useRef, useState } from "react";
-
 import { useAppDispatch, useAppSelector } from "@/hooks/use-redux/redux";
+import { saveUserPreference } from "@/store/slices/auth/auth-thunk";
+import { setLocale } from "@/store/slices/current-locale";
+import { setTheme } from "@/store/slices/theme/theme-slice";
+import { Locale } from "@/types/types";
+import { getUserPreferencesInLocalStorage } from "@/utils/localstorage/localstorage";
 import { MenuItem } from "@mui/material";
 import { usePathname, useRouter } from "next/navigation";
+import React, { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import i18nConfig from "../../../../../i18nConfig";
 import { StyledMenu } from "../menu-button/components/styled-menu";
-import { Locale } from "@/types/types";
-import { getUserPreferencesInLocalStorage } from "@/utils/localstorage/localstorage";
-import { setTheme } from "@/store/slices/theme/theme-slice";
-import { setLocale } from "@/store/slices/current-locale";
-import { saveUserPreference } from "@/store/slices/auth/auth-thunk";
 
 interface Props {
   languageMenuAnchorEl: null | HTMLElement;
@@ -29,8 +27,8 @@ export default function ChangeLanguage({
   const anchorRef = useRef<HTMLButtonElement>(null);
   const theme = useAppSelector((state) => state.theme.theme);
   const { locale } = useAppSelector((state) => state.locale);
-  const isAuth = useAppSelector((state) => state.user.user.isAuth);
-  const { i18n } = useTranslation();
+
+  const { i18n, t } = useTranslation();
   const dispatch = useAppDispatch();
   const currentLocale = i18n.language;
   const router = useRouter();
@@ -108,7 +106,7 @@ export default function ChangeLanguage({
           handleSelectLanguage("en");
         }}
       >
-        English
+        {t("menu-options:english")}
       </MenuItem>
       <MenuItem
         onClick={() => {
@@ -116,7 +114,7 @@ export default function ChangeLanguage({
           handleSelectLanguage("es");
         }}
       >
-        Spanish
+        {t("menu-options:spanish")}
       </MenuItem>
     </StyledMenu>
   );

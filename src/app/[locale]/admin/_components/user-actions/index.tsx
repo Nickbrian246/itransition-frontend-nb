@@ -1,12 +1,11 @@
-import { Box, Button } from "@mui/material";
-import React from "react";
-import BlockBtn from "./components/block-btn";
-import UnLockBtn from "./components/unlock-btn";
-import DeleteBtn from "./components/delete-btn";
-import ChangeRoles from "./components/change-role";
-import VisitUserBtn from "./components/visit-user-btn";
-import CsvButton from "./components/csv-btn";
 import { User } from "@/entities/user";
+import { Box } from "@mui/material";
+import BlockBtn from "./components/block-btn";
+import ChangeRoles from "./components/change-role";
+import CsvButton from "./components/csv-btn";
+import DeleteBtn from "./components/delete-btn";
+import UnLockBtn from "./components/unlock-btn";
+import VisitUserBtn from "./components/visit-user-btn";
 
 interface Props {
   usersSelected: any[];
