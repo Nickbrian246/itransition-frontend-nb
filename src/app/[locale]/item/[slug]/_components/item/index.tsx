@@ -45,7 +45,7 @@ export default function Item({ slug }: Props) {
     } else {
       setIsUserOwner(false);
     }
-  }, [email]);
+  }, [email, item, role]);
 
   // useEffect(() => {
   //   if (!item) return;
