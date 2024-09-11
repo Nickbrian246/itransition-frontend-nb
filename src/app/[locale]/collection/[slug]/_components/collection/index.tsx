@@ -54,7 +54,8 @@ export default function Collection({
           style={{ borderRadius: "10px" }}
           width={300}
           alt="collection image"
-          src={foodImage}
+          height={200}
+          src={imgId}
         />
       </Box>
       <Box
