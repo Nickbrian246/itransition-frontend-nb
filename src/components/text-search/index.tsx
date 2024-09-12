@@ -31,7 +31,9 @@ export default function TextSearch() {
   const getTextSearchCoincidences = () => {
     getCoincidences(text)
       .then((res) => setCoincidences(res.data))
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        // console.log(err)
+      });
   };
 
   const handleText = (e: ChangeEvent<HTMLInputElement>) => {

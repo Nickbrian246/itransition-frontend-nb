@@ -4,8 +4,24 @@ import initTranslations from "@/app/i18n";
 import TranslationsProvider from "@/components/translations-provider/translations-provider";
 import Collections from "../_componets";
 import { Locale } from "@/types/types";
+import { Metadata } from "next";
+import { getCollectionsByUserId, getUserById } from "../_services";
 
 const i18nNamespaces = ["auth", "commons", "password-rules", "menu-options"];
+
+type Props = {
+  params: { locale: Locale; slug: string };
+  searchParams: { name: string };
+};
+
+export async function generateMetadata({
+  params: { locale, slug },
+  searchParams,
+}: Props): Promise<Metadata> {
+  return {
+    title: `${searchParams.name}´s collection`,
+  };
+}
 export default async function Page({
   params: { locale, slug },
 }: {

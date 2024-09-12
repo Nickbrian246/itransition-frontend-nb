@@ -7,3 +7,10 @@ export interface ItemByTagId {
   createdAt: string;
   item: Item;
 }
+
+export interface TagResponse {
+  id: string;
+  name: string;
+  createdAt: string;
+  updatedAt: string;
+}

@@ -3,6 +3,8 @@ import Header from "@/components/header";
 import TranslationsProvider from "@/components/translations-provider/translations-provider";
 import { Locale } from "@/types/types";
 import Item from "./_components/item";
+import { getItemById } from "./_services";
+import { Metadata } from "next";
 const i18nNamespaces = [
   "auth",
   "commons",
@@ -10,6 +12,17 @@ const i18nNamespaces = [
   "menu-options",
   "errors",
 ];
+
+type Props = {
+  params: { locale: Locale; slug: string };
+};
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const item = await getItemById(params.slug);
+  return {
+    title: item.data.name,
+  };
+}
 export default async function Page({
   params: { locale, slug },
 }: {
