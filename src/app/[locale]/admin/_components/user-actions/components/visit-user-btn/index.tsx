@@ -1,4 +1,7 @@
 "use client";
+import { getUserById } from "@/app/[locale]/my-collections/_services";
+import { useAppDispatch } from "@/hooks/use-redux/redux";
+import { setGlobalWarning } from "@/store/slices/global-warning/slice";
 import { Button } from "@mui/material";
 import { useRouter } from "next/navigation";
 import React from "react";
@@ -8,10 +11,23 @@ interface Props {
 }
 export default function VisitUserBtn({ usersSelected }: Props) {
   const router = useRouter();
+  const dispatch = useAppDispatch();
   const { t } = useTranslation();
 
-  const handleClick = () => {
-    router.push(`/my-collections/${usersSelected[0]}`);
+  const handleClick = async () => {
+    try {
+      const {
+        data: { firstName },
+      } = await getUserById(usersSelected[0]);
+      router.push(`/my-collections/${usersSelected[0]}?name=${firstName}`);
+    } catch (error) {
+      dispatch(
+        setGlobalWarning({
+          message: `${error}`,
+          severity: "error",
+        })
+      );
+    }
   };
   return (
     <Button

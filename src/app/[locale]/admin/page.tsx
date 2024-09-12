@@ -5,6 +5,7 @@ import TranslationsProvider from "@/components/translations-provider/translation
 
 import { Locale } from "@/types/types";
 import Dashboard from "./_components";
+import { Metadata } from "next";
 
 const i18nNamespaces = [
   "auth",
@@ -14,6 +15,18 @@ const i18nNamespaces = [
   "userHeaders",
   "errors",
 ];
+
+type Props = {
+  params: { locale: Locale; slug: string };
+};
+
+export async function generateMetadata({
+  params: { locale },
+}: Props): Promise<Metadata> {
+  return {
+    title: locale === "en" ? "Users dashboard" : "Panel de usuarios",
+  };
+}
 export default async function Page({
   params: { locale, slug },
 }: {

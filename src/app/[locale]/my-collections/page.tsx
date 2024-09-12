@@ -4,6 +4,7 @@ import initTranslations from "@/app/i18n";
 import TranslationsProvider from "@/components/translations-provider/translations-provider";
 import Collections from "./_componets";
 import { Locale } from "@/types/types";
+import { Metadata } from "next";
 
 const i18nNamespaces = [
   "auth",
@@ -13,6 +14,18 @@ const i18nNamespaces = [
   "collection",
   "errors",
 ];
+
+type Props = {
+  params: { locale: Locale; slug: string };
+};
+
+export async function generateMetadata({
+  params: { locale },
+}: Props): Promise<Metadata> {
+  return {
+    title: locale === "en" ? "My collections" : "Mis colecciones",
+  };
+}
 export default async function Page({
   params: { locale, slug },
 }: {

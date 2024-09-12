@@ -1,7 +1,7 @@
-import { TagWithItems } from "@/entities/tags";
+import { Tag, TagWithItems } from "@/entities/tags";
 import { ApiSuccessResponseWithData } from "@/types/api/api-response-interface";
 import axios from "@/lib/axios/axios";
-import { ItemByTagId } from "../_interfaces/item";
+import { ItemByTagId, TagResponse } from "../_interfaces/item";
 import { Item } from "@/entities/item";
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 export async function getItemsByTagId(
@@ -22,9 +22,9 @@ export async function getItemsByTagId(
 
 export async function getTagById(
   id: string
-): Promise<ApiSuccessResponseWithData<Item>> {
+): Promise<ApiSuccessResponseWithData<Tag>> {
   try {
-    const { data } = await axios.get<ApiSuccessResponseWithData<Item>>(
+    const { data } = await axios.get<ApiSuccessResponseWithData<TagResponse>>(
       `${BASE_URL}/tags/${id}`
     );
     return data;

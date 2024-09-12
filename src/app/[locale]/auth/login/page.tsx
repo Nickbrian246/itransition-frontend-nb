@@ -4,8 +4,20 @@ import initTranslations from "@/app/i18n";
 import TranslationsProvider from "@/components/translations-provider/translations-provider";
 import Header from "@/components/header";
 import { Locale } from "@/types/types";
+import { Metadata } from "next";
 
 const i18nNamespaces = ["auth", "commons", "password-rules", "menu-options"];
+type Props = {
+  params: { locale: Locale; slug: string };
+};
+
+export async function generateMetadata({
+  params: { locale },
+}: Props): Promise<Metadata> {
+  return {
+    title: locale === "en" ? "Sign in" : "Iniciar sesión",
+  };
+}
 export default async function Page({
   params: { locale },
 }: {

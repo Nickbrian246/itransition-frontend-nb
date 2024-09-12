@@ -3,7 +3,23 @@ import Header from "@/components/header";
 import TranslationsProvider from "@/components/translations-provider/translations-provider";
 import CollectionPage from "./_components";
 import { Locale } from "@/types/types";
+import { Metadata } from "next";
+import { getCollectionById } from "./_services";
+
 const i18nNamespaces = ["home", "menu-options", "feed", "commons", "errors"];
+
+type Props = {
+  params: { locale: Locale; slug: string };
+};
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const {
+    data: { name },
+  } = await getCollectionById(params.slug);
+  return {
+    title: name,
+  };
+}
 export default async function Page({
   params: { locale, slug },
 }: {
