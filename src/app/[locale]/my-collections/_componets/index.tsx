@@ -1,13 +1,18 @@
 "use client";
 import CreateCollectionForm from "@/components/create-collection-form";
+import CustomModal from "@/components/custom-components/custom-modal";
 import EmptyContent from "@/components/empty-content";
 import { Collections as CollectionInterface } from "@/entities/collections";
 import { useAppSelector } from "@/hooks/use-redux/redux";
+import { setGlobalWarning } from "@/store/slices/global-warning/slice";
+import { ErrorResponse } from "@/types/api/api-error.interface";
+import { errorsRedirectToHome } from "@/utils/errors-actions/errors";
 import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
-import { Box, Button, Modal } from "@mui/material";
+import { Box, Button } from "@mui/material";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useDispatch } from "react-redux";
 import {
   FilterKeys,
   FilterOrder as FilterOrderInterface,
@@ -15,14 +20,10 @@ import {
 import { getCollectionsByUserId, getMyCollections } from "../_services";
 import { filterByType } from "../_utils/filter-by";
 import MyCollections from "./collections";
+import CsvButton from "./csv-btn";
 import FilterOptionsMenu from "./filter-options-menu";
 import FilterOrder from "./filter-order";
 import Skeleton from "./skeleton";
-import CsvButton from "./csv-btn";
-import { useDispatch } from "react-redux";
-import { setGlobalWarning } from "@/store/slices/global-warning/slice";
-import { ErrorResponse } from "@/types/api/api-error.interface";
-import { errorsRedirectToHome } from "@/utils/errors-actions/errors";
 
 interface Props {
   userId?: string;
@@ -137,7 +138,6 @@ export default function Collections({ userId }: Props) {
             : t("commons:createNewCollection")}
         </Button>
       </Box>
-
       <Box sx={{ display: "flex", flexDirection: "column", gap: "15px" }}>
         {isLoading || collections === null ? (
           <Skeleton />
@@ -151,12 +151,7 @@ export default function Collections({ userId }: Props) {
           <EmptyContent text={t("commons:noCollections")} />
         )}
       </Box>
-      <Modal
-        aria-labelledby="parent-modal-title"
-        aria-describedby="parent-modal-description"
-        open={isOpenModal}
-        onClose={() => setIsOpenModal(false)}
-      >
+      <CustomModal open={isOpenModal} handleClose={() => setIsOpenModal(false)}>
         <CreateCollectionForm
           userId={userId}
           handleRefreshCollections={handleRefreshCollections}
@@ -164,7 +159,7 @@ export default function Collections({ userId }: Props) {
             setIsOpenModal(false);
           }}
         />
-      </Modal>
+      </CustomModal>
     </Box>
   );
 }

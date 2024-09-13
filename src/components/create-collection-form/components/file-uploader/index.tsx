@@ -1,5 +1,5 @@
 "use client";
-import { Box, Typography } from "@mui/material";
+import { Box, Stack, Typography } from "@mui/material";
 import React, { SetStateAction, useState } from "react";
 import {
   FileUploaderRegular,
@@ -39,7 +39,7 @@ export default function FileUploader({ setImgSrc }: Props) {
   //  }).then((res) => console.log(res.uuid));
 
   return (
-    <Box>
+    <Stack spacing={1}>
       <Typography variant="caption">
         {t("commons:uploadCollectionImg")} {`(${t("commons:optionalStep")})`}
       </Typography>
@@ -59,6 +59,6 @@ export default function FileUploader({ setImgSrc }: Props) {
           </div>
         ))}
       </div>
-    </Box>
+    </Stack>
   );
 }

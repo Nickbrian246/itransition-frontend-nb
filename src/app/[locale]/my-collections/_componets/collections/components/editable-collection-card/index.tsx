@@ -17,6 +17,7 @@ import CustomFields from "@/components/custom-fields";
 import EditableCustomField from "@/components/editable-custom-field";
 import EmptyContent from "@/components/empty-content";
 import { setGlobalWarning } from "@/store/slices/global-warning/slice";
+import CustomModal from "@/components/custom-components/custom-modal";
 interface Props {
   title: string;
   description: string;
@@ -165,12 +166,7 @@ export default function EditableCollectionCard({
       {fields && fields.length === 0 && (
         <EmptyContent text={t("commons:noFields")} />
       )}
-      <Modal
-        aria-labelledby="parent-modal-title"
-        aria-describedby="parent-modal-description"
-        open={isOpenModal}
-        onClose={() => setIsOpenModal(false)}
-      >
+      <CustomModal open={isOpenModal} handleClose={() => setIsOpenModal(false)}>
         <CreateCollectionForm
           handleRefreshCollections={handleRefreshCollections}
           handleCLoseModal={() => {
@@ -184,7 +180,7 @@ export default function EditableCollectionCard({
             name: title,
           }}
         />
-      </Modal>
+      </CustomModal>
     </Card>
   );
 }
