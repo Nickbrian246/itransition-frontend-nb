@@ -1,20 +1,18 @@
 "use client";
-import React from "react";
-import { Card, Box, Typography } from "@mui/material";
-import { timeFromNow } from "@/utils/date/date-distance";
-import Image from "next/image";
-import foodImage from "../../../../../../../public/assets/food.jpg";
-import { Categories } from "@/entities/categories";
 import CategoryCard from "@/components/category-card";
+import { Categories } from "@/entities/categories";
 import { User } from "@/entities/user";
 import { Locale } from "@/types/types";
+import { timeFromNow } from "@/utils/date/date-distance";
+import { Box, Card, Typography } from "@mui/material";
+import Image from "next/image";
 import ReactMarkdown from "react-markdown";
 interface Props {
   title: string;
   description: string;
   itemsCount: number;
   date: string;
-  imgId: string;
+  imgId: string | null;
   id: string;
   category: Categories;
   user: Pick<User, "email">;
@@ -44,20 +42,22 @@ export default function Collection({
         },
       }}
     >
-      <Box
-        sx={{
-          position: "relative",
-          width: "300px",
-        }}
-      >
-        <Image
-          style={{ borderRadius: "10px" }}
-          width={300}
-          alt="collection image"
-          height={200}
-          src={imgId}
-        />
-      </Box>
+      {imgId && (
+        <Box
+          sx={{
+            position: "relative",
+            width: "300px",
+          }}
+        >
+          <Image
+            style={{ borderRadius: "10px" }}
+            width={300}
+            alt="collection image"
+            height={200}
+            src={imgId}
+          />
+        </Box>
+      )}
       <Box
         sx={{
           display: "flex",

@@ -1,15 +1,21 @@
-import { Categories } from "@/entities/categories";
-import { Box, Button, TextField, Typography } from "@mui/material";
+import { Categories as CategoriesInterface } from "@/entities/categories";
+import { useAppDispatch } from "@/hooks/use-redux/redux";
+import { setGlobalWarning } from "@/store/slices/global-warning/slice";
+import { ErrorResponse } from "@/types/api/api-error.interface";
+import { errorsRedirectToHome } from "@/utils/errors-actions/errors";
+import { Box, Typography } from "@mui/material";
+import { useRouter } from "next/navigation";
 import React, { ChangeEvent, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { CustomInputLabel } from "../custom-components";
-import CustomTextArea from "../custom-components/custom-text-area";
-import CreateCustomCategory from "./components/add-custom-category";
-import AutoComplete from "./components/auto-complete";
+import { ZodError } from "zod";
+import ActionsButtons from "./components/action-btns";
+import Categories from "./components/categories";
 import CustomFields from "./components/custom-fields";
+import Description from "./components/description";
 import FileUploader from "./components/file-uploader";
-import MarkDownDescription from "./components/mark-down-description";
+import NameField from "./components/name-field";
 import {
+  CollectionDataFrom,
   CreateCollection as CreateCollectionInterface,
   Custom,
   EditableCollection,
@@ -21,11 +27,8 @@ import {
   editCollectionById,
 } from "./services";
 import { adapterForCustomFields } from "./utils";
-import { useAppDispatch } from "@/hooks/use-redux/redux";
-import { setGlobalWarning } from "@/store/slices/global-warning/slice";
-import { ErrorResponse } from "@/types/api/api-error.interface";
-import { errorsRedirectToHome } from "@/utils/errors-actions/errors";
-import { useRouter } from "next/navigation";
+import { CreateCollectionSchema } from "./validations/create-collection";
+import GlobalWarning from "../global-warning";
 
 interface Props {
   handleRefreshCollections: () => void;
@@ -44,20 +47,22 @@ export default function CreateCollectionForm({
   const [customFields, setCustomFields] = useState<Custom[]>([]);
   const [isEditable, setIsEditable] = useState<boolean>(false);
   const [isNewCategory, setIsNewCategory] = useState<boolean>(false);
-  const { t } = useTranslation();
-  const dispatch = useAppDispatch();
-  const [categorySelected, setCategorySelected] = useState<Categories | null>(
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [localWarning, setLocalWarning] = useState<{ message: string } | null>(
     null
   );
+  const { t } = useTranslation();
+  const dispatch = useAppDispatch();
+  const [categorySelected, setCategorySelected] =
+    useState<CategoriesInterface | null>(null);
   const [idCollectionCreated, setIdCollectionCreated] = useState<string | null>(
     null
   );
-  const [collectionData, setCreateCollectionData] = useState<
-    Pick<CreateCollectionInterface, "description" | "name">
-  >({
-    description: "",
-    name: "",
-  });
+  const [collectionData, setCreateCollectionData] =
+    useState<CollectionDataFrom>({
+      description: "",
+      name: "",
+    });
   const router = useRouter();
 
   useEffect(() => {
@@ -70,6 +75,12 @@ export default function CreateCollectionForm({
       .then((res) => {
         handleRefreshCollections();
         handleCLoseModal();
+        dispatch(
+          setGlobalWarning({
+            message: t("commons:collectionCreated"),
+            severity: "success",
+          })
+        );
       })
       .catch((err: ErrorResponse<string>) => {
         dispatch(
@@ -122,38 +133,51 @@ export default function CreateCollectionForm({
 
   const handleSelectCategory = (
     event: React.SyntheticEvent,
-    value: Categories | null
+    value: CategoriesInterface | null
   ) => {
     if (!value) return;
     setCategorySelected(value);
     if (value.name === "other") setIsNewCategory(true);
   };
 
+  const validateMandatoryFields = () => {
+    try {
+      const data = CreateCollectionSchema.parse({
+        category: categorySelected?.id ?? "",
+        description: collectionData.description,
+        name: collectionData.name,
+      });
+      return data;
+    } catch (error) {
+      if (error instanceof ZodError) {
+        const e = error.issues.reduce((acc, issue) => {
+          //@ts-ignore
+          acc[issue.path[0]] = issue.message;
+          return acc;
+        }, {});
+        return setErrors(e);
+      }
+    }
+  };
+
   const handleCrateCollection = () => {
+    const mandatoryFields = validateMandatoryFields();
+    if (!mandatoryFields) return;
     const data: CreateCollectionInterface = {
-      category: categorySelected?.id ?? "",
-      description: collectionData.description,
-      name: collectionData.name,
+      category: mandatoryFields.category,
+      description: mandatoryFields.description,
+      name: mandatoryFields.name,
       imageId: imgSrc,
       userId: userId ?? null,
     };
     CreateCollection(data)
       .then((res) => {
         setIdCollectionCreated(res.data.id);
-        dispatch(
-          setGlobalWarning({
-            message: t("commons:collectionCreated"),
-            severity: "success",
-          })
-        );
       })
       .catch((err: ErrorResponse<string>) => {
-        dispatch(
-          setGlobalWarning({
-            message: t(`errors:${err.message}`),
-            severity: "error",
-          })
-        );
+        setLocalWarning({
+          message: t(`errors:${err.message}`),
+        });
         if (
           errorsRedirectToHome[err.message as keyof typeof errorsRedirectToHome]
         ) {
@@ -161,7 +185,11 @@ export default function CreateCollectionForm({
         }
       });
   };
+
   const handleEditCollection = () => {
+    const mandatoryFields = validateMandatoryFields();
+    if (!mandatoryFields) return;
+
     const data: UpdateCollection = {
       category:
         categorySelected?.id ?? editableCollectionData?.categoryId ?? "",
@@ -182,12 +210,9 @@ export default function CreateCollectionForm({
         );
       })
       .catch((err: ErrorResponse<string>) => {
-        dispatch(
-          setGlobalWarning({
-            message: t(`errors:${err.message}`),
-            severity: "error",
-          })
-        );
+        setLocalWarning({
+          message: t(`errors:${err.message}`),
+        });
         if (
           errorsRedirectToHome[err.message as keyof typeof errorsRedirectToHome]
         ) {
@@ -196,7 +221,7 @@ export default function CreateCollectionForm({
       });
   };
 
-  const newCategoryCreated = (category: Categories) => {
+  const newCategoryCreated = (category: CategoriesInterface) => {
     setCategorySelected(category);
     setIsNewCategory(false);
     dispatch(
@@ -210,123 +235,55 @@ export default function CreateCollectionForm({
   return (
     <Box
       sx={{
-        position: "absolute",
-        top: "50%",
-        left: "50%",
-        transform: "translate(-50%, -50%)",
-        padding: "10px",
-        width: "100%",
-        maxWidth: "900px",
-        bgcolor: "background.paper",
-        border: "2px solid #000",
-        boxShadow: 24,
-        pt: 2,
-        px: 4,
-        pb: 3,
         display: "flex",
         flexDirection: "column",
         gap: "20px",
-        maxHeight: "600px",
+        maxHeight: "650px",
         overflow: "auto",
+        padding: "8px",
+        position: "relative",
       }}
     >
+      {localWarning && <GlobalWarning message="hola" severity="error" />}
       <Typography align="center" variant="h6">
         {isEditable
           ? t("commons:editCollection")
           : t("commons:createCollection")}
       </Typography>
-      <Box sx={{ display: "flex", flexDirection: "column" }}>
-        <CustomInputLabel htmlFor="collectionName">
-          {t("commons:name")}
-        </CustomInputLabel>
-        <TextField
-          onChange={handleName}
-          id="collectionName"
-          name="name"
-          placeholder={t("commons:collectionName")}
-          value={collectionData["name"]}
-          fullWidth
-        />
-      </Box>
-      <Box sx={{ display: "flex", flexDirection: "column" }}>
-        <CustomInputLabel htmlFor="collectionName">
-          {t("commons:description")}
-        </CustomInputLabel>
-        <CustomTextArea
-          name="description"
-          onChange={handleDescription}
-          id="collectionName"
-          placeholder={t("commons:description")}
-          value={collectionData["description"]}
-        />
-        <MarkDownDescription text={collectionData["description"]} />
-      </Box>
+      <NameField
+        collectionData={collectionData}
+        errors={errors}
+        handleName={handleName}
+      />
+      <Description
+        collectionData={collectionData}
+        errors={errors}
+        handleDescription={handleDescription}
+      />
       <FileUploader setImgSrc={setImgSrc} />
-      {isNewCategory ? (
-        <CreateCustomCategory
-          handleCancel={() => {
-            setIsNewCategory(false);
-            setCategorySelected(null);
-          }}
-          newCategoryCreated={newCategoryCreated}
-        />
-      ) : (
-        <AutoComplete
-          categoryId={
-            editableCollectionData?.categoryId ?? categorySelected?.id ?? null
-          }
-          handleSelectCategory={handleSelectCategory}
-        />
-      )}
+      <Categories
+        categorySelected={categorySelected}
+        handleSelectCategory={handleSelectCategory}
+        isNewCategory={isNewCategory}
+        newCategoryCreated={newCategoryCreated}
+        setCategorySelected={setCategorySelected}
+        setIsNewCategory={setIsNewCategory}
+        editableCollectionData={editableCollectionData}
+        errors={errors}
+      />
       {!isEditable && (
         <CustomFields
           customFields={customFields}
           setCustomFields={setCustomFields}
         />
       )}
-      {isEditable ? (
-        <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-          <Button
-            onClick={handleEditCollection}
-            disabled={
-              !(
-                collectionData.description.length !== 0 &&
-                collectionData.name.length !== 0
-              )
-            }
-            variant="contained"
-          >
-            {" "}
-            {t("commons:saveChanges")}
-          </Button>
-          <Button
-            sx={{ bgcolor: "red" }}
-            onClick={() => {
-              handleCLoseModal();
-            }}
-            variant="contained"
-          >
-            {" "}
-            {t("commons:cancel")}
-          </Button>
-        </Box>
-      ) : (
-        <Button
-          onClick={handleCrateCollection}
-          disabled={
-            !(
-              collectionData.description.length !== 0 &&
-              collectionData.name.length !== 0 &&
-              !isNewCategory &&
-              categorySelected
-            )
-          }
-          variant="contained"
-        >
-          {" "}
-          {t("commons:createCollection")}
-        </Button>
-      )}
+      <ActionsButtons
+        collectionData={collectionData}
+        handleCLoseModal={handleCLoseModal}
+        handleCrateCollection={handleCrateCollection}
+        handleEditCollection={handleEditCollection}
+        isEditable={isEditable}
+      />
     </Box>
   );
 }

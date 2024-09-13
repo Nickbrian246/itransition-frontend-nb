@@ -28,6 +28,8 @@ export default function AutoComplete({
   useEffect(() => {
     GetCategories()
       .then((res) => {
+        //@ts-ignore
+        handleSelectCategory("", res.data[0]);
         const a = categoriesAdapter(res.data).concat({
           label: t("commons:other"),
           name: "other",

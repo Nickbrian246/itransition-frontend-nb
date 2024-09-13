@@ -79,7 +79,7 @@ export default function CollectionPage({ slug }: Props) {
           date={collection.updatedAt}
           description={collection.description}
           id={collection.id}
-          imgId={collection.imageId ?? ""}
+          imgId={collection.imageId ?? null}
           itemsCount={collection.items?.length ?? 0}
           title={collection.name}
           key={collection.id}

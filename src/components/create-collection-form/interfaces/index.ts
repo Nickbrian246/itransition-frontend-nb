@@ -50,3 +50,5 @@ export interface EditableCollection
   > {
   categoryId: string | null;
 }
+
+export type CollectionDataFrom = Pick<CreateCollection, "description" | "name">;
