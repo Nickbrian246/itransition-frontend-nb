@@ -140,16 +140,16 @@ export default function CreateItemModalForm({
         <form style={{ width: "100%" }}>
           <CustomInputLabel id="name">{t("commons:name")}</CustomInputLabel>
           <TextField fullWidth id="name" onChange={handleName} />
-          <CustomFields
-            groupOfFields={customFields}
-            fieldsData={fieldsData}
-            setFieldData={setFieldData}
-          />
           {errors["name"] && (
             <Typography sx={{ color: "#ff9800" }} variant="caption">
               {errors["name"]}
             </Typography>
           )}
+          <CustomFields
+            groupOfFields={customFields}
+            fieldsData={fieldsData}
+            setFieldData={setFieldData}
+          />
         </form>
         <Box>
           <TagsSelector
