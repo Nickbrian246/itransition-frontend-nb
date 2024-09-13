@@ -1,21 +1,24 @@
 "use client";
-import { Box, Button, TextField, Typography } from "@mui/material";
-import React, { ChangeEvent, useEffect, useState } from "react";
-import { CustomInputLabel } from "../custom-components";
-import {
-  createItem,
-  getCustomFieldsByCollectionId,
-  crateItemsTags,
-} from "./services";
-import CustomFields, { EditCustomFields } from "../custom-fields";
 import { CustomField } from "@/entities/custom-field";
-import TagsSelector from "../tag-selector";
+import { Item } from "@/entities/item";
 import { Tag } from "@/entities/tags";
-import Modal from "@mui/material/Modal";
-import { useTranslation } from "react-i18next";
 import { useAppDispatch } from "@/hooks/use-redux/redux";
 import { setGlobalWarning } from "@/store/slices/global-warning/slice";
-import { Item } from "@/entities/item";
+import { Box, TextField, Typography } from "@mui/material";
+import { ChangeEvent, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { ZodError } from "zod";
+import { CustomInputLabel } from "../custom-components";
+import CustomModal from "../custom-components/custom-modal";
+import CustomFields, { EditCustomFields } from "../custom-fields";
+import TagsSelector from "../tag-selector";
+import ActionsButtons from "./components/actions-btns";
+import {
+  crateItemsTags,
+  createItem,
+  getCustomFieldsByCollectionId,
+} from "./services";
+import { CreateItemSchema } from "./validations/create-item";
 
 interface Props {
   collectionId: string;
@@ -38,6 +41,7 @@ export default function CreateItemModalForm({
   const [fieldsData, setFieldData] = useState<EditCustomFields[]>([]);
   const [tagsSelected, setTagsSelected] = useState<Tag[]>([]);
   const [itemCreated, setItemCreated] = useState<Item>();
+  const [errors, setErrors] = useState<Record<string, string>>({});
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
 
@@ -83,8 +87,10 @@ export default function CreateItemModalForm({
   }, [itemCreated]);
 
   const handleCreateItem = () => {
+    const data = validateItem();
+    if (!data) return;
     createItem({
-      name: name,
+      name: data.name,
       customFields: fieldsData,
       collectionId: collectionId,
       userId: itemOwnerId ?? null,
@@ -105,32 +111,29 @@ export default function CreateItemModalForm({
   const handleName = (e: ChangeEvent<HTMLInputElement>) => {
     setName(e.target.value);
   };
+
+  const validateItem = () => {
+    try {
+      const data = CreateItemSchema.parse({
+        name: name,
+        tagsIds: tagsSelected.map((t) => t.id),
+      });
+      return data;
+    } catch (error) {
+      if (error instanceof ZodError) {
+        const e = error.issues.reduce((acc, issues) => {
+          //@ts-ignore
+          acc[issues.path[0]] = issues.message;
+          return acc;
+        }, {});
+        return setErrors(e);
+      }
+      throw error;
+    }
+  };
   return (
-    <Modal
-      open={open}
-      onClose={handleClose}
-      aria-labelledby="modal-modal-title"
-      aria-describedby="modal-modal-description"
-    >
-      <Box
-        sx={{
-          position: "absolute" as "absolute",
-          top: "50%",
-          left: "50%",
-          transform: "translate(-50%, -50%)",
-          minWidth: "300px",
-          width: {
-            xs: "90%",
-            md: "1000px",
-          },
-          maxHeight: "600px",
-          overflow: "auto",
-          bgcolor: "background.paper",
-          border: "2px solid #000",
-          boxShadow: 24,
-          p: 4,
-        }}
-      >
+    <CustomModal open={open} handleClose={handleClose}>
+      <Box>
         <Typography variant="h6" align="center">
           {t("commons:createItem")}
         </Typography>
@@ -142,20 +145,28 @@ export default function CreateItemModalForm({
             fieldsData={fieldsData}
             setFieldData={setFieldData}
           />
+          {errors["name"] && (
+            <Typography sx={{ color: "#ff9800" }} variant="caption">
+              {errors["name"]}
+            </Typography>
+          )}
         </form>
-        <TagsSelector
-          setTagsSelected={setTagsSelected}
-          tagsSelected={tagsSelected}
+        <Box>
+          <TagsSelector
+            setTagsSelected={setTagsSelected}
+            tagsSelected={tagsSelected}
+          />
+          {errors["tagsIds"] && (
+            <Typography sx={{ color: "#ff9800" }} variant="caption">
+              {errors["tagsIds"]}
+            </Typography>
+          )}
+        </Box>
+        <ActionsButtons
+          handleClose={handleClose}
+          handleCreateItem={handleCreateItem}
         />
-        <Button
-          sx={{ marginTop: "20px" }}
-          variant="contained"
-          onClick={handleCreateItem}
-        >
-          {" "}
-          {t("commons:createItem")}
-        </Button>
       </Box>
-    </Modal>
+    </CustomModal>
   );
 }
